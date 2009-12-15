@@ -6,12 +6,12 @@ CropPlugin::CropPlugin( wxWindow* parent_, MyFrame *win_ )
 {
 	sidebar =  new CropSidebar(parent_, this);
 	sidebarw = sidebar;
-	sidebar->fromx->SetMax(cm->size.width-1);
-	sidebar->fromy->SetMax(cm->size.width-1);
-	sidebar->width->SetMin(-cm->size.height+1);
-	sidebar->height->SetMin(-cm->size.height+1);
-	sidebar->width->SetMax(cm->size.height-1);
-	sidebar->height->SetMax(cm->size.height-1);
+	//sidebar->fromx->SetMax(cm->size.width-1);
+	//sidebar->fromy->SetMax(cm->size.width-1);
+	//sidebar->width->SetMin(-cm->size.height+1);
+	//sidebar->height->SetMin(-cm->size.height+1);
+	//sidebar->width->SetMax(cm->size.height-1);
+	//sidebar->height->SetMax(cm->size.height-1);
 	sidebar->width->SetValue(cm->size.width-1);
 	sidebar->height->SetValue(cm->size.height-1);
 	canvas->SetRectListener(this);

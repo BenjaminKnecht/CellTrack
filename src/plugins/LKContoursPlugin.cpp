@@ -37,7 +37,7 @@ void LKContoursPlugin::OnOK()
 	else{
 		FetchParams();
 		CvPoint *ops=NULL;
-		CvPoint2D32f *opsf=NULL, *psf=NULL,*swap_psf=NULL; 
+		CvPoint2D32f *opsf=NULL, *psf=NULL,*swap_psf=NULL;
 		char *status=NULL;
 		int np_total=0;
 		ImagePlus *oimg=cm->book[0], *img;
@@ -71,14 +71,14 @@ void LKContoursPlugin::ProcessImage( ImagePlus *img, int pos ){
 	FetchParams();
 	ImagePlus *oimg = cm->book[pos-1];
 	CvPoint *ops=NULL;
-	CvPoint2D32f *opsf=NULL, *psf=NULL; 
+	CvPoint2D32f *opsf=NULL, *psf=NULL;
 	char *status=NULL;
 	int np_total=0;
 	LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, 0, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,true,true);
 }
 void LKContoursPlugin::ShowProcessInfo()
 {
-	win->SetStatusText(WXFORMAT("tracked %.2f%%, interpolated %.2f%% points.", 1-avgLost, avgLost));
+	win->SetStatusText(WXFORMAT(_T("tracked %.2f%%, interpolated %.2f%% points."), 1-avgLost, avgLost));
 }
 //temp images are create on demand. must be freed by user (or use free_temps=true)
 void LKContoursPlugin::ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level, CvSize winsize, CvTermCriteria criteria, int flags, float fixOutliers, int intwin, float &avgLost, IplImage* &gray, IplImage* &ogray, IplImage* &pyr, IplImage* &opyr, CvPoint* &ops, CvPoint2D32f* &psf, CvPoint2D32f* &opsf, char* &status, bool useAvailable, int &np_total, bool rebuild_opsf, bool free_temps){

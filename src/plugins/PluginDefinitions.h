@@ -11,7 +11,9 @@
 		NAME##Sidebar( wxWindow* parent, NAME##Plugin *plugin_ ); \
 	void OnChange();\
 	void OnChange( wxSpinEvent& event ){ OnChange(); } \
+	void OnChangeSpin( wxSpinEvent& event ){ OnChange(); } \
 	void OnChange( wxCommandEvent& event ){ OnChange(); } \
+	void OnChangeComm( wxCommandEvent& event ){ OnChange(); } \
 	void OnChange( wxNotebookEvent& event ){ OnChange(); } \
 	void OnChange( wxChoicebookEvent& event ){ OnChange(); } \
 	void OnChangePreview( wxCommandEvent& event ); \
@@ -26,13 +28,15 @@
 #define DECLARE_PLUGIN_SIDEBAR(NAME)	\
 	NAME##Sidebar::NAME##Sidebar( wxWindow* parent, NAME##Plugin *plugin_ ) \
 	: NAME##Sidebar_( parent ), plugin(plugin_), preview_(NULL) { \
-		wxWindow *w=FindWindowByLabel("Show preview",this); \
+		wxWindow *w=FindWindowByLabel(_T("Show preview"),this); \
 		if(w) preview_=(wxCheckBox*)w; } \
 	void NAME##Sidebar::OnChange() { plugin->DoPreview(); } \
 	void NAME##Sidebar::OnOK( wxCommandEvent& event ) \
-	{ plugin->OnOK(); ProcessEvent(wxCommandEvent(EVT_PLUGIN_END)); } \
+	{ plugin->OnOK(); wxCommandEvent dummy = wxCommandEvent(EVT_PLUGIN_END); \
+        ProcessEvent(dummy); } \
 	void NAME##Sidebar::OnCancel( wxCommandEvent& event ) \
-	{ plugin->OnCancel(); ProcessEvent(wxCommandEvent(EVT_PLUGIN_END)); } \
+	{ plugin->OnCancel(); wxCommandEvent dummy = wxCommandEvent(EVT_PLUGIN_END); \
+        ProcessEvent(dummy); } \
 	void NAME##Sidebar::OnApply( wxCommandEvent& event ) \
 	{ plugin->OnApply(); } \
 	void NAME##Sidebar::OnChangePreview( wxCommandEvent& event ) { \

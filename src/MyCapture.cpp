@@ -1,12 +1,12 @@
-#include "mycapture.h"
+#include "MyCapture.h"
 
 
 MyCapture_Files::MyCapture_Files(const wxArrayString& files_)
 : MyCapture()
 {
 	files = files_;
-	if(!(frame = cvLoadImage(files[0].c_str()))){
-		wxLogError("Failed to read image file [ %s ]. Corrupt file or unsupported codec.", files[0]);
+	if(!(frame = cvLoadImage(files[0].mb_str()))){
+		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec."), files[0]);
 		return;
 	}
 
@@ -22,7 +22,7 @@ MyCapture_Movie::MyCapture_Movie(const char* avi)
 {
 	frame_flip = NULL;
 	if(!( capture = cvCaptureFromAVI(avi) )) {
-		wxLogError("Failed to read movie file [ %s ]. Corrupt file or unsupported codec.", avi);
+		wxLogError(_T("Failed to read movie file [ %s ]. Corrupt file or unsupported codec."), avi);
 		return;
 	}
 	size = cvSize(cvGetCaptureProperty(capture, CV_CAP_PROP_FRAME_WIDTH),
@@ -76,8 +76,8 @@ IplImage* MyCapture_Files::queryFrame(int pos_)
 		throw "no more frames left to query. position passed end of movie.";
 	if (frame)
 		cvReleaseImage(&frame);
-	if (!(frame = cvLoadImage(files[pos].c_str()))) {
-		wxLogError("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image.", files[0], pos);
+	if (!(frame = cvLoadImage(files[pos].mb_str()))) {
+		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image."), files[0], pos);
 		if (size.width)
 			frame = cvCreateImage(size,8,3);
 	}

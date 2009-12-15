@@ -24,5 +24,5 @@ public:
 	virtual void ReleaseTemps();
 
 	void ProcessImage( ImagePlus *img );
-	static void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int maxLength );
+	static void ProcessStatic( ImagePlus *img, int minLength, int maxLength );
 };

@@ -8,7 +8,7 @@
 //TODO?: abstract out an object (with contour and features as members). This can
 //make object handling easier, at a cost to translate back and forth between cvContour
 typedef std::vector<CvPoint2D32f> FeatPoints;
-typedef std::vector<std::vector<CvPoint2D32f>> FeatPointsSet;
+typedef std::vector<std::vector<CvPoint2D32f> > FeatPointsSet;
 
 class ImagePlus
 {
@@ -19,7 +19,7 @@ public:
 	std::vector<CvSeq*> contourArray;
 	int numContours;
 	CvMemStorage *contours_storage;
-	std::vector<std::vector<CvPoint2D32f>> feats;
+	std::vector<std::vector<CvPoint2D32f> > feats;
 	bool dirty; //specifies if drawn need to be updated. no longer needed.
 
 	ImagePlus();
@@ -42,7 +42,7 @@ public:
 	void RemoveContours(int from, int to);
 	void RemoveContour(CvSeq *seq);
 	void AddContours(CvSeq *seq);
-	void AddRoi(std::vector<wxPoint> &roi);	
+	void AddRoi(std::vector<wxPoint> &roi);
 	void AddContour( wxPoint* ps, int np );
 	void AddContour(CvPoint *ps, int np);
 	void AddContour(CvPoint2D32f *ps, int np);

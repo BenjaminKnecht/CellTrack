@@ -1,4 +1,4 @@
-#include "util.h"
+#include "Util.h"
 #include "string.h"
 
 bool Config_ReadBool( const wxConfigBase *config, const wxString &key, bool defaultValue ) {

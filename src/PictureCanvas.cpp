@@ -45,7 +45,8 @@ void PictureCanvas::SetImage( const wxBitmap& bmp_ )
 	if (img) delete img;
 	img = new wxImage();
 	*img = bmp_.ConvertToImage();
-	OnSize(wxSizeEvent());
+	wxSizeEvent dummy = wxSizeEvent();
+	OnSize(dummy);
 }
 
 

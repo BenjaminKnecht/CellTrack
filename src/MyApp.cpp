@@ -1,4 +1,6 @@
+#ifndef __GNUG__
 #include <wx/msw/winundef.h>
+#endif
 // For compilers that support precompilation, includes "wx/wx.h".
 #include "wx/wxprec.h"
 #ifdef __BORLANDC__
@@ -49,7 +51,7 @@ public:
 };
 IMPLEMENT_APP(MyApp)
 
-#include "myframe.h"
+#include "MyFrame.h"
 #include "Preferences.h"
 bool MyApp::OnInit()
 {
@@ -69,11 +71,15 @@ bool MyApp::OnInit()
 	wxConfigBase::Set(config);
 
 	wxString cwd;
-	config->Read("CWD", &cwd);
+	config->Read(_T("CWD"), &cwd);
 	if (cwd.empty()) {
 		char path[1024];
+#ifndef __GNUG__
 		_getcwd(path,1024);
-		config->Write("CWD",wxString(path)+"/");
+#else
+		getcwd(path,1024);
+#endif
+		config->Write(_T("CWD"),wxString::FromAscii(path)+_T("/"));
 	}
 	Preferences::InitializeOnDemand();
 
@@ -82,7 +88,7 @@ bool MyApp::OnInit()
 	wxInt32 x = (wxInt32) config->Read(wxT("Frame/x"), 50l);
 	wxInt32 y = (wxInt32) config->Read(wxT("Frame/y"), 50l);
     // Create the main frame window
-    MyFrame *frame = new MyFrame("CellTrack", wxPoint(x, y), wxSize(width, height), wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
+    MyFrame *frame = new MyFrame(_T("CellTrack"), wxPoint(x, y), wxSize(width, height), wxDEFAULT_FRAME_STYLE | wxNO_FULL_REPAINT_ON_RESIZE);
     frame->myShow(argc<=1);
 	if (argc > 1)
 		frame->OpenMovie(argv[1]);

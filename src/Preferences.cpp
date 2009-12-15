@@ -1,6 +1,6 @@
 #include "Preferences.h"
-#include "util.h"
-#include "gui.h"
+#include "Util.h"
+#include "Gui.h"
 #include <highgui.h>
 
 wxConfigBase * Preferences::config;
@@ -34,15 +34,15 @@ DECLARE_PREF_GET(wxString, ColorContourSelectedColor)
 DECLARE_PREF_GET(wxString, ColorFeatureColor)
 
 
-#define SET_CONTROL_VALUE(key)	c_##key->SetValue(##key);
+#define SET_CONTROL_VALUE(key)	c_##key->SetValue(key);
 #define SET_CONTROL_VALUE_DEFAULT(key)	c_##key->SetValue(d.c_##key->GetValue());
-#define GET_CONTROL_VALUE(key)	(##key = c_##key->GetValue());
-#define SET_CONTROL_SELECTION(key)	c_##key->SetSelection(##key);
+#define GET_CONTROL_VALUE(key)	(key = c_##key->GetValue());
+#define SET_CONTROL_SELECTION(key)	c_##key->SetSelection(key);
 #define SET_CONTROL_SELECTION_DEFAULT(key)	c_##key->SetSelection(d.c_##key->GetSelection());
-#define GET_CONTROL_SELECTION(key)	(##key = c_##key->GetSelection());
-#define SET_CONTROL_COLOUR(key)	c_##key->SetColour(##key);
+#define GET_CONTROL_SELECTION(key)	(key = c_##key->GetSelection());
+#define SET_CONTROL_COLOUR(key)	c_##key->SetColour(key);
 #define SET_CONTROL_COLOUR_DEFAULT(key)	c_##key->SetColour(d.c_##key->GetColour());
-#define GET_CONTROL_COLOUR(key)	(##key = c_##key->GetColour().GetAsString(wxC2S_HTML_SYNTAX));
+#define GET_CONTROL_COLOUR(key)	(key = c_##key->GetColour().GetAsString(wxC2S_HTML_SYNTAX));
 
 Preferences::Preferences( wxWindow* parent, bool keepDefaults )
 :
@@ -127,23 +127,23 @@ void Preferences::OnSave( wxCommandEvent& e )
 
 
 #define PREF_WRITE_VALUE(NAME)	\
-	config->Write(#NAME, NAME);
+	config->Write(_T(#NAME), NAME);
 #define PREF_WRITE_VALUE_LONG(NAME)	\
-	config->Write(#NAME, (long) NAME);
+	config->Write(_T(#NAME), (long) NAME);
 
-	config->SetPath("/Saving/Codec");
+	config->SetPath(_T("/Saving/Codec"));
 	PREF_WRITE_VALUE(SavingCodecUseCombo)
 	PREF_WRITE_VALUE_LONG(SavingCodecCombo)
 	PREF_WRITE_VALUE(SavingCodecUseFOURCC)
 	PREF_WRITE_VALUE(SavingCodecFOURCC)
-	config->SetPath("/Saving/Size");
+	config->SetPath(_T("/Saving/Size"));
 	PREF_WRITE_VALUE(SavingSizeOverride)
 	PREF_WRITE_VALUE(SavingSizeWidth)
 	PREF_WRITE_VALUE(SavingSizeHeight)
-	config->SetPath("/Saving/Fps");
+	config->SetPath(_T("/Saving/Fps"));
 	PREF_WRITE_VALUE_LONG(SavingFpsDefault)
 	PREF_WRITE_VALUE(SavingFpsOverride)
-	config->SetPath("/Color");
+	config->SetPath(_T("/Color"));
 	PREF_WRITE_VALUE(ColorContourBorderDraw)
 	PREF_WRITE_VALUE(ColorContourBorderColor)
 	PREF_WRITE_VALUE_LONG(ColorContourBorderWidth)
@@ -156,7 +156,7 @@ void Preferences::OnSave( wxCommandEvent& e )
 	PREF_WRITE_VALUE(ColorContourSelectedColor)
 	PREF_WRITE_VALUE(ColorFeatureColor)
 
-	config->SetPath("/");
+	config->SetPath(_T("/"));
 	EndModal(wxID_OK);
 }
 
@@ -169,29 +169,29 @@ void Preferences::InitializeOnDemand()
 
 
 #define PREF_INIT_VALUE(NAME)	\
-	(##NAME) = config->Read(#NAME, d.c_##NAME->GetValue());
+	(NAME) = config->Read(_T(#NAME), d.c_##NAME->GetValue());
 #define PREF_INIT_VALUE_LONG(NAME)	\
-	(##NAME) = config->Read(#NAME, (long) d.c_##NAME->GetValue());
+	(NAME) = config->Read(_T(#NAME), (long) d.c_##NAME->GetValue());
 #define PREF_INIT_BOOL(NAME)	\
-	(##NAME) = Config_ReadBool(config, #NAME, d.c_##NAME->GetValue());
+	(NAME) = Config_ReadBool(config, _T(#NAME), d.c_##NAME->GetValue());
 #define PREF_INIT_SELECTION(NAME)	\
-	(##NAME) = config->Read(#NAME, (long) d.c_##NAME->GetSelection());
+	(NAME) = config->Read(_T(#NAME), (long) d.c_##NAME->GetSelection());
 #define PREF_INIT_COLOUR(NAME)	\
-	(##NAME) = config->Read(#NAME, d.c_##NAME->GetColour().GetAsString(wxC2S_HTML_SYNTAX));
+	(NAME) = config->Read(_T(#NAME), d.c_##NAME->GetColour().GetAsString(wxC2S_HTML_SYNTAX));
 
-	config->SetPath("/Saving/Codec");
+	config->SetPath(_T("/Saving/Codec"));
 	PREF_INIT_BOOL(SavingCodecUseCombo)
 	PREF_INIT_SELECTION(SavingCodecCombo)
 	PREF_INIT_BOOL(SavingCodecUseFOURCC)
 	PREF_INIT_VALUE(SavingCodecFOURCC)
-	config->SetPath("/Saving/Size");
+	config->SetPath(_T("/Saving/Size"));
 	PREF_INIT_BOOL(SavingSizeOverride)
 	PREF_INIT_VALUE(SavingSizeWidth)
 	PREF_INIT_VALUE(SavingSizeHeight)
-	config->SetPath("/Saving/Fps");
+	config->SetPath(_T("/Saving/Fps"));
 	PREF_INIT_VALUE_LONG(SavingFpsDefault)
 	PREF_INIT_BOOL(SavingFpsOverride)
-	config->SetPath("/Color");
+	config->SetPath(_T("/Color"));
 	PREF_INIT_BOOL(ColorContourBorderDraw)
 	PREF_INIT_COLOUR(ColorContourBorderColor)
 	PREF_INIT_VALUE_LONG(ColorContourBorderWidth)
@@ -204,7 +204,7 @@ void Preferences::InitializeOnDemand()
 	PREF_INIT_COLOUR(ColorContourSelectedColor)
 	PREF_INIT_COLOUR(ColorFeatureColor)
 
-	config->SetPath("/");
+	config->SetPath(_T("/"));
 	initialized = true;
 }
 

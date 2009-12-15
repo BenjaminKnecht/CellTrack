@@ -102,7 +102,8 @@ void MyCanvas::SetImage( const ImagePlus& img_ )
 	ResetSelectedContours();
 	imgwidth = img.orig->width;
 	imgheight = img.orig->height;
-	OnSize(wxSizeEvent());
+	wxSizeEvent dummy = wxSizeEvent();
+	OnSize(dummy);
 }
 void MyCanvas::DrawContours()
 {
@@ -155,7 +156,7 @@ void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoi
 				dc->DrawRectangle(ps[i]-MyPoint(Preferences::GetColorContourCornerWidth())/2, MyPoint(Preferences::GetColorContourCornerWidth()).ToSize());
 		}
 		dc->SetTextForeground(Preferences::GetColorContourBorderColor());
-		dc->DrawText(wxString::Format("%d", label), ps[0]);
+		dc->DrawText(wxString::Format(_T("%d"), label), ps[0]);
 		delete[] ps;
 }
 void MyCanvas::DrawRoi(bool lastPointOnly)
@@ -272,7 +273,8 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 				ShiftContour(img.contourArray[draggedContour], shift);
 				dragStart = newPoint;
 				draggedContourRect = newRect;
-				OnSize(wxSizeEvent());
+                wxSizeEvent dummy = wxSizeEvent();
+                OnSize(dummy);
 			}
 			if (!e.LeftIsDown()){
 				selectedContours[draggedContour] = !selectedContours[draggedContour];
@@ -319,7 +321,8 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 				CvPoint *p = (CvPoint*) cvGetSeqElem(img.contourArray[dv.x], dv.y);
 				p->x = newPoint.x;
 				p->y = newPoint.y;
-				OnSize(wxSizeEvent());
+                wxSizeEvent dummy = wxSizeEvent();
+                OnSize(dummy);
 			}
 			if (!e.LeftIsDown()){
 				OnDragVertex();
@@ -371,7 +374,7 @@ MyPoint MyCanvas::GetVertexHit(const MyPoint &p, int fuzz){
 #define DEFINE_LISTENER(X)	\
 	void MyCanvas::Set##X##Listener( PluginBase* p ) { \
 	if (X##Listener && p) \
-		wxLogError("canvas already had a %s listener.", #X); \
+		wxLogError(_T("canvas already had a %s listener."), #X); \
 	X##Listener = p; \
 }
 DEFINE_LISTENER(Mouse)

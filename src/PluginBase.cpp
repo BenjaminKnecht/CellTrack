@@ -49,7 +49,7 @@ void PluginBase::OnCancel()
 void PluginBase::OnRedraw(  )
 {
 	if ( IsPreviewOn() && cm && cm->GetFrameCount())
-		ProcessImage(&cm->img, cm->GetPos());	
+		ProcessImage(&cm->img, cm->GetPos());
 }
 void PluginBase::OnOK()
 {
@@ -75,12 +75,12 @@ void PluginBase::OnOK()
 void PluginBase::CreateProgressDlg(int maxFrames)
 {
 	DestroyProgressDlg();
-	progressDlg = new wxProgressDialog(name+" processing...", wxString::Format("Frame 0 of %d...", cm->GetFrameCount()), maxFrames>=0 ? maxFrames : cm->GetFrameCount(), win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()), maxFrames>=0 ? maxFrames : cm->GetFrameCount(), win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 }
 bool PluginBase::UpdateProgressDlg(int frame){
 	if (!progressDlg)
 		CreateProgressDlg();
-	return progressDlg->Update(frame+1, wxString::Format("Frame %d of %d...", frame+1, cm->GetFrameCount()));
+	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, cm->GetFrameCount()));
 }
 void PluginBase::DestroyProgressDlg(){
 	if (progressDlg){

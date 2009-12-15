@@ -6,7 +6,9 @@
 #include <stdio.h>
 #include "MyPoint.h"
 #include <vector>
+#ifndef __GNUG__
 #include <wx/msw/winundef.h>
+#endif
 
 #define forto(i,n) for(i=0; i<n; i++)
 #define fromto(i,j,n) for(i=j; i<n; i++)

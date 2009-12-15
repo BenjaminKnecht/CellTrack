@@ -75,7 +75,7 @@ void CamShiftPlugin::OnOK()
 		CreateProgressDlg(numContours*frameCount);
 		bool cont=true;
 		for (int j=0; j<numContours && cont; j++){
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format("Cell %d of %d, Frame %d of %d", j+1,numContours, i+1, frameCount))); i++){
+			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
 				ProcessStatic(j, cm->book[i], cm->book[useFirst ? 0 : i-1], hsizes, criteria,
 		planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
 			}

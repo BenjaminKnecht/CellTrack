@@ -27,7 +27,7 @@ void TrackContoursPlugin::DoPreview()
 }
 void TrackContoursPlugin::ShowProcessInfo()
 {
-	win->SetStatusText(WXFORMAT("avg iterations: %.1f", avgiterations));
+	win->SetStatusText(WXFORMAT(_T("avg iterations: %.1f"), avgiterations));
 }
 void TrackContoursPlugin::FetchParams()
 {
@@ -71,7 +71,7 @@ void TrackContoursPlugin::OnOK()
 		bool cont=true;
 		for (int j=0; j<numContours && cont; j++){
 			oimg = cm->book[0];
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format("Cell %d of %d, Frame %d of %d", j+1,numContours, i+1, frameCount))); i++){
+			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
 				img = cm->book[i];
 				int iterations=0;
 				TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);

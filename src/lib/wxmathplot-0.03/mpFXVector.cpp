@@ -65,7 +65,7 @@ bool mpFXVector::GetNextXY(double & x, double & y)
 void mpFXVector::Plot(wxDC & dc, mpWindow & w) {
 	wxString name = m_name;
 	if (m_xs.size())
-		m_name = "";
+		m_name = _T("");
 	mpFXYVector::Plot(dc, w);
 	if (m_xs.size() && !name.IsEmpty()) {
 		m_name = name;

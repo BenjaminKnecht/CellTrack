@@ -16,7 +16,7 @@ class MyCanvas : public wxPanel
 public:
 	MyCanvas(void);
 	~MyCanvas(void);
-	MyCanvas(wxWindow* parent_, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, 
+	MyCanvas(wxWindow* parent_, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition,
 				   const wxSize& size = wxDefaultSize, long style = wxTAB_TRAVERSAL, const wxString& name=wxT("MyCanvas"));
 	void OnPaint( wxPaintEvent &event );
     void OnEraseBackGround(wxEraseEvent& event) {};
@@ -85,7 +85,7 @@ public:
 	void SetImage(const ImagePlus& img_);
 	void DrawContours();
 	void DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected=false, int label=0);
-	static void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift=wxPoint(0,0), wxRealPoint scale=wxRealPoint(1,1), bool selected=false, const wxColor *borderColor=NULL, int label=0);
+	static void DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift=wxPoint(0,0), wxRealPoint scale=wxRealPoint(1,1), bool selected=false, const wxColor *borderColor=NULL, int label=0);
 	void SetContourSelection(int index, bool selected);
 
 };

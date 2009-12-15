@@ -33,10 +33,8 @@ SET( CELLTRACK_SRC_FILES
   plugins/ResizeMovieSidebar.cpp
   plugins/CamShiftSidebar.cpp
   plugins/FindFeaturesSidebar.cpp
-  plugins/ResizePlugin.cpp
   plugins/CombinedTrackingPlugin.cpp
   plugins/ImproveContoursPlugin.cpp
-  plugins/ResizeSidebar.cpp
   plugins/CombinedTrackingSidebar.cpp
   plugins/ImproveContoursSidebar.cpp
   plugins/CropPlugin.cpp

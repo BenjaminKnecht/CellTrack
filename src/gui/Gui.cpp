@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 17 2007)
+// C++ code generated with wxFormBuilder (version Dec 29 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -24,167 +24,208 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	menu_file = new wxMenu();
 	wxMenuItem* m_menuItem1;
 	m_menuItem1 = new wxMenuItem( menu_file, ID_OPEN_MOVIE, wxString( _("Open movie file") ) + wxT('\t') + wxT("Ctrl+O"), wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem1);
+	menu_file->Append( m_menuItem1 );
+	
 	wxMenuItem* m_menuItem6;
 	m_menuItem6 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Open image files") ) + wxT('\t') + wxT("Ctrl+Shift+O"), wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem6);
+	menu_file->Append( m_menuItem6 );
+	
 	wxMenuItem* m_menuItem12;
 	m_menuItem12 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Save movie as..") ) + wxT('\t') + wxT("Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem12);
+	menu_file->Append( m_menuItem12 );
 	m_menuItem12->Enable( false );
 	
 	wxMenuItem* m_menuItem123;
 	m_menuItem123 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Save current frame as..") ) + wxT('\t') + wxT("Ctrl+Shift+S"), wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem123);
+	menu_file->Append( m_menuItem123 );
 	m_menuItem123->Enable( false );
 	
 	wxMenuItem* m_menuItem42;
 	m_menuItem42 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Import Tracking Data") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem42);
+	menu_file->Append( m_menuItem42 );
+	
 	wxMenuItem* m_menuItem4;
 	m_menuItem4 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Preferences") ) + wxT('\t') + wxT("Ctrl+K"), wxEmptyString, wxITEM_NORMAL );
-	menu_file->Append(m_menuItem4);
+	menu_file->Append( m_menuItem4 );
+	
 	m_menubar1->Append( menu_file, _("File") );
 	
 	menu_go = new wxMenu();
 	wxMenuItem* m_menuItem81;
 	m_menuItem81 = new wxMenuItem( menu_go, wxID_ANY, wxString( _("Next frame") ) + wxT('\t') + wxT("Alt+Right"), wxEmptyString, wxITEM_NORMAL );
-	menu_go->Append(m_menuItem81);
+	menu_go->Append( m_menuItem81 );
+	
 	wxMenuItem* m_menuItem91;
 	m_menuItem91 = new wxMenuItem( menu_go, wxID_ANY, wxString( _("Previous frame") ) + wxT('\t') + wxT("Alt+Left"), wxEmptyString, wxITEM_NORMAL );
-	menu_go->Append(m_menuItem91);
+	menu_go->Append( m_menuItem91 );
+	
 	wxMenuItem* m_menuItem111;
 	m_menuItem111 = new wxMenuItem( menu_go, wxID_ANY, wxString( _("First frame") ) + wxT('\t') + wxT("Alt+Up"), wxEmptyString, wxITEM_NORMAL );
-	menu_go->Append(m_menuItem111);
+	menu_go->Append( m_menuItem111 );
+	
 	wxMenuItem* m_menuItem1111;
 	m_menuItem1111 = new wxMenuItem( menu_go, wxID_ANY, wxString( _("Last frame") ) + wxT('\t') + wxT("Alt+Down"), wxEmptyString, wxITEM_NORMAL );
-	menu_go->Append(m_menuItem1111);
+	menu_go->Append( m_menuItem1111 );
+	
 	wxMenuItem* m_menuItem11111;
 	m_menuItem11111 = new wxMenuItem( menu_go, wxID_ANY, wxString( _("Play/pause movie") ) + wxT('\t') + wxT("Ctrl+Enter"), wxEmptyString, wxITEM_NORMAL );
-	menu_go->Append(m_menuItem11111);
+	menu_go->Append( m_menuItem11111 );
+	
 	m_menubar1->Append( menu_go, _("Go") );
 	
 	menu_image = new wxMenu();
 	wxMenuItem* m_menuItem8;
 	m_menuItem8 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Resize") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem8);
+	menu_image->Append( m_menuItem8 );
+	
 	wxMenuItem* m_menuItem11;
 	m_menuItem11 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Crop") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem11);
+	menu_image->Append( m_menuItem11 );
+	
 	wxMenuItem* m_menuItem9;
 	m_menuItem9 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Smooth") ) + wxT('\t') + wxT("Ctrl+M"), wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem9);
+	menu_image->Append( m_menuItem9 );
+	
 	wxMenuItem* m_menuItem111112;
 	m_menuItem111112 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Delete current frame") ) + wxT('\t') + wxT("Ctrl+Back"), wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem111112);
+	menu_image->Append( m_menuItem111112 );
+	
 	wxMenuItem* m_menuItem1111121;
 	m_menuItem1111121 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Delete preceeding frames") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem1111121);
+	menu_image->Append( m_menuItem1111121 );
+	
 	wxMenuItem* m_menuItem1111122;
 	m_menuItem1111122 = new wxMenuItem( menu_image, wxID_ANY, wxString( _("Delete proceeding frames") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_image->Append(m_menuItem1111122);
+	menu_image->Append( m_menuItem1111122 );
+	
 	m_menubar1->Append( menu_image, _("Image") );
 	
 	menu_contours = new wxMenu();
 	wxMenuItem* m_menuItem2;
 	m_menuItem2 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Detect cell boundaries") ) + wxT('\t') + wxT("Ctrl+D"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem2);
+	menu_contours->Append( m_menuItem2 );
+	
 	wxMenuItem* m_menuItem21;
 	m_menuItem21 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Filter cells") ) + wxT('\t') + wxT("Ctrl+F"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem21);
+	menu_contours->Append( m_menuItem21 );
+	
 	wxMenuItem* m_menuItem121;
 	m_menuItem121 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Edit cells") ) + wxT('\t') + wxT("Ctrl+E"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem121);
+	menu_contours->Append( m_menuItem121 );
+	
 	wxMenuItem* m_menuItem7;
 	m_menuItem7 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Improve boundaries") ) + wxT('\t') + wxT("Ctrl+I"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem7);
+	menu_contours->Append( m_menuItem7 );
+	
 	wxMenuItem* m_menuItem71;
 	m_menuItem71 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Resample boundaries") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem71);
+	menu_contours->Append( m_menuItem71 );
 	
+	menu_contours->AppendSeparator();
 	
 	wxMenuItem* m_menuItem14;
 	m_menuItem14 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Find intracellular features") ) + wxT('\t') + wxT("Ctrl+G"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem14);
+	menu_contours->Append( m_menuItem14 );
+	
 	wxMenuItem* m_menuItem10;
 	m_menuItem10 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Background subtraction") ) + wxT('\t') + wxT("Ctrl+B"), wxEmptyString, wxITEM_NORMAL );
-	menu_contours->Append(m_menuItem10);
+	menu_contours->Append( m_menuItem10 );
+	
 	m_menubar1->Append( menu_contours, _("Detection") );
 	
 	menu_track = new wxMenu();
 	wxMenuItem* m_menuItem38;
 	m_menuItem38 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("Template-matching") ) + wxT('\t') + wxT("Ctrl+M"), wxEmptyString, wxITEM_NORMAL );
-	menu_track->Append(m_menuItem38);
+	menu_track->Append( m_menuItem38 );
+	
 	wxMenuItem* m_menuItem39;
 	m_menuItem39 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("CAM-Shift tracking") ) + wxT('\t') + wxT("Ctrl+C"), wxEmptyString, wxITEM_NORMAL );
-	menu_track->Append(m_menuItem39);
+	menu_track->Append( m_menuItem39 );
+	
 	wxMenuItem* m_menuItem382;
 	m_menuItem382 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("Optical flow tracking") ) + wxT('\t') + wxT("Ctrl+L"), wxEmptyString, wxITEM_NORMAL );
-	menu_track->Append(m_menuItem382);
+	menu_track->Append( m_menuItem382 );
+	
 	wxMenuItem* m_menuItem16;
 	m_menuItem16 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("Extended Snake tracking") ) + wxT('\t') + wxT("Ctrl+A"), wxEmptyString, wxITEM_NORMAL );
-	menu_track->Append(m_menuItem16);
+	menu_track->Append( m_menuItem16 );
+	
 	wxMenuItem* m_menuItem161;
 	m_menuItem161 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("Combined Tracking") ) + wxT('\t') + wxT("Ctrl+T"), wxEmptyString, wxITEM_NORMAL );
-	menu_track->Append(m_menuItem161);
+	menu_track->Append( m_menuItem161 );
+	
 	m_menubar1->Append( menu_track, _("Tracking") );
 	
 	menu_analyze = new wxMenu();
 	m_menu4 = new wxMenu();
 	wxMenuItem* m_menuItem383;
 	m_menuItem383 = new wxMenuItem( m_menu4, wxID_ANY, wxString( _("Plot speed") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu4->Append(m_menuItem383);
+	m_menu4->Append( m_menuItem383 );
+	
 	wxMenuItem* m_menuItem56;
 	m_menuItem56 = new wxMenuItem( m_menu4, wxID_ANY, wxString( _("Export speed data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu4->Append(m_menuItem56);
+	m_menu4->Append( m_menuItem56 );
+	
 	menu_analyze->Append( -1, _("Cell Speed"), m_menu4 );
 	
 	m_menu5 = new wxMenu();
 	wxMenuItem* m_menuItem391;
 	m_menuItem391 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Plot area") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu5->Append(m_menuItem391);
+	m_menu5->Append( m_menuItem391 );
+	
 	wxMenuItem* m_menuItem58;
 	m_menuItem58 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Plot change in area") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu5->Append(m_menuItem58);
+	m_menu5->Append( m_menuItem58 );
+	
 	wxMenuItem* m_menuItem57;
 	m_menuItem57 = new wxMenuItem( m_menu5, wxID_ANY, wxString( _("Export area data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu5->Append(m_menuItem57);
+	m_menu5->Append( m_menuItem57 );
+	
 	menu_analyze->Append( -1, _("Cell Area"), m_menu5 );
 	
 	m_menu41 = new wxMenu();
 	wxMenuItem* m_menuItem3831;
 	m_menuItem3831 = new wxMenuItem( m_menu41, wxID_ANY, wxString( _("Plot deformation") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu41->Append(m_menuItem3831);
+	m_menu41->Append( m_menuItem3831 );
+	
 	wxMenuItem* m_menuItem561;
 	m_menuItem561 = new wxMenuItem( m_menu41, wxID_ANY, wxString( _("Export deformation data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu41->Append(m_menuItem561);
+	m_menu41->Append( m_menuItem561 );
+	
 	menu_analyze->Append( -1, _("Cell Deformation"), m_menu41 );
 	
 	m_menu2 = new wxMenu();
 	wxMenuItem* m_menuItem41;
 	m_menuItem41 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("View tracking") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append(m_menuItem41);
+	m_menu2->Append( m_menuItem41 );
+	
 	wxMenuItem* m_menuItem36;
 	m_menuItem36 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Save as image") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append(m_menuItem36);
+	m_menu2->Append( m_menuItem36 );
+	
 	wxMenuItem* m_menuItem35;
 	m_menuItem35 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Export tracking data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append(m_menuItem35);
+	m_menu2->Append( m_menuItem35 );
+	
 	wxMenuItem* m_menuItem421;
 	m_menuItem421 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Import tracking data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu2->Append(m_menuItem421);
+	m_menu2->Append( m_menuItem421 );
+	
 	menu_analyze->Append( -1, _("Tracking"), m_menu2 );
 	
 	m_menu1 = new wxMenu();
 	wxMenuItem* m_menuItem40;
 	m_menuItem40 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("View trajectory") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append(m_menuItem40);
+	m_menu1->Append( m_menuItem40 );
+	
 	wxMenuItem* m_menuItem381;
 	m_menuItem381 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Save as image") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append(m_menuItem381);
+	m_menu1->Append( m_menuItem381 );
+	
 	wxMenuItem* m_menuItem37;
 	m_menuItem37 = new wxMenuItem( m_menu1, wxID_ANY, wxString( _("Export trajectory data") ) , wxEmptyString, wxITEM_NORMAL );
-	m_menu1->Append(m_menuItem37);
+	m_menu1->Append( m_menuItem37 );
+	
 	menu_analyze->Append( -1, _("Trajectory"), m_menu1 );
 	
 	m_menubar1->Append( menu_analyze, _("Analysis") );
@@ -192,10 +233,12 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	menu_help = new wxMenu();
 	wxMenuItem* m_menuItem122;
 	m_menuItem122 = new wxMenuItem( menu_help, wxID_ANY, wxString( _("Help contents") ) + wxT('\t') + wxT("F1"), wxEmptyString, wxITEM_NORMAL );
-	menu_help->Append(m_menuItem122);
+	menu_help->Append( m_menuItem122 );
+	
 	wxMenuItem* m_menuItem13;
 	m_menuItem13 = new wxMenuItem( menu_help, wxID_ANY, wxString( _("About CellTrack") ) , wxEmptyString, wxITEM_NORMAL );
-	menu_help->Append(m_menuItem13);
+	menu_help->Append( m_menuItem13 );
+	
 	m_menubar1->Append( menu_help, _("Help") );
 	
 	this->SetMenuBar( m_menubar1 );
@@ -443,14 +486,14 @@ MyFrame_::~MyFrame_()
 	m_prev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPrev ), NULL, this );
 	m_next->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnNext ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
-	m_slider->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
+	m_slider->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 }
 
 SmoothSidebar_::SmoothSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
@@ -607,16 +650,16 @@ SmoothSidebar_::SmoothSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& 
 	this->Layout();
 	
 	// Connect Events
-	method->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	blur1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	blur2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss3->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss4->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	median1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	bilateral1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	bilateral2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
+	method->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SmoothSidebar_::OnChangeChoicebook ), NULL, this );
+	blur1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	blur2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss3->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChangeComm ), NULL, this );
+	gauss4->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChangeComm ), NULL, this );
+	median1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	bilateral1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	bilateral2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnCancel ), NULL, this );
@@ -625,16 +668,16 @@ SmoothSidebar_::SmoothSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& 
 SmoothSidebar_::~SmoothSidebar_()
 {
 	// Disconnect Events
-	method->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	blur1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	blur2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss3->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	gauss4->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	median1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	bilateral1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
-	bilateral2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChange ), NULL, this );
+	method->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SmoothSidebar_::OnChangeChoicebook ), NULL, this );
+	blur1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	blur2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	gauss3->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChangeComm ), NULL, this );
+	gauss4->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SmoothSidebar_::OnChangeComm ), NULL, this );
+	median1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	bilateral1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
+	bilateral2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SmoothSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SmoothSidebar_::OnCancel ), NULL, this );
@@ -747,14 +790,14 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 	this->Layout();
 	
 	// Connect Events
-	thresh2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	thresh1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	aperture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	dilate->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	erode->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	approx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	intra->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	clean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
+	thresh2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	thresh1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	aperture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	dilate->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	erode->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	approx->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	intra->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	clean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnCancel ), NULL, this );
@@ -763,14 +806,14 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 FindContoursSidebar_::~FindContoursSidebar_()
 {
 	// Disconnect Events
-	thresh2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	thresh1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	aperture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	dilate->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	erode->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	approx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	intra->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
-	clean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChange ), NULL, this );
+	thresh2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	thresh1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	aperture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	dilate->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	erode->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
+	approx->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	intra->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
+	clean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnCancel ), NULL, this );
@@ -839,10 +882,10 @@ CropSidebar_::CropSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 	this->Layout();
 	
 	// Connect Events
-	fromx->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	fromy->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
+	fromx->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	fromy->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CropSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CropSidebar_::OnCancel ), NULL, this );
 }
@@ -850,10 +893,10 @@ CropSidebar_::CropSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& pos,
 CropSidebar_::~CropSidebar_()
 {
 	// Disconnect Events
-	fromx->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	fromy->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
-	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChange ), NULL, this );
+	fromx->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	fromy->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
+	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CropSidebar_::OnChangeSpin ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CropSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CropSidebar_::OnCancel ), NULL, this );
 }
@@ -1021,10 +1064,10 @@ NormalizeContoursSidebar_::NormalizeContoursSidebar_( wxWindow* parent, wxWindow
 	this->Layout();
 	
 	// Connect Events
-	isMinLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	minLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	isMaxLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	maxLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
+	isMinLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangeComm ), NULL, this );
+	minLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMaxLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangeComm ), NULL, this );
+	maxLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button122->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnOK ), NULL, this );
 	m_button1313->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnCancel ), NULL, this );
@@ -1034,10 +1077,10 @@ NormalizeContoursSidebar_::NormalizeContoursSidebar_( wxWindow* parent, wxWindow
 NormalizeContoursSidebar_::~NormalizeContoursSidebar_()
 {
 	// Disconnect Events
-	isMinLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	minLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	isMaxLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
-	maxLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChange ), NULL, this );
+	isMinLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangeComm ), NULL, this );
+	minLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMaxLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangeComm ), NULL, this );
+	maxLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( NormalizeContoursSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button122->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnOK ), NULL, this );
 	m_button1313->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnCancel ), NULL, this );
@@ -1137,12 +1180,12 @@ FilterContoursSidebar_::FilterContoursSidebar_( wxWindow* parent, wxWindowID id,
 	this->Layout();
 	
 	// Connect Events
-	isMinArea->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	minArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	isMaxArea->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	maxArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	isMinDist->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	minDist->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
+	isMinArea->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	minArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMaxArea->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	maxArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMinDist->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	minDist->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnCancel ), NULL, this );
@@ -1151,12 +1194,12 @@ FilterContoursSidebar_::FilterContoursSidebar_( wxWindow* parent, wxWindowID id,
 FilterContoursSidebar_::~FilterContoursSidebar_()
 {
 	// Disconnect Events
-	isMinArea->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	minArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	isMaxArea->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	maxArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	isMinDist->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
-	minDist->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChange ), NULL, this );
+	isMinArea->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	minArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMaxArea->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	maxArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
+	isMinDist->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangeComm ), NULL, this );
+	minDist->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FilterContoursSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FilterContoursSidebar_::OnCancel ), NULL, this );
@@ -1391,13 +1434,13 @@ FindFeaturesSidebar_::FindFeaturesSidebar_( wxWindow* parent, wxWindowID id, con
 	this->Layout();
 	
 	// Connect Events
-	quality->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	minDist->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	harrisK->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	blockSize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	maxCount->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	method->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	clean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
+	quality->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	minDist->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	harrisK->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	blockSize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChangeSpin ), NULL, this );
+	maxCount->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChangeSpin ), NULL, this );
+	method->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	clean->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnCancel ), NULL, this );
@@ -1406,13 +1449,13 @@ FindFeaturesSidebar_::FindFeaturesSidebar_( wxWindow* parent, wxWindowID id, con
 FindFeaturesSidebar_::~FindFeaturesSidebar_()
 {
 	// Disconnect Events
-	quality->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	minDist->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	harrisK->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	blockSize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	maxCount->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	method->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
-	clean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChange ), NULL, this );
+	quality->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	minDist->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	harrisK->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	blockSize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChangeSpin ), NULL, this );
+	maxCount->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindFeaturesSidebar_::OnChangeSpin ), NULL, this );
+	method->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
+	clean->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( FindFeaturesSidebar_::OnCancel ), NULL, this );
@@ -1544,14 +1587,14 @@ SubtractBackgroundSidebar_::SubtractBackgroundSidebar_( wxWindow* parent, wxWind
 	
 	// Connect Events
 	method->Connect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	numFrames->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	win_size->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	n_gauss->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	bg_threshold->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	std_threshold->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	minArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	weight_init->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	variance_init->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
+	numFrames->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	win_size->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	n_gauss->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	bg_threshold->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	std_threshold->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	minArea->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	weight_init->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	variance_init->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnCancel ), NULL, this );
@@ -1561,14 +1604,14 @@ SubtractBackgroundSidebar_::~SubtractBackgroundSidebar_()
 {
 	// Disconnect Events
 	method->Disconnect( wxEVT_COMMAND_CHOICEBOOK_PAGE_CHANGED, wxChoicebookEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	numFrames->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	win_size->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	n_gauss->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	bg_threshold->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	std_threshold->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	minArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	weight_init->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
-	variance_init->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChange ), NULL, this );
+	numFrames->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	win_size->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	n_gauss->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	bg_threshold->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	std_threshold->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	minArea->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
+	weight_init->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangeComm ), NULL, this );
+	variance_init->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( SubtractBackgroundSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( SubtractBackgroundSidebar_::OnCancel ), NULL, this );
@@ -1710,14 +1753,14 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 	this->Layout();
 	
 	// Connect Events
-	alpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	beta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	gamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
+	alpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	beta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	gamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
+	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnCancel ), NULL, this );
@@ -1726,14 +1769,14 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 ImproveContoursSidebar_::~ImproveContoursSidebar_()
 {
 	// Disconnect Events
-	alpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	beta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	gamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChange ), NULL, this );
+	alpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	beta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	gamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
+	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnCancel ), NULL, this );
@@ -1834,10 +1877,10 @@ MatchTemplateSidebar_::MatchTemplateSidebar_( wxWindow* parent, wxWindowID id, c
 	this->Layout();
 	
 	// Connect Events
-	method->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
+	method->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangeComm ), NULL, this );
+	useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangeComm ), NULL, this );
+	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChangeSpin ), NULL, this );
+	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnCancel ), NULL, this );
@@ -1847,10 +1890,10 @@ MatchTemplateSidebar_::MatchTemplateSidebar_( wxWindow* parent, wxWindowID id, c
 MatchTemplateSidebar_::~MatchTemplateSidebar_()
 {
 	// Disconnect Events
-	method->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
-	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChange ), NULL, this );
+	method->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangeComm ), NULL, this );
+	useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangeComm ), NULL, this );
+	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChangeSpin ), NULL, this );
+	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( MatchTemplateSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MatchTemplateSidebar_::OnCancel ), NULL, this );
@@ -1951,10 +1994,10 @@ CamShiftSidebar_::CamShiftSidebar_( wxWindow* parent, wxWindowID id, const wxPoi
 	this->Layout();
 	
 	// Connect Events
-	hsize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
+	hsize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChangeSpin ), NULL, this );
+	useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChangeComm ), NULL, this );
+	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CamShiftSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnCancel ), NULL, this );
@@ -1964,10 +2007,10 @@ CamShiftSidebar_::CamShiftSidebar_( wxWindow* parent, wxWindowID id, const wxPoi
 CamShiftSidebar_::~CamShiftSidebar_()
 {
 	// Disconnect Events
-	hsize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
-	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CamShiftSidebar_::OnChange ), NULL, this );
+	hsize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChangeSpin ), NULL, this );
+	useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChangeComm ), NULL, this );
+	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CamShiftSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CamShiftSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CamShiftSidebar_::OnCancel ), NULL, this );
@@ -2125,15 +2168,15 @@ LKContoursSidebar_::LKContoursSidebar_( wxWindow* parent, wxWindowID id, const w
 	this->Layout();
 	
 	// Connect Events
-	level->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	fixOutliers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	outliers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	intwin->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
+	level->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	fixOutliers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	outliers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	intwin->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnCancel ), NULL, this );
@@ -2143,15 +2186,15 @@ LKContoursSidebar_::LKContoursSidebar_( wxWindow* parent, wxWindowID id, const w
 LKContoursSidebar_::~LKContoursSidebar_()
 {
 	// Disconnect Events
-	level->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	fixOutliers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	outliers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	intwin->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChange ), NULL, this );
+	level->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	fixOutliers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	outliers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
+	intwin->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( LKContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( LKContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( LKContoursSidebar_::OnCancel ), NULL, this );
@@ -2349,21 +2392,21 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	this->Layout();
 	
 	// Connect Events
-	oalpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	alpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	obeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	beta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	ogamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	gamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	oomega->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	ozeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	oteta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
+	oalpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	alpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	obeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	beta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	ogamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	gamma->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	oomega->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	ozeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	oteta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnCancel ), NULL, this );
@@ -2373,21 +2416,21 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 TrackContoursSidebar_::~TrackContoursSidebar_()
 {
 	// Disconnect Events
-	oalpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	alpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	obeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	beta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	ogamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	gamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	oomega->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	ozeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	oteta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
-	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( TrackContoursSidebar_::OnChange ), NULL, this );
+	oalpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	alpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	obeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	beta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	ogamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	gamma->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	oomega->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	ozeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	oteta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
+	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnCancel ), NULL, this );
@@ -2873,27 +2916,27 @@ CombinedTrackingSidebar_::CombinedTrackingSidebar_( wxWindow* parent, wxWindowID
 	this->Layout();
 	
 	// Connect Events
-	initial_method->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useLK->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useAS->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useNC->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_method->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_hsize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_level->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_fixOutliers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_outliers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_intwin->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
+	initial_method->Connect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useLK->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useAS->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useNC->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_method->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	mt_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_hsize->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_useFirst->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	cs_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_level->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_fixOutliers->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_outliers->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_intwin->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
 	as_oalpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_alpha->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_obeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
@@ -2903,16 +2946,16 @@ CombinedTrackingSidebar_::CombinedTrackingSidebar_( wxWindow* parent, wxWindowID
 	as_oomega->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_ozeta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_oteta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_isMinLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_minLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_isMaxLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_maxLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
+	as_gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	as_useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	as_width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_isMinLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_minLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	nc_isMaxLength->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_maxLength->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangePreview ), NULL, this );
 	m_button122->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnOK ), NULL, this );
 	m_button131->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnCancel ), NULL, this );
@@ -2922,27 +2965,27 @@ CombinedTrackingSidebar_::CombinedTrackingSidebar_( wxWindow* parent, wxWindowID
 CombinedTrackingSidebar_::~CombinedTrackingSidebar_()
 {
 	// Disconnect Events
-	initial_method->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useLK->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useAS->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	useNC->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_method->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	mt_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_hsize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	cs_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_level->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_fixOutliers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_outliers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_intwin->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	lk_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
+	initial_method->Disconnect( wxEVT_COMMAND_RADIOBOX_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useLK->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useAS->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	useNC->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_method->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	mt_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	mt_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_hsize->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_useFirst->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	cs_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	cs_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_level->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_fixOutliers->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_outliers->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	lk_intwin->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	lk_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
 	as_oalpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_alpha->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_obeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
@@ -2952,16 +2995,16 @@ CombinedTrackingSidebar_::~CombinedTrackingSidebar_()
 	as_oomega->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_ozeta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
 	as_oteta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	as_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_isMinLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_minLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_isMaxLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
-	nc_maxLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChange ), NULL, this );
+	as_gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	as_useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	as_width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	as_epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_isMinLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_minLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
+	nc_isMaxLength->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangeComm ), NULL, this );
+	nc_maxLength->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( CombinedTrackingSidebar_::OnChangeSpin ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnChangePreview ), NULL, this );
 	m_button122->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnOK ), NULL, this );
 	m_button131->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CombinedTrackingSidebar_::OnCancel ), NULL, this );
@@ -3269,7 +3312,7 @@ TemporaryPanel::TemporaryPanel( wxWindow* parent, wxWindowID id, const wxPoint& 
 	from = new wxTextCtrl( this, wxID_ANY, _("colormap/"), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer12->Add( from, 0, wxALL, 5 );
 	
-	img1 = new wxStaticBitmap( this, wxID_ANY, wxBitmap( wxT("../../gui/images/png/delete.png"), wxBITMAP_TYPE_ANY ), wxDefaultPosition, wxDefaultSize, 0 );
+	img1 = new wxStaticBitmap( this, wxID_ANY, wxBitmap( wxT("D:/Ahmet/20072/CellTracking/CellTrack/gui/images/png/delete.png"), wxBITMAP_TYPE_ANY ), wxDefaultPosition, wxDefaultSize, 0 );
 	bSizer12->Add( img1, 0, wxALL, 5 );
 	
 	bSizer10->Add( bSizer12, 1, wxEXPAND, 5 );

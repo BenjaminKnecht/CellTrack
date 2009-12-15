@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////
-// C++ code generated with wxFormBuilder (version Dec 17 2007)
+// C++ code generated with wxFormBuilder (version Dec 29 2008)
 // http://www.wxformbuilder.org/
 //
 // PLEASE DO "NOT" EDIT THIS FILE!
@@ -7,6 +7,8 @@
 
 #ifndef __Gui__
 #define __Gui__
+
+#include <wx/intl.h>
 
 class MyCanvas;
 class PictureCanvas;
@@ -16,6 +18,7 @@ class wxTextCtrl_double;
 #include <wx/string.h>
 #include <wx/bitmap.h>
 #include <wx/image.h>
+#include <wx/icon.h>
 #include <wx/menu.h>
 #include <wx/gdicmn.h>
 #include <wx/font.h>
@@ -197,9 +200,9 @@ class SmoothSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxChoicebookEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeChoicebook( wxChoicebookEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -248,8 +251,8 @@ class FindContoursSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -282,7 +285,7 @@ class CropSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
 		
@@ -347,8 +350,8 @@ class NormalizeContoursSidebar_ : public wxPanel
 		wxButton* m_button1211;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -376,8 +379,8 @@ class FilterContoursSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -482,8 +485,8 @@ class FindFeaturesSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -528,8 +531,8 @@ class SubtractBackgroundSidebar_ : public wxPanel
 		
 		// Virtual event handlers, overide them in your derived class
 		virtual void OnChange( wxChoicebookEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -577,8 +580,8 @@ class ImproveContoursSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -614,8 +617,8 @@ class MatchTemplateSidebar_ : public wxPanel
 		wxButton* m_button121;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -652,8 +655,8 @@ class CamShiftSidebar_ : public wxPanel
 		wxButton* m_button121;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -699,8 +702,8 @@ class LKContoursSidebar_ : public wxPanel
 		wxButton* m_button121;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -760,8 +763,8 @@ class TrackContoursSidebar_ : public wxPanel
 		wxButton* m_button121;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
@@ -866,7 +869,8 @@ class CombinedTrackingSidebar_ : public wxPanel
 		wxButton* m_button121;
 		
 		// Virtual event handlers, overide them in your derived class
-		virtual void OnChange( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChange( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }

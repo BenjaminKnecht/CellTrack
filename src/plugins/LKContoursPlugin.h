@@ -34,7 +34,7 @@ public:
 
 	void FetchParams();
 	void ProcessImage( ImagePlus *img, int pos );
-	static void LKContoursPlugin::ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level, CvSize winsize, CvTermCriteria criteria, int flags, float fixOutliers, int intwin, float &avgLost, IplImage* &gray, IplImage* &ogray, IplImage* &pyr, IplImage* &opyr, CvPoint* &ops, CvPoint2D32f* &psf, CvPoint2D32f* &opsf, char* &status, bool useAvailable, int &np_total, bool rebuild_opsf, bool free_temps);
+	static void ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level, CvSize winsize, CvTermCriteria criteria, int flags, float fixOutliers, int intwin, float &avgLost, IplImage* &gray, IplImage* &ogray, IplImage* &pyr, IplImage* &opyr, CvPoint* &ops, CvPoint2D32f* &psf, CvPoint2D32f* &opsf, char* &status, bool useAvailable, int &np_total, bool rebuild_opsf, bool free_temps);
 
 	static float GetStdDevSqDist(CvPoint2D32f *opsf, CvPoint2D32f *psf, int np, float avg, char *status=NULL, float *sqdists=NULL);
 	static float GetAvgSqDist(CvPoint2D32f *opsf, CvPoint2D32f *psf, int np, char *status=NULL, float *sqdists=NULL);

@@ -608,6 +608,12 @@ cvSnakeImageTrack( const IplImage* src, CvPoint* points, int length,
 	CvSize size;
 	int step;
 
+	IplImage *dux = NULL;
+    IplImage *duy = NULL;
+	IplImage *odux= NULL;
+    IplImage *oduy= NULL;
+    CvStatus status;
+
 	if( src->nChannels != 1 )
 		CV_ERROR( CV_BadNumChannels, "input image has more than one channel" );
 
@@ -618,10 +624,6 @@ cvSnakeImageTrack( const IplImage* src, CvPoint* points, int length,
 	uchar *odata;
 	cvGetRawData( orig, &odata, &step, &size );
 
-	IplImage *dux = NULL;
-    IplImage *duy = NULL;
-	IplImage *odux= NULL;
-    IplImage *oduy= NULL;
 	if(oomega!=0){
 		dux = cvCreateImage(size, IPL_DEPTH_32F, 1 );
 		duy = cvCreateImage(size, IPL_DEPTH_32F, 1 );
@@ -636,7 +638,7 @@ cvSnakeImageTrack( const IplImage* src, CvPoint* points, int length,
 	//	cvShowImage("t",odux);
 	}
 
-	CvStatus status = ( icvSnakeTrack8uC1R( data, step, size, points, length,
+	status = ( icvSnakeTrack8uC1R( data, step, size, points, length,
 		alpha, beta, gamma, coeffUsage, win, criteria,
 		calcGradient ? _CV_SNAKE_GRAD : _CV_SNAKE_IMAGE,
 		odata, opoints, oalpha, obeta, ogamma, oteta, ozeta, oomega,

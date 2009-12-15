@@ -48,7 +48,7 @@ void MatchTemplatePlugin::OnOK()
 		CreateProgressDlg(numContours*frameCount);
 		bool cont=true;
 		for (int j=0; j<numContours && cont; j++){
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format("Cell %d of %d, Frame %d of %d", j+1,numContours, i+1, frameCount))); i++){
+			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
 				ProcessStatic(j, cm->book[i], cm->book[useFirst ? 0 : i-1], method, winsize, map);
 			}
 		}
@@ -71,7 +71,7 @@ void MatchTemplatePlugin::ProcessImage( ImagePlus* img, int pos )
 	}
 }
 void MatchTemplatePlugin::ProcessStatic
-( int i, ImagePlus *img, ImagePlus *oimg, 
+( int i, ImagePlus *img, ImagePlus *oimg,
  int method, CvSize winsize, IplImage* &map){
 	CvRect orect = cvBoundingRect(oimg->contourArray[i],1);
 	RestrictRectLoc(orect, cvRect(0,0,img->orig->width,img->orig->height));

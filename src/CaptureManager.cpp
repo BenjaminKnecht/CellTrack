@@ -1,6 +1,6 @@
 #include "CaptureManager.h"
 #include "Preferences.h"
-#include "util.h"
+#include "Util.h"
 
 CaptureManager::CaptureManager(void)
 : book(NULL), canvas(NULL), RedrawListener(NULL), BookChangeListener(NULL), ReloadListener(NULL)
@@ -49,9 +49,9 @@ bool CaptureManager::OpenMovie_initialize(MyCapture &capture)
 	frameCount = capture.frameCount;
 	fps = capture.fps ? capture.fps : Preferences::GetSavingFpsDefault();
 	book = new ImagePlus*[frameCount];
-	wxProgressDialog progressDlg("Loading movie...", wxString::Format("Frame 0 of %d", frameCount),frameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	wxProgressDialog progressDlg(_T("Loading movie..."), wxString::Format(_T("Frame 0 of %d"), frameCount),frameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 	for (int i=0; i<frameCount; i++){
-		progressDlg.Update(i+1, wxString::Format("Frame %d of %d", i+1, frameCount));
+		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, frameCount));
 		IplImage *newframe = capture.queryFrame(i);
 		IplImage *resized;
 		if (i == 0){
@@ -89,9 +89,9 @@ bool CaptureManager::SaveMovie(const char* avi){
 	if (resize)
 		resized = cvCreateImage(newsize,8,3);
 	IplImage *frame_flip = cvCreateImage(newsize,8,3);
-	wxProgressDialog progressDlg("Saving movie...", wxString::Format("Frame 0 of %d", frameCount),frameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	wxProgressDialog progressDlg(_T("Saving movie..."), wxString::Format(_T("Frame 0 of %d"), frameCount),frameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 	for (int i=0; i<frameCount; i++) {
-		progressDlg.Update(i+1, wxString::Format("Frame %d of %d", i+1, frameCount));
+		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, frameCount));
 		if (resize)
 			cvResize(book[i]->ToIplImage(), resized);
 		else
@@ -166,7 +166,7 @@ bool CaptureManager::OnDelete()
 	if (!frameCount)
 		return false;
 	if (frameCount == 1){
-		wxLogError("Cannot delete the last and only frame.");
+		wxLogError(_T("Cannot delete the last and only frame."));
 		return false;
 	}
 	ImagePlus *todelete=book[pos];
@@ -198,19 +198,19 @@ void CaptureManager::Redraw(bool callPlugin){
 void CaptureManager::SetRedrawListener( PluginBase* RedrawListener_ )
 {
 	if (RedrawListener && RedrawListener_)
-		wxLogError("canvas already had a redraw listener.");
+		wxLogError(_T("canvas already had a redraw listener."));
 	RedrawListener = RedrawListener_;
 }
 void CaptureManager::SetReloadListener( PluginBase* ReloadListener_ )
 {
 	if (ReloadListener && ReloadListener_)
-		wxLogError("canvas already had a Reload listener.");
+		wxLogError(_T("canvas already had a Reload listener."));
 	ReloadListener = ReloadListener_;
 }
 void CaptureManager::SetBookChangeListener( PluginBase* BookChangeListener_ )
 {
 	if (BookChangeListener && BookChangeListener_)
-		wxLogError("canvas already had a BookChange listener.");
+		wxLogError(_T("canvas already had a BookChange listener."));
 	BookChangeListener = BookChangeListener_;
 }
 
@@ -323,11 +323,11 @@ std::vector<CvPoint> CaptureManager::GetTrajectory(int c){
 #include <stdio.h>
 bool CaptureManager::SaveData_setup(const char* file, FILE* &fp){
 	if (!book[0]->contourArray.size()){
-		wxLogError("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first.");
+		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
 	if (!(fp = fopen(file,"w"))){
-		wxLogError("Unable to open file %s", file);
+		wxLogError(_T("Unable to open file %s"), file);
 		return false;
 	}
 	return true;
@@ -362,7 +362,7 @@ bool CaptureManager::SaveTrackData(const char* file) {
 bool CaptureManager::ImportTrackData(const char* file) {
 	FILE *fp = fopen(file,"r");
 	if (!fp){
-		wxLogError("Unable to open file %s", file);
+		wxLogError(_T("Unable to open file %s"), file);
 		return false;
 	}
 
@@ -375,7 +375,7 @@ bool CaptureManager::ImportTrackData(const char* file) {
 		}
 	}
 	if (hasCells){
-		int reply = wxMessageBox("There are already detected cells. Do you want to remove existing cells before importing tracking data?", "Remove existing cells?", wxYES_NO | wxCANCEL, NULL);
+		int reply = wxMessageBox(_T("There are already detected cells. Do you want to remove existing cells before importing tracking data?"), _T("Remove existing cells?"), wxYES_NO | wxCANCEL, NULL);
 		if (reply == wxCANCEL)
 			return false;
 		else if(reply == wxYES){
@@ -387,18 +387,18 @@ bool CaptureManager::ImportTrackData(const char* file) {
 	int NumCells;
 	int Width, Height, FrameCount, FSP;
 	if( fscanf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n#cellCount: %d\n", &Width, &Height, &FrameCount, &FSP, &NumCells) !=5 ) {
-		wxLogError("Unable to parse file header %s", file);	return false;
+		wxLogError(_T("Unable to parse file header %s"), file);	return false;
 	}
 	for (int c=0; c<NumCells; c++){
 		int cellid,np;
 		if( fscanf(fp, "#Cell: %d, pointCount: %d\n", &cellid, &np) !=2 ) {
-			wxLogError("Unable to parse file %s for cell %d header %s", file, c+1);	return false;
+			wxLogError(_T("Unable to parse file %s for cell %d header %s"), file, c+1);	return false;
 		}
 		for (int j=0; j<frameCount && j<FrameCount; j++) {
 			std::vector<wxPoint> roi(np);
 			for (int i=0; i<np; i++){
 				if( fscanf(fp, "%d %d", &roi[i].x, &roi[i].y) !=2 ) {
-					wxLogError("Unable to parse file %s for cell %d coordinates", file, c+1);	return false;
+					wxLogError(_T("Unable to parse file %s for cell %d coordinates"), file, c+1);	return false;
 				}
 			}
 			book[j]->AddRoi(roi);
@@ -496,7 +496,7 @@ bool CaptureManager::SaveDeformationData(const char* file) {
 #include <wx/dc.h>
 bool CaptureManager::SaveTrackImage(wxBitmap &bmp) {
 	if (!book[0]->contourArray.size()){
-		wxLogError("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first.");
+		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
 	wxRealPoint scale(6,6);
@@ -535,7 +535,7 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp) {
 }
 bool CaptureManager::SaveTrajectoryImage(wxBitmap &bmp) {
 	if (!book[0]->contourArray.size()){
-		wxLogError("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first.");
+		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
 	wxRealPoint scale(6,6);

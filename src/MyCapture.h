@@ -6,7 +6,7 @@
 #include <cxcore.h>
 #endif
 
-#include "util.h"
+#include "Util.h"
 #include <wx/arrstr.h>
 
 using namespace std;

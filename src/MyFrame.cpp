@@ -1,5 +1,5 @@
-#include "myframe.h"
-#include "util.h"
+#include "MyFrame.h"
+#include "Util.h"
 #include <wx/msgdlg.h>
 #include <wx/filedlg.h>
 #include "CustomEvents.h"
@@ -25,7 +25,8 @@ MyFrame::~MyFrame()
 {
 	if ( hotplug ) {
 		hotplug->OnCancel();
-		OnPluginEnd(wxCommandEvent());
+		wxCommandEvent dummy = wxCommandEvent();
+		OnPluginEnd(dummy);
 	}
 	if (cm)
 		delete cm;
@@ -51,11 +52,11 @@ MyFrame::~MyFrame()
 
 ////////////////////////////////////////////////////////////////////
 // Method:	Constructor
-// Purpose:	
-// Input:	
+// Purpose:
+// Input:
 // Output:	NONE
 ////////////////////////////////////////////////////////////////////
-MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style) 
+MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, long style)
 : MyFrame_(NULL, -1, title, pos, size, style), hotplug(NULL), isplaying(false), loaded(false)
 {
 	config = wxConfig::Get();
@@ -71,14 +72,14 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	SET_ICON_IMAGES( play )
 	SET_ICON_IMAGES( prev )
 	SET_ICON_IMAGES( next )
-	
+
 	timer = new wxTimer(this);
 	int widths[] = {-1,100};
 	sbar->SetStatusWidths(2, widths);
-	
-	if(Config_ReadBool(config,"Frame/maximized", false))
+
+	if(Config_ReadBool(config,_T("Frame/maximized"), false))
 		Maximize();
-	else if(Config_ReadBool(config,"Frame/fullscreen", false))
+	else if(Config_ReadBool(config,_T("Frame/fullscreen"), false))
 		ShowFullScreen(true);
 	ShowCanvas2(false);
 	getCWD();
@@ -89,9 +90,15 @@ void MyFrame::myShow(bool askLoad){
 		LoadImagesDialog_ w(this);
 		if(w.ShowModal() == wxID_OK){
 			if (w.filetype->GetSelection()==0)
-				OnOpenMovie(wxCommandEvent());
+			{
+			    wxCommandEvent dummy = wxCommandEvent();
+				OnOpenMovie(dummy);
+			}
 			else
-				OnOpenImages(wxCommandEvent());
+			{
+			    wxCommandEvent dummy = wxCommandEvent();
+				OnOpenImages(dummy);
+			}
 		}
 //		else OpenMovie(config->Read("AppDir")+"sampleMovie.avi");
 	}
@@ -115,12 +122,15 @@ void MyFrame::OnPreferences( wxCommandEvent &event )
 {
 	Preferences d(this);
 	if (d.ShowModal() == wxID_OK)
-		canvas->OnSize(wxSizeEvent());
+	{
+	    wxSizeEvent dummy = wxSizeEvent();
+		canvas->OnSize(dummy);
+	}
 
 }
 void MyFrame::OnOpenMovie( wxCommandEvent &event )
 {
-	wxString filename = wxFileSelector("Select a movie file to load", cwd, "", "", "Movie Files (*.avi)|*.avi", wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
+	wxString filename = wxFileSelector(_T("Select a movie file to load"), cwd, _T(""), _T(""), _T("Movie Files (*.avi)|*.avi"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
 	if (!filename.empty()) {
 		OpenMovie(filename);
 	}
@@ -129,7 +139,7 @@ void MyFrame::OpenMovie( const wxString& filename )
 {
 	wxBeginBusyCursor();
 		setCWD(wxPathOnly(filename));
-		if(cm->OpenMovie(filename.c_str()))
+		if(cm->OpenMovie(filename.mb_str()))
 			OnNewMovieOpened();
 	wxEndBusyCursor();
 }
@@ -137,10 +147,10 @@ void MyFrame::OpenMovie( const wxString& filename )
 
 void MyFrame::OnOpenImages( wxCommandEvent& event )
 {
-	wxFileDialog d(this, "Select image files to load", cwd, "", "Windows bitmaps (*.bmp, *.dib)|*.bmp;*.dib|JPEG files (*.jpeg,*.jpg,*.jpe)|*.jpeg;*.jpg;*.jpe|Portable Network Graphics (*.png)|*.png|Portable image format (*.pbm,*.pgm,*.ppm)|*.pbm;*.pgm;*.ppm|Sun rasters (*.sr,*.ras)|*.sr;*.ras|TIFF files (*.tiff,*.tif)|*.tiff;*.tif|OpenEXR HDR images (.exr)|*.exr|JPEG 2000 images (.jp2)|*.jp2|All files (*.*)|*.*", wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
-	d.SetFilterIndex(config->Read("OpenImages/filterIndex",1l));
+	wxFileDialog d(this, _T("Select image files to load"), cwd, _T(""), _T("Windows bitmaps (*.bmp, *.dib)|*.bmp;*.dib|JPEG files (*.jpeg,*.jpg,*.jpe)|*.jpeg;*.jpg;*.jpe|Portable Network Graphics (*.png)|*.png|Portable image format (*.pbm,*.pgm,*.ppm)|*.pbm;*.pgm;*.ppm|Sun rasters (*.sr,*.ras)|*.sr;*.ras|TIFF files (*.tiff,*.tif)|*.tiff;*.tif|OpenEXR HDR images (.exr)|*.exr|JPEG 2000 images (.jp2)|*.jp2|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
+	d.SetFilterIndex(config->Read(_T("OpenImages/filterIndex"),1l));
 	if (d.ShowModal() == wxID_OK){
-		config->Write("OpenImages/filterIndex",(long)d.GetFilterIndex());
+		config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());
 		wxArrayString files;
 		d.GetFilenames(files);
 		if (!files.GetCount())
@@ -162,37 +172,38 @@ void MyFrame::OnNewMovieOpened()
 	EnableMenus( true );
 
 	return;
-	OnFindContours(wxCommandEvent() );
-	hotplug->OnOK(); OnPluginEnd(wxCommandEvent());
-	OnFilterContours(wxCommandEvent());
+	wxCommandEvent dummy = wxCommandEvent();
+	OnFindContours(dummy );
+	hotplug->OnOK(); OnPluginEnd(dummy);
+	OnFilterContours(dummy);
 	FilterContoursSidebar *s = (FilterContoursSidebar *) hotplug->GetSidebar();
 	s->isMinArea->SetValue(true);
 	s->minArea->SetValue(1800);
 	s->scope->SetSelection(1);
 	s->preview->SetValue(false);
-	hotplug->OnOK(); OnPluginEnd(wxCommandEvent());
-	OnImproveContours(wxCommandEvent() );
-	hotplug->OnOK(); OnPluginEnd(wxCommandEvent());
-//	OnLKContours(wxCommandEvent() );
-	OnCombinedTracking(wxCommandEvent());
+	hotplug->OnOK(); OnPluginEnd(dummy);
+	OnImproveContours(dummy );
+	hotplug->OnOK(); OnPluginEnd(dummy);
+//	OnLKContours(dummy );
+	OnCombinedTracking(dummy);
 	((CombinedTrackingSidebar *) hotplug->GetSidebar())->useNC->SetValue(false);
-	hotplug->OnOK(); OnPluginEnd(wxCommandEvent());
-//	OnExportTrackData(wxCommandEvent());
-	OnPlotDeformation(wxCommandEvent());
+	hotplug->OnOK(); OnPluginEnd(dummy);
+//	OnExportTrackData(dummy);
+	OnPlotDeformation(dummy);
 }
 void MyFrame::OnSaveMovieAs( wxCommandEvent &event )
 {
-	wxString filename = wxFileSelector("Save movie file as...", cwd, "", "", "Movie Files (*.avi)|*.avi", wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+	wxString filename = wxFileSelector(_T("Save movie file as..."), cwd, _T(""), _T(""), _T("Movie Files (*.avi)|*.avi"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
 	if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
 	wxBeginBusyCursor();
-		cm->SaveMovie(filename.c_str());
+		cm->SaveMovie(filename.mb_str());
 	wxEndBusyCursor();
 	}
 }
 void MyFrame::OnSaveFrameAs( wxCommandEvent &event )
 {
-	wxString filename = wxFileSelector("Save current frame as...", cwd, "", "", "Image Files|*.png;*.bmp;*.jpg;*.gif", wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+	wxString filename = wxFileSelector(_T("Save current frame as..."), cwd, _T(""), _T(""), _T("Image Files|*.png;*.bmp;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
 	if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
@@ -202,9 +213,9 @@ void MyFrame::OnSaveFrameAs( wxCommandEvent &event )
 }
 void MyFrame::OnClose(wxCloseEvent &event)
 {
-	config->Write("Frame/maximized", IsMaximized());
-	config->Write("Frame/fullscreen", IsFullScreen());
-	config->Write("Frame/iconized", IsIconized());
+	config->Write(_T("Frame/maximized"), IsMaximized());
+	config->Write(_T("Frame/fullscreen"), IsFullScreen());
+	config->Write(_T("Frame/iconized"), IsIconized());
 	if (!IsMaximized() && !IsFullScreen() && !IsIconized()){
 		wxRect frameDim = GetRect();
 		config->Write(wxT("Frame/width"), frameDim.width);
@@ -214,20 +225,21 @@ void MyFrame::OnClose(wxCloseEvent &event)
 	}
 	Show(false);
 	if(hotplug){
-		OnPluginEnd(wxCommandEvent());
+	    wxCommandEvent dummy = wxCommandEvent();
+		OnPluginEnd(dummy);
 	}
 	event.Skip();
 }
 
 wxString MyFrame::getCWD()
 {
-	config->Read("CWD", &cwd);
+	config->Read(_T("CWD"), &cwd);
 	return cwd;
 }
 void MyFrame::setCWD(const wxString& path)
 {
 	cwd = path;
-	config->Write("CWD", cwd);
+	config->Write(_T("CWD"), cwd);
 }
 void MyFrame::OnDelete( wxCommandEvent& event )
 {
@@ -263,19 +275,21 @@ void MyFrame::OnStop( wxCommandEvent& event )
 }
 void MyFrame::OnTogglePlay( wxCommandEvent& event )
 {
+    wxCommandEvent dummy = wxCommandEvent();
 	if (isplaying)
-		OnStop(wxCommandEvent());
+		OnStop(dummy);
 	else
-		OnPlay(wxCommandEvent());
+		OnPlay(dummy);
 }
 
 void MyFrame::OnTimer( wxTimerEvent &e )
 {
 	if (isplaying) {
+        wxCommandEvent dummy = wxCommandEvent();
 		if(m_next->IsEnabled())
-			OnNext(wxCommandEvent());
+			OnNext(dummy);
 		else {
-			OnStop(wxCommandEvent());
+			OnStop(dummy);
 			if(cm->SetPos(0))
 				OnNavigate();
 		}
@@ -304,7 +318,7 @@ void MyFrame::OnScroll( wxScrollEvent &event )
 void MyFrame::OnFirst( wxCommandEvent& event )
 {
 	if (cm->SetPos(0))
-		OnNavigate();	
+		OnNavigate();
 }
 void MyFrame::OnLast( wxCommandEvent& event )
 {
@@ -318,7 +332,7 @@ void MyFrame::UpdateControls(){
 	m_slider->SetValue( cm->GetPos() );
 	WX_SET_ENABLED ( m_slider, cm->GetFrameCount() > 1 );
 	WX_SET_ENABLED ( m_play, cm->GetFrameCount() > 1 );
-	sbar->SetStatusText(wxString::Format("%d of %d", cm->pos+1, cm->GetFrameCount()),SBAR_POS);
+	sbar->SetStatusText(wxString::Format(_T("%d of %d"), cm->pos+1, cm->GetFrameCount()),SBAR_POS);
 }
 void MyFrame::OnNavigate()
 {
@@ -344,7 +358,8 @@ void MyFrame::StartPlugin(Plugin *newplugin, wxWindow *parentwin)
 //		if (wxMessageBox(wxString("There is already an active plugin named \"")+hotplug->GetStaticName()+"\". Do you want to continue starting new plugin named \""+Plugin::GetStaticName()+"\"?", "Cancel active plugin?", wxOK|wxCANCEL, this) != wxOK)
 //			return;
 		hotplug->OnCancel();
-		OnPluginEnd(wxCommandEvent());
+		wxCommandEvent dummy = wxCommandEvent();
+		OnPluginEnd(dummy);
 	}
 	hotplug = new Plugin(parentwin, this);
 	wxWindow *sidebar = hotplug->GetSidebar();
@@ -352,7 +367,7 @@ void MyFrame::StartPlugin(Plugin *newplugin, wxWindow *parentwin)
 		splitterSidebar->SplitVertically(sidebar, splitterSidebar->GetWindow1(), sidebar->GetSize().GetWidth());
 	}
 	sidebar = hotplug->GetBottombar();
-	if ( sidebar ){		
+	if ( sidebar ){
 		splitterBottombar->SplitHorizontally(splitterBottombar->GetWindow1(), sidebar,
 			splitterBottombar->GetSize().GetHeight() - sidebar->GetSize().GetHeight());
 	}
@@ -399,10 +414,11 @@ void MyFrame::OnPluginEnd(wxEvent &event){
 }
 void MyFrame::OnKeyDown( wxKeyEvent& e )
 {
+    wxCommandEvent dummy = wxCommandEvent();
 	if (e.GetKeyCode() == WXK_LEFT)
-		OnPrev(wxCommandEvent());
+		OnPrev(dummy);
 	else if (e.GetKeyCode() == WXK_RIGHT)
-		OnNext(wxCommandEvent());
+		OnNext(dummy);
 }
 void MyFrame::OnMouse( wxMouseEvent& event )
 {
@@ -413,7 +429,7 @@ void MyFrame::OnMouse( wxMouseEvent& event )
 		if (!event.AltDown())
 			return;
 		if (event.GetEventObject() == canvas && event.m_leftDown)
-			sbar->SetStatusText(wxString::Format("x=%d, y=%d", event.GetX(), event.GetY()));
+			sbar->SetStatusText(wxString::Format(_T("x=%d, y=%d"), event.GetX(), event.GetY()));
 }
 
 
@@ -441,7 +457,7 @@ void MyFrame::ShowCanvas2(bool show){
 bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells){
 	numCells=cm->book[0]->contourArray.size();
 	if (!numCells){
-		wxLogError("No cells in the first frame. Detect/draw boundaries in the first frame and apply tracking first.");
+		wxLogError(_T("No cells in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
 	pd = new PlotDialog(this, wxID_ANY, title);
@@ -455,11 +471,11 @@ bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mp
 void MyFrame::OnPlotSpeed( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
-	if(!SetupCellPlot("Cell Speed", "speed (pixel/frame)", pd, p, numCells)) return;
+	if(!SetupCellPlot(_T("Cell Speed"), _T("speed (pixel/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float totalDisp, avgSpeed;
 		std::vector<float> speeds = cm->GetSpeeds(i, totalDisp, avgSpeed);
-		wxString name = wxString::Format("Cell-%d (distance=%.1f, speed=%.1f)", i+1, totalDisp, avgSpeed);
+		wxString name = wxString::Format(_T("Cell-%d (distance=%.1f, speed=%.1f)"), i+1, totalDisp, avgSpeed);
 		mpFXVector *v = new mpFXVector(name);
 		v->SetData( speeds );
 		v->SetContinuity(true);
@@ -473,11 +489,11 @@ void MyFrame::OnPlotSpeed( wxCommandEvent& e )
 void MyFrame::OnPlotArea( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
-	if(!SetupCellPlot("Cell Area", "area (pixel^2)", pd, p, numCells)) return;
+	if(!SetupCellPlot(_T("Cell Area"), _T("area (pixel^2)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float avgArea;
 		std::vector<float> areas = cm->GetAreas(i, avgArea);
-		wxString name = wxString::Format("Cell-%d (avgArea=%.1f)", i+1, avgArea);
+		wxString name = wxString::Format(_T("Cell-%d (avgArea=%.1f)"), i+1, avgArea);
 		mpFXVector *v = new mpFXVector(name);
 		v->SetData( areas );
 		v->SetContinuity(true);
@@ -490,11 +506,11 @@ void MyFrame::OnPlotArea( wxCommandEvent& e )
 void MyFrame::OnPlotAreaDiff( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
-	if(!SetupCellPlot("Change in Cell Area", "d-area (pixel^2/frame)", pd, p, numCells)) return;
+	if(!SetupCellPlot(_T("Change in Cell Area"), _T("d-area (pixel^2/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float avgArea;
 		std::vector<float> areas = cm->GetAreaDiff(i, avgArea);
-		wxString name = wxString::Format("Cell-%d (avgChange=%.1f)", i+1, avgArea);
+		wxString name = wxString::Format(_T("Cell-%d (avgChange=%.1f)"), i+1, avgArea);
 		mpFXVector *v = new mpFXVector(name);
 		v->SetData( areas );
 		v->SetContinuity(true);
@@ -507,11 +523,11 @@ void MyFrame::OnPlotAreaDiff( wxCommandEvent& e )
 void MyFrame::OnPlotDeformation( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
-	if(!SetupCellPlot("Cell Deformation", "deformation (pixel^2/frame)", pd, p, numCells)) return;
+	if(!SetupCellPlot(_T("Cell Deformation"), _T("deformation (pixel^2/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float avgDef;
 		std::vector<float> defs = cm->GetDeformation(i, avgDef);
-		wxString name = wxString::Format("Cell-%d (avgDeform=%.1f)", i+1, avgDef);
+		wxString name = wxString::Format(_T("Cell-%d (avgDeform=%.1f)"), i+1, avgDef);
 		mpFXVector *v = new mpFXVector(name);
 		v->SetData( defs );
 		v->SetContinuity(true);
@@ -526,13 +542,13 @@ void MyFrame::OnPlotDeformation( wxCommandEvent& e )
 void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &)){
 	wxBitmap bmp;
 	if((cm->*func)(bmp)){
-		ShowImageDialog d(this,wxID_ANY,"Cell Tracking");
+		ShowImageDialog d(this,wxID_ANY,_T("Cell Tracking"));
 		d.canvas->SetImage(bmp);
 		d.ShowModal();
-	}		
+	}
 }
 void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &)){
-	wxString filename = wxFileSelector(title, cwd, "", "", "Image Files|*.png;*.jpg;*.gif", wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+	wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
 	  if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
@@ -543,66 +559,67 @@ void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitma
 	  }
 }
 void MyFrame::OnViewTrackImage( wxCommandEvent& e ) {
-	OnViewImage("Cell Tracking", &CaptureManager::SaveTrackImage);
+	OnViewImage(_T("Cell Tracking"), &CaptureManager::SaveTrackImage);
 }
 void MyFrame::OnViewTrajectoryImage( wxCommandEvent& e ) {
-	OnViewImage("Cell Trajectory", &CaptureManager::SaveTrajectoryImage);
+	OnViewImage(_T("Cell Trajectory"), &CaptureManager::SaveTrajectoryImage);
 }
 void MyFrame::OnExportTrackImage( wxCommandEvent& e ) {
-	OnExportImage("Save tracking image as...", &CaptureManager::SaveTrackImage);
+	OnExportImage(_T("Save tracking image as..."), &CaptureManager::SaveTrackImage);
 }
 void MyFrame::OnExportTrajectoryImage( wxCommandEvent& e ) {
-	OnExportImage("Save trajectory image as...", &CaptureManager::SaveTrajectoryImage);
+	OnExportImage(_T("Save trajectory image as..."), &CaptureManager::SaveTrajectoryImage);
 }
 
 void MyFrame::OnExportData(wxString title, bool (CaptureManager::*func)(const char*)){
-	wxString filename = wxFileSelector(title, cwd, "", "", "Text Files|*.txt", wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+	wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
 	  if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
-		(cm->*func)(filename.c_str());
+		(cm->*func)(filename.mb_str());
 		wxEndBusyCursor();
-	}	
+	}
 }
 void MyFrame::OnExportTrajectoryData(wxCommandEvent& e ) {
-	OnExportData("Save Trajectory data as...", &CaptureManager::SaveTrajectoryData);
+	OnExportData(_T("Save Trajectory data as..."), &CaptureManager::SaveTrajectoryData);
 }
 void MyFrame::OnExportTrackData(wxCommandEvent& e ){
-	OnExportData("Save Tracking data as...", &CaptureManager::SaveTrackData);
+	OnExportData(_T("Save Tracking data as..."), &CaptureManager::SaveTrackData);
 }
 void MyFrame::OnExportSpeedData(wxCommandEvent& e ){
-	OnExportData("Save Cell Speed data as...", &CaptureManager::SaveSpeedData);
+	OnExportData(_T("Save Cell Speed data as..."), &CaptureManager::SaveSpeedData);
 }
 void MyFrame::OnExportAreaData(wxCommandEvent& e ){
-	OnExportData("Save Cell Area data as...", &CaptureManager::SaveAreaData);
+	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveAreaData);
 }
 void MyFrame::OnExportDeformationData(wxCommandEvent& e ){
-	OnExportData("Save Cell Area data as...", &CaptureManager::SaveDeformationData);
+	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveDeformationData);
 }
 
 void MyFrame::OnImportTrackData(wxCommandEvent& e )
 {
-	wxString filename = wxFileSelector("Import tracking data...", cwd, "", "", "Text Files|*.txt", wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
+	wxString filename = wxFileSelector(_T("Import tracking data..."), cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
 	  if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
-		cm->ImportTrackData(filename.c_str());
+		cm->ImportTrackData(filename.mb_str());
 //TODO: is this necessary?
-		canvas->OnSize(wxSizeEvent());
+        wxSizeEvent dummy = wxSizeEvent();
+		canvas->OnSize(dummy);
 		wxEndBusyCursor();
-	}	
+	}
 }
 
 #include <wx/aboutdlg.h>
 void MyFrame::OnAbout(wxCommandEvent &e){
 	wxAboutDialogInfo i;
-	i.SetName("CellTrack");
-	i.SetVersion("1.1");
-	i.SetDescription("An Open-Source Software for Cell Tracking and Motility Analysis");
-	i.SetCopyright("(C) 2008 Ahmet Sacan <sacan@cse.ohio-state.edu>");
-	i.SetWebSite("http://db.cse.ohio-state.edu/CellTrack");
+	i.SetName(_T("CellTrack"));
+	i.SetVersion(_T("1.1"));
+	i.SetDescription(_T("An Open-Source Software for Cell Tracking and Motility Analysis"));
+	i.SetCopyright(_T("(C) 2008 Ahmet Sacan <sacan@cse.ohio-state.edu>"));
+	i.SetWebSite(_T("http://db.cse.ohio-state.edu/CellTrack"));
 	wxAboutBox(i);
 }
 void MyFrame::OnHelp(wxCommandEvent &e){
-	wxLaunchDefaultBrowser("http://db.cse.ohio-state.edu/CellTrack");
+	wxLaunchDefaultBrowser(_T("http://db.cse.ohio-state.edu/CellTrack"));
 }

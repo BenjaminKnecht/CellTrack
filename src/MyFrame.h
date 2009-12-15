@@ -11,6 +11,7 @@
 #include "mathplot.h"
 
 class CaptureManager;
+class PluginBase;
 
 //status-bar fields
 enum
@@ -40,7 +41,7 @@ public:
 private:
 	// Member variables
 	CaptureManager *cm;
-	
+
 	// config helps in saving/loading configuration parameters in a platform-dependent way.
 	wxConfigBase *config;
 	wxString cwd;
@@ -71,7 +72,7 @@ public:
 	void OnCrop( wxCommandEvent& event );
 	void OnResizeMovie( wxCommandEvent& event );
 
-	
+
 	// Navigation events
 	virtual void OnDeleteBefore( wxCommandEvent &event );
 	virtual void OnDeleteAfter( wxCommandEvent &event );

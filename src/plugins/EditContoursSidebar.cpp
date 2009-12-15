@@ -19,7 +19,7 @@ void EditContoursSidebar::OnInvertSelection( wxCommandEvent& event )
 {
 	for (int i=0; i<count; i++)
 		TOGGLE_LISTBOX_SELECTION(listbox,i);
-	plugin->DoPreview();	
+	plugin->DoPreview();
 }
 
 void EditContoursSidebar::OnDeleteSelected( wxCommandEvent& event )
@@ -35,12 +35,12 @@ void EditContoursSidebar::OnDeleteAll( wxCommandEvent& event )
 
 void EditContoursSidebar::OnCleanAllFrames( wxCommandEvent& event )
 {
-	if(wxMessageBox("Are you sure you want to remove all cells from ALL frames?", "Confirm removal", wxOK | wxCANCEL, this)==wxOK)
+	if(wxMessageBox(_T("Are you sure you want to remove all cells from ALL frames?"), _T("Confirm removal"), wxOK | wxCANCEL, this)==wxOK)
 		plugin->OnCleanAllFrames();
 }
 void EditContoursSidebar::OnUseMouseTo( wxCommandEvent& event )
 {
-	plugin->OnUseMouseTo();	
+	plugin->OnUseMouseTo();
 }
 #include <wx/listbox.h>
 void EditContoursSidebar::OnNavigate( int count_ )
@@ -48,7 +48,7 @@ void EditContoursSidebar::OnNavigate( int count_ )
 	count = count_;
 	listbox->Clear();
 	for (int i=0; i<count; i++)
-		listbox->Append(wxString::Format("%d",i+1));
+		listbox->Append(wxString::Format(_T("%d"),i+1));
 }
 void EditContoursSidebar::OnNormalizeEdges(wxCommandEvent& e){
 	plugin->OnNormalizeEdges();

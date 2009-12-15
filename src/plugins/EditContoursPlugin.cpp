@@ -30,7 +30,7 @@ EditContoursPlugin::~EditContoursPlugin()
 #include <wx/msgdlg.h>
 void EditContoursPlugin::OnReload(){
 	if (dirty){
-		if(wxMessageDialog(win,"Do you want to save changes to the current frame?", "Save changes?", wxYES_NO).ShowModal()==wxID_YES){
+		if(wxMessageDialog(win,_T("Do you want to save changes to the current frame?"), _T("Save changes?"), wxYES_NO).ShowModal()==wxID_YES){
 			cm->PushbackCurrentFrame();
 		}
 	}
@@ -90,7 +90,7 @@ void EditContoursPlugin::OnRoi()
 	cm->img.AddRoi(canvas->roi);
 	dirty = true;
 	cm->Redraw();
-	sidebar->listbox->Append(wxString::Format("%d",++sidebar->count));
+	sidebar->listbox->Append(wxString::Format(_T("%d"),++sidebar->count));
 	canvas->BeginRoi();
 }
 #include "Util.h"
