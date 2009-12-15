@@ -1,0 +1,15 @@
+CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
+
+PROJECT(CellTrack C CXX)
+
+
+
+# This sets where to look for CMake modules (e.g. "Find*.cmake" files)
+SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
+
+FIND_PACKAGE(WxWidgets REQUIRED)
+FIND_PACKAGE(OpenCV    REQUIRED)
+
+ADD_DEFINITIONS(${WXWINDOWS_DEFINITIONS})
+
+ADD_SUBDIRECTORY(src)
