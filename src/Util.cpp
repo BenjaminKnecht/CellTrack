@@ -31,9 +31,8 @@ void EnableMenu( wxMenu* menu, const bool enable )
 {
 	wxMenuItemList::Node* iter = menu->GetMenuItems().GetFirst();
 	while (iter){
-		if (iter->GetData()->IsSeparator())
-			continue;
-		iter->GetData()->Enable(enable);
+		if (!(iter->GetData()->IsSeparator()))
+            iter->GetData()->Enable(enable);
 		iter = iter->GetNext();
 	}
 }

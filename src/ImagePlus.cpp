@@ -222,7 +222,7 @@ void ImagePlus::ReplaceContour( int index, CvPoint* ps, int np )
 	}
 	CvSeq *seq = contourArray[index];
 	cvClearSeq(seq);
-//	cvRelease((void**)&seq);		
+//	cvRelease((void**)&seq);
 //	contourArray[index] = cvCreateSeq( CV_SEQ_ELTYPE_POINT|CV_SEQ_POLYLINE|CV_SEQ_FLAG_CLOSED, sizeof( CvContour ), sizeof( CvPoint), CreateContoursStorageOnDemand() );
 //	seq = contourArray[index];
 	for (int i=0; i<np; i++)
@@ -287,7 +287,7 @@ void ImagePlus::Resize(int width, int height, int method){
 	CvPoint2D32f scale = cvPoint2D32f(width/(float)orig->width, height/(float)orig->height);
 	CvSize newsize = cvSize(width,height);
 	IplImage *img = cvCreateImage(newsize, IPL_DEPTH_8U, 3);
-	cvResize(orig, img);
+	cvResize(orig, img, method);
 	cvReleaseImage(&orig);
 	cvReleaseImage(&drawn);
 	orig = img;
