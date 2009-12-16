@@ -1,4 +1,4 @@
-		#include "MyCanvas.h"
+#include "MyCanvas.h"
 #include <wx/dcbuffer.h>
 #include <wx/dcmemory.h>
 #include <wx/msgdlg.h>
@@ -26,7 +26,7 @@ MyCanvas::~MyCanvas(void)
 		delete[] selectedContours;
 }
 
-MyCanvas::MyCanvas(wxWindow* parent_, wxWindowID id, const wxPoint& pos, 
+MyCanvas::MyCanvas(wxWindow* parent_, wxWindowID id, const wxPoint& pos,
 				   const wxSize& size, long style, const wxString& name):
 wxPanel(parent_, id, pos, size, style, name), MouseListener(NULL), topleft(wxPoint(0,0)), scale(wxRealPoint(1.0,1.0)), doingRoi(false), RoiListener(NULL), lastRoiEndTime(wxDateTime::Now()), doingSelectContour(false), SelectContourListener(NULL), selectedContours(NULL), DragContourListener(false), DragVertexListener(NULL), doingDragContour(false), doingDragVertex(false), hoverContour(-1), dv(MyPoint(-1,-1)), draggedContour(-1), doingRect(false), RectListener(NULL)
 {
@@ -244,7 +244,7 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 		wxBufferedDC dc(&cdc);
 		int minSeq = -1;
 		if (!e.Leaving())
-			minSeq = GetContourHit(newPoint);		
+			minSeq = GetContourHit(newPoint);
 		if (minSeq != hoverContour){
 			if(hoverContour>=0)
 				DrawContour(&dc, topleft, img.contourArray[hoverContour], selectedContours[hoverContour]);

@@ -19,6 +19,7 @@ void CaptureManager::Reset(){
 	frameCount = 0;
 	fps = 0;
 	pos = 0;
+	zPos = 0;
 	size = cvSize(0, 0);
 	img.ReleaseAll();
 }
@@ -40,6 +41,12 @@ bool CaptureManager::OpenMovie( const wxArrayString& files )
 	Reset();
 	MyCapture_Files capture(files);
 	return OpenMovie_initialize(capture);
+}
+bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides)
+{
+    Reset();
+    MyCapture_Confocal capture(files, zSlides);
+    return OpenMovie_initialize(capture);
 }
 #include <wx/progdlg.h>
 bool CaptureManager::OpenMovie_initialize(MyCapture &capture)
@@ -117,19 +124,19 @@ int CaptureManager::GetPos(){
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img = *book[pos];
+	img = *book[pos+zPos+fluorecence];
 	if (redraw)
 		Redraw(callPlugin);
 }
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img.CloneContours(book[pos]);
+	img.CloneContours(book[pos+zPos+fluorecence]);
 	if (redraw)
 		Redraw(callPlugin);
 }
 void CaptureManager::PushbackCurrentFrame(){
-	*(book[pos]) = img;
+	*(book[pos+zPos+fluorecence]) = img;
 }
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))
@@ -169,7 +176,7 @@ bool CaptureManager::OnDelete()
 		wxLogError(_T("Cannot delete the last and only frame."));
 		return false;
 	}
-	ImagePlus *todelete=book[pos];
+	ImagePlus *todelete=book[pos+zPos+fluorecence];
 	int i;
 	for (i=pos; i<frameCount-1; i++)
 		book[i]=book[i+1];
@@ -186,6 +193,10 @@ bool CaptureManager::OnPrev(){
 }
 bool CaptureManager::OnNext(){
 	return SetPos(pos+1);
+}
+bool CaptureManager::ShowFluorecence(bool show)
+{
+    fluorecence = (show ? 1 : 0);
 }
 void CaptureManager::Redraw(bool callPlugin){
 	if (!canvas)

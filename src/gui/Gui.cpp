@@ -30,6 +30,10 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_menuItem6 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Open image files") ) + wxT('\t') + wxT("Ctrl+Shift+O"), wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( m_menuItem6 );
 	
+	wxMenuItem* m_menuItem46;
+	m_menuItem46 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Open confocal image files") ) , wxEmptyString, wxITEM_NORMAL );
+	menu_file->Append( m_menuItem46 );
+	
 	wxMenuItem* m_menuItem12;
 	m_menuItem12 = new wxMenuItem( menu_file, wxID_ANY, wxString( _("Save movie as..") ) + wxT('\t') + wxT("Ctrl+S"), wxEmptyString, wxITEM_NORMAL );
 	menu_file->Append( m_menuItem12 );
@@ -356,6 +360,10 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	bSizer3->Add( m_next, 0, wxALIGN_CENTER_VERTICAL, 0 );
 	
+	m_fluorecence = new wxCheckBox( this, wxID_ANY, _("Show Fluorecence image"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	bSizer3->Add( m_fluorecence, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
 	m_slider = new wxSlider( this, wxID_ANY, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_BOTH );
 	m_slider->Enable( false );
 	
@@ -371,6 +379,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( wxEVT_KEY_DOWN, wxKeyEventHandler( MyFrame_::OnKeyDown ) );
 	this->Connect( m_menuItem1->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenMovie ) );
 	this->Connect( m_menuItem6->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenImages ) );
+	this->Connect( m_menuItem46->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenConfocal ) );
 	this->Connect( m_menuItem12->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSaveMovieAs ) );
 	this->Connect( m_menuItem123->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSaveFrameAs ) );
 	this->Connect( m_menuItem42->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportTrackData ) );
@@ -437,6 +446,7 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxEVT_KEY_DOWN, wxKeyEventHandler( MyFrame_::OnKeyDown ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenMovie ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenImages ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOpenConfocal ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSaveMovieAs ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSaveFrameAs ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportTrackData ) );
@@ -3261,6 +3271,50 @@ LoadImagesDialog_::LoadImagesDialog_( wxWindow* parent, wxWindowID id, const wxS
 }
 
 LoadImagesDialog_::~LoadImagesDialog_()
+{
+}
+
+ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxString& title, const wxPoint& pos, const wxSize& size, long style ) : wxDialog( parent, id, title, pos, size, style )
+{
+	this->SetSizeHints( wxDefaultSize, wxDefaultSize );
+	
+	wxBoxSizer* bSizer60;
+	bSizer60 = new wxBoxSizer( wxVERTICAL );
+	
+	
+	bSizer60->Add( 0, 10, 0, wxEXPAND, 5 );
+	
+	m_staticText101 = new wxStaticText( this, wxID_ANY, _("Specify Z range of images."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( -1 );
+	bSizer60->Add( m_staticText101, 0, wxALL, 5 );
+	
+	wxFlexGridSizer* fgSizer40;
+	fgSizer40 = new wxFlexGridSizer( 1, 2, 0, 0 );
+	fgSizer40->SetFlexibleDirection( wxBOTH );
+	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
+	
+	m_staticText102 = new wxStaticText( this, wxID_ANY, _("Number of Z slices:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102->Wrap( -1 );
+	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_zslides = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 100, 30 );
+	fgSizer40->Add( m_zslides, 0, wxALL, 5 );
+	
+	bSizer60->Add( fgSizer40, 0, wxEXPAND, 5 );
+	
+	m_sdbSizer2 = new wxStdDialogButtonSizer();
+	m_sdbSizer2OK = new wxButton( this, wxID_OK );
+	m_sdbSizer2->AddButton( m_sdbSizer2OK );
+	m_sdbSizer2Cancel = new wxButton( this, wxID_CANCEL );
+	m_sdbSizer2->AddButton( m_sdbSizer2Cancel );
+	m_sdbSizer2->Realize();
+	bSizer60->Add( m_sdbSizer2, 1, wxALL, 5 );
+	
+	this->SetSizer( bSizer60 );
+	this->Layout();
+}
+
+ConfocalDialog_::~ConfocalDialog_()
 {
 }
 

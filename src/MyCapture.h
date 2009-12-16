@@ -34,10 +34,9 @@ public:
 
 class MyCapture_Files : public MyCapture
 {
-private:
-//	void setPos(int pos_);
-	wxArrayString files;
-	MyCapture_Files(){};
+protected:
+    wxArrayString files;
+ 	MyCapture_Files(){};
 public:
 	MyCapture_Files(const wxArrayString &files_);
 	~MyCapture_Files();
@@ -54,4 +53,16 @@ public:
 	MyCapture_Movie(const char *avi);
 	~MyCapture_Movie();
 	virtual IplImage* queryFrame(int pos_=-1);
+};
+
+class MyCapture_Confocal : public MyCapture_Files
+{
+private:
+	int zSlides;
+	MyCapture_Confocal(){};
+public:
+	MyCapture_Confocal(const wxArrayString &files_, int slides);
+	~MyCapture_Confocal();
+    virtual IplImage* queryFrame(int pos_=-1);
+	int getSlideNumber();
 };

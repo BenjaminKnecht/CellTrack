@@ -30,6 +30,7 @@ class wxTextCtrl_double;
 #include <wx/sizer.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
+#include <wx/checkbox.h>
 #include <wx/slider.h>
 #include <wx/frame.h>
 #include <wx/stattext.h>
@@ -37,7 +38,6 @@ class wxTextCtrl_double;
 #include <wx/textctrl.h>
 #include <wx/choicebk.h>
 #include <wx/radiobox.h>
-#include <wx/checkbox.h>
 #include <wx/statline.h>
 #include <wx/scrolwin.h>
 #include <wx/statbox.h>
@@ -92,6 +92,7 @@ class MyFrame_ : public wxFrame
 		wxBitmapButton* m_play;
 		wxBitmapButton* m_prev;
 		wxBitmapButton* m_next;
+		wxCheckBox* m_fluorecence;
 		wxSlider* m_slider;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -99,6 +100,7 @@ class MyFrame_ : public wxFrame
 		virtual void OnKeyDown( wxKeyEvent& event ){ event.Skip(); }
 		virtual void OnOpenMovie( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOpenImages( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnOpenConfocal( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSaveMovieAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSaveFrameAs( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnImportTrackData( wxCommandEvent& event ){ event.Skip(); }
@@ -961,6 +963,28 @@ class LoadImagesDialog_ : public wxDialog
 		wxRadioBox* filetype;
 		LoadImagesDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load movie"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 275,160 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~LoadImagesDialog_();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class ConfocalDialog_
+///////////////////////////////////////////////////////////////////////////////
+class ConfocalDialog_ : public wxDialog 
+{
+	private:
+	
+	protected:
+		
+		wxStaticText* m_staticText102;
+		wxStdDialogButtonSizer* m_sdbSizer2;
+		wxButton* m_sdbSizer2OK;
+		wxButton* m_sdbSizer2Cancel;
+	
+	public:
+		wxStaticText* m_staticText101;
+		wxSpinCtrl* m_zslides;
+		ConfocalDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load confocal images"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 210,160 ), long style = wxDEFAULT_DIALOG_STYLE );
+		~ConfocalDialog_();
 	
 };
 

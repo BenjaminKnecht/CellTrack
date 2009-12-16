@@ -94,10 +94,15 @@ void MyFrame::myShow(bool askLoad){
 			    wxCommandEvent dummy = wxCommandEvent();
 				OnOpenMovie(dummy);
 			}
-			else
+			else if (w.filetype->GetSelection()==1)
 			{
 			    wxCommandEvent dummy = wxCommandEvent();
 				OnOpenImages(dummy);
+			}
+			else
+			{
+			    wxCommandEvent dummy = wxCommandEvent();
+				OnOpenConfocal(dummy);
 			}
 		}
 //		else OpenMovie(config->Read("AppDir")+"sampleMovie.avi");
@@ -161,6 +166,39 @@ void MyFrame::OnOpenImages( wxCommandEvent& event )
 	wxEndBusyCursor();
 	}
 }
+
+void MyFrame::OnOpenConfocal( wxCommandEvent& event )
+{
+    wxFileDialog d(this, _T("Select image files to load"), cwd, _T(""), _T("TIFF files (*.tiff,*.tif)|*.tiff;*.tif|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
+    if (d.ShowModal() == wxID_OK)
+    {
+        config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());
+        wxArrayString files;
+        d.GetFilenames(files);
+        if (!files.GetCount() && ((float)(files.GetCount()/2) == ((float)files.GetCount())/2.0f))
+            return;
+        ConfocalDialog_ w(this);
+        int zslides = 1;
+        if(w.ShowModal() == wxID_OK)
+        {
+            zslides = w.m_zslides->GetValue();
+            while ((float)(files.GetCount()/2/zslides) != ((float)files.GetCount())/2.0f/(float)zslides)
+            {
+                ConfocalDialog_ v(this);
+                v.m_staticText101->SetLabel(_T("Number must be proper divisor."));
+                if(v.ShowModal() == wxID_OK)
+                    zslides = v.m_zslides->GetValue();
+                else
+                    return;
+            }
+            wxBeginBusyCursor();
+                if(cm->OpenConfocal(files, zslides))
+                    OnNewMovieOpened();
+            wxEndBusyCursor();
+        }
+    }
+}
+
 #include <wx/sound.h>
 #include "FilterContoursSidebar.h"
 void MyFrame::OnNewMovieOpened()
@@ -320,6 +358,12 @@ void MyFrame::OnFirst( wxCommandEvent& event )
 	if (cm->SetPos(0))
 		OnNavigate();
 }
+void MyFrame::OnFluorecence( wxCommandEvent &event )
+{
+    if (cm->ShowFluorecence(m_fluorecence->IsChecked()))
+        OnNavigate();
+}
+
 void MyFrame::OnLast( wxCommandEvent& event )
 {
 	if (cm->SetPos(cm->GetFrameCount()-1))

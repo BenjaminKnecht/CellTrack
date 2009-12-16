@@ -1,4 +1,5 @@
 #include "MyCapture.h"
+#include <fstream>
 
 
 MyCapture_Files::MyCapture_Files(const wxArrayString& files_)
@@ -33,6 +34,11 @@ MyCapture_Movie::MyCapture_Movie(const char* avi)
 	fps = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
 	frame_flip = cvCreateImage(size,8,3);
 }
+MyCapture_Confocal::MyCapture_Confocal(const wxArrayString& files_, int zslides)
+: MyCapture_Files(files_)
+{
+	zSlides = zslides;
+}
 MyCapture::~MyCapture()
 {
 	if ( frame_flip )
@@ -47,6 +53,9 @@ MyCapture_Movie::~MyCapture_Movie()
 {
 	if ( capture )
 		cvReleaseCapture( &capture );
+}
+MyCapture_Confocal::~MyCapture_Confocal()
+{
 }
 void MyCapture::setPos(int pos_)
 {
@@ -94,4 +103,42 @@ IplImage* MyCapture_Movie::queryFrame(int pos_){
 		frame = frame_flip;
 	}
 	return MyCapture::queryFrame();
+}
+IplImage* MyCapture_Confocal::queryFrame(int pos_)
+{
+	if ( pos_ >= 0 )
+		setPos(pos_);
+	if ( pos >= frameCount )
+		throw "no more frames left to query. position passed end of movie.";
+	if (frame)
+		cvReleaseImage(&frame);
+
+    std::ifstream file (files[pos].mb_str(), std::ios::in|std::ios::binary|std::ios::ate);
+    if (file.is_open())
+    {
+        frame = cvCreateImage(size,IPL_DEPTH_8U,3);
+        uchar* data = (uchar*)frame->imageData;
+        std::ifstream::pos_type end = file.tellg();
+        char* memblock = new char [2];
+        file.seekg (768, std::ios::beg);
+        while(file.tellg() < end)
+        {
+            file.read (memblock, 2);
+            int pixVal = ((int)(memblock[0]<<8) + (uchar)memblock[1])/16;
+            *(data++) = (uchar)pixVal;
+            *(data++) = (uchar)pixVal;
+            *(data++) = (uchar)pixVal;
+        }
+        file.close();
+        delete[] memblock;
+    }
+    else
+    {
+        wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image."), files[0], pos);
+        frame = cvCreateImage(size,IPL_DEPTH_8U,3);
+    }
+}
+int MyCapture_Confocal::getSlideNumber()
+{
+    return zSlides;
 }

@@ -18,12 +18,15 @@ class CaptureManager
 private:
 	bool OpenMovie_initialize(MyCapture &capture);
 public:
-	ImagePlus **book;
+	ImagePlus** book;
 	ImagePlus img;
 	int *frameMap;
 	int frameCount;
+	//int slideCount;
 	int fps;
 	int pos;
+	int zPos;
+	int fluorecence;
 	MyCanvas *canvas;
 	CvSize size;
 	PluginBase *ReloadListener;
@@ -40,6 +43,7 @@ public:
 	MyCanvas* GetCanvas();
 	bool OpenMovie(const char* avi);
 	bool OpenMovie(const wxArrayString &files);
+	bool OpenConfocal(const wxArrayString &files, int zSlides);
 	bool SaveMovie(const char* avi);
 	int GetFrameCount();
 	CvSize GetSize();
@@ -50,6 +54,7 @@ public:
 	bool OnDeleteAfter();
 	bool OnPrev();
 	bool OnNext();
+	bool ShowFluorecence(bool show);
 	void Redraw(bool callPlugin=true);
 	void SetReloadListener(PluginBase *ReloadListener_=NULL);
 	void SetRedrawListener(PluginBase *RedrawListener_=NULL);

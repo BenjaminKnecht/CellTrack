@@ -65,7 +65,7 @@ public:
 	void OnPreferences( wxCommandEvent &event );
 	void OpenMovie(const wxString &filename);
 	void OnNewMovieOpened();
-
+    void OnOpenConfocal( wxCommandEvent &event );
 
 	// Image Menu
 	void OnSmooth( wxCommandEvent& event );
@@ -82,6 +82,7 @@ public:
 	virtual void OnTogglePlay( wxCommandEvent &event );
 	virtual void OnPrev( wxCommandEvent &event );
 	virtual void OnNext( wxCommandEvent &event );
+	virtual void OnFluorecence( wxCommandEvent &event );
 	virtual void OnFirst( wxCommandEvent &event );
 	virtual void OnLast( wxCommandEvent &event );
 	virtual void OnScroll( wxScrollEvent &event );
