@@ -145,6 +145,7 @@ class MyFrame_ : public wxFrame
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnStop( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPlay( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnFluorecence( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnScroll( wxScrollEvent& event ){ event.Skip(); }
 		
 	
@@ -961,7 +962,7 @@ class LoadImagesDialog_ : public wxDialog
 	
 	public:
 		wxRadioBox* filetype;
-		LoadImagesDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load movie"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 275,160 ), long style = wxDEFAULT_DIALOG_STYLE );
+		LoadImagesDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load movie"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 290,200 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~LoadImagesDialog_();
 	
 };

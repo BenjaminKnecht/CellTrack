@@ -428,6 +428,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_play->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPlay ), NULL, this );
 	m_prev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPrev ), NULL, this );
 	m_next->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnNext ), NULL, this );
+	m_fluorecence->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorecence ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
@@ -495,6 +496,7 @@ MyFrame_::~MyFrame_()
 	m_play->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPlay ), NULL, this );
 	m_prev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPrev ), NULL, this );
 	m_next->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnNext ), NULL, this );
+	m_fluorecence->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorecence ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
@@ -3252,10 +3254,10 @@ LoadImagesDialog_::LoadImagesDialog_( wxWindow* parent, wxWindowID id, const wxS
 	m_staticText99->Wrap( -1 );
 	bSizer57->Add( m_staticText99, 0, wxALL, 5 );
 	
-	wxString filetypeChoices[] = { _("A single movie file (*.avi)"), _("A collection of image files") };
+	wxString filetypeChoices[] = { _("A single movie file (*.avi)"), _("A collection of image files"), _("A collection of confocal images (*.tif)") };
 	int filetypeNChoices = sizeof( filetypeChoices ) / sizeof( wxString );
 	filetype = new wxRadioBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, filetypeNChoices, filetypeChoices, 1, wxRA_SPECIFY_COLS );
-	filetype->SetSelection( 0 );
+	filetype->SetSelection( 2 );
 	bSizer57->Add( filetype, 0, wxALL|wxEXPAND, 5 );
 	
 	m_sdbSizer1 = new wxStdDialogButtonSizer();

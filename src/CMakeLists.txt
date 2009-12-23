@@ -11,6 +11,8 @@ INCLUDE_DIRECTORIES(
 SET( CELLTRACK_SRC_FILES
   CaptureManager.cpp
   ImagePlus.cpp
+  ImageLoader.cpp
+  ImageJobQueue.cpp
   MyCapture.cpp
   PluginBase.cpp
   CustomEvents.cpp

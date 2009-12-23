@@ -11,17 +11,23 @@ CaptureManager::~CaptureManager(void){
 void CaptureManager::Reset(){
 	int i;
 	if (book) {
-		for (i=0; i<frameCount; i++){
+		for (i=0; i<totalFrameCount; i++){
 			delete book[i];
 		}
 		delete[] book;
 	}
 	frameCount = 0;
+	slideCount = 0;
+	fluorescence = false;
+	viewFluorescence = false;
+	totalFrameCount = 0;
+	offset = 1;
 	fps = 0;
 	pos = 0;
 	zPos = 0;
 	size = cvSize(0, 0);
 	img.ReleaseAll();
+	loadRadius = 4;
 }
 void CaptureManager::SetCanvas(MyCanvas *canvas_){
 	canvas = canvas_;
@@ -46,19 +52,27 @@ bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides)
 {
     Reset();
     MyCapture_Confocal capture(files, zSlides);
-    return OpenMovie_initialize(capture);
+    return OpenConfocal_initialize(capture);
 }
+
+void CaptureManager::SetQueue(ImageJobQueue* queue)
+{
+    m_queue = queue;
+}
+
 #include <wx/progdlg.h>
 bool CaptureManager::OpenMovie_initialize(MyCapture &capture)
 {
 	if (!capture.IsOK())
 		return false;
 	frameCount = capture.frameCount;
+	totalFrameCount = frameCount;
+	slideCount = 1;
 	fps = capture.fps ? capture.fps : Preferences::GetSavingFpsDefault();
 	book = new ImagePlus*[frameCount];
 	wxProgressDialog progressDlg(_T("Loading movie..."), wxString::Format(_T("Frame 0 of %d"), frameCount),frameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
-	for (int i=0; i<frameCount; i++){
-		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, frameCount));
+	for (int i=0; i<totalFrameCount; i++){
+		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, totalFrameCount));
 		IplImage *newframe = capture.queryFrame(i);
 		IplImage *resized;
 		if (i == 0){
@@ -77,6 +91,45 @@ bool CaptureManager::OpenMovie_initialize(MyCapture &capture)
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
 	SetPos(0);
+	return true;
+}
+
+bool CaptureManager::OpenConfocal_initialize(MyCapture_Confocal &capture)
+{
+	if (!capture.IsOK())
+		return false;
+	slideCount = capture.getSlideNumber();
+	frameCount = capture.frameCount/2/slideCount;
+	fluorescence = true;
+	totalFrameCount = frameCount*2*slideCount;
+	offset = 2*slideCount;
+	fps = Preferences::GetSavingFpsDefault();
+	book = new ImagePlus*[frameCount*2*slideCount];
+	/*wxProgressDialog progressDlg(_T("Loading movie..."), wxString::Format(_T("Frame 0 of %d"), totalFrameCount),totalFrameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	for (int i=0; i<totalFrameCount; i++){
+        if (i == 31)
+            std::cout << "loading frame .. " << i << std::endl;
+		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, totalFrameCount));
+		IplImage *newframe = capture.queryFrame(i);
+		IplImage *resized;
+		if (i == 0){
+			size = cvSize(newframe->width, newframe->height);
+			book[1] = new ImagePlus(newframe);
+		}
+		else if(!cvSizeEquals(newframe, size)){
+			resized = cvCloneImage(book[1]->orig);
+			cvResize(newframe, resized);
+			book[i+(i%2 == 1 ? 1 : -1)] = new ImagePlus(resized);
+			cvReleaseImage(&resized);
+		}
+		else
+			book[i+(i%2 == 1 ? 1 : -1)] = new ImagePlus(newframe);
+	}*/
+	m_capture = capture;
+	if (BookChangeListener)
+		BookChangeListener->OnBookChange();
+	SetPos(0);
+	SetZPos(0);
 	return true;
 }
 
@@ -100,9 +153,9 @@ bool CaptureManager::SaveMovie(const char* avi){
 	for (int i=0; i<frameCount; i++) {
 		progressDlg.Update(i+1, wxString::Format(_T("Frame %d of %d"), i+1, frameCount));
 		if (resize)
-			cvResize(book[i]->ToIplImage(), resized);
+			cvResize(book[i*offset]->ToIplImage(), resized);
 		else
-			resized = book[i]->ToIplImage();
+			resized = book[i*offset]->ToIplImage();
 		cvConvertImage( resized, frame_flip, CV_CVTIMG_SWAP_RB );
 		cvWriteFrame(writer, frame_flip);
 	}
@@ -112,6 +165,7 @@ bool CaptureManager::SaveMovie(const char* avi){
 		cvReleaseImage(&resized);
 	return true;
 }
+//TODO: Check who uses this and how to change accordingly
 int CaptureManager::GetFrameCount(){
 	return frameCount;
 }
@@ -121,22 +175,45 @@ CvSize CaptureManager::GetSize(){
 int CaptureManager::GetPos(){
 	return pos;
 }
+int CaptureManager::GetTotalPos()
+{
+	return pos*offset+zPos*2+(viewFluorescence?1:0);
+}
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img = *book[pos+zPos+fluorecence];
-	if (redraw)
+	img = *book[pos*offset+zPos*2+(viewFluorescence?1:0)];
+	LoadNeighborhood();
+	if (redraw && img.loaded)
 		Redraw(callPlugin);
 }
+
+void CaptureManager::LoadNeighborhood()
+{
+    for (int i = pos - loadRadius; i<loadRadius+pos+1; i++)
+    {
+        for (int j = zPos - (loadRadius - abs(i - pos)); j < zPos + (loadRadius - abs(i - pos)) + 1; j++)
+        {
+            if (i >= 0 && i < frameCount && j >= 0 && j < slideCount)
+            {
+                int totalPos = i*offset + j*2;
+                int priority = 2 + abs(pos - i) + abs(zPos - j);
+                m_queue->AddJob(Job(Job::thread_load, totalPos, m_capture.getFilename(totalPos)), priority);
+                m_queue->AddJob(Job(Job::thread_load, totalPos + 1, m_capture.getFilename(totalPos + 1)), priority + (viewFluorescence?1:-1));
+            }
+        }
+    }
+}
+
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img.CloneContours(book[pos+zPos+fluorecence]);
+	img.CloneContours(book[pos*offset+zPos*2+(viewFluorescence?1:0)]);
 	if (redraw)
 		Redraw(callPlugin);
 }
 void CaptureManager::PushbackCurrentFrame(){
-	*(book[pos+zPos+fluorecence]) = img;
+	*(book[pos*offset+zPos*2+(viewFluorescence?1:0)]) = img;
 }
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))
@@ -145,15 +222,32 @@ bool CaptureManager::SetPos(int newpos, bool reload){
 	ReloadCurrentFrame();
 	return true;
 }
+bool CaptureManager::SetZPos(int newpos, bool reload){
+	if (newpos<0 || newpos>=slideCount || (newpos==zPos && img.orig && !reload))
+		return false;
+	zPos = newpos;
+	ReloadCurrentFrame();
+	return true;
+}
+bool CaptureManager::SetPos(int newpos, int newZPos, bool reload){
+	if (newpos<0 || newpos>=frameCount || newZPos<0 || newZPos>=slideCount
+        || (newZPos==zPos && newpos==pos && img.orig && !reload))
+		return false;
+	pos = newpos;
+	zPos = newZPos;
+	ReloadCurrentFrame();
+	return true;
+}
 bool CaptureManager::OnDeleteBefore()
 {
 	if (!pos)
 		return false;
-	for (int i=0; i<pos; i++)
+	for (int i=0; i<pos*offset; i++)
 		delete book[i];
-	for (int i=0; i<frameCount-pos; i++)
-		book[i] = book[i+pos];
+	for (int i=0; i<totalFrameCount-pos*offset; i++)
+		book[i] = book[i+pos*offset];
 	frameCount-=pos;
+	totalFrameCount-=pos*offset;
 	SetPos(0,true);
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
@@ -161,9 +255,10 @@ bool CaptureManager::OnDeleteBefore()
 }
 bool CaptureManager::OnDeleteAfter()
 {
-	for (int i=pos+1; i<frameCount; i++)
+	for (int i=(pos+1)*offset; i<totalFrameCount; i++)
 		delete book[i];
 	frameCount=pos+1;
+	totalFrameCount=(pos+1)*offset;
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
 	return true;
@@ -176,16 +271,23 @@ bool CaptureManager::OnDelete()
 		wxLogError(_T("Cannot delete the last and only frame."));
 		return false;
 	}
-	ImagePlus *todelete=book[pos+zPos+fluorecence];
+	ImagePlus* todelete[offset];
+	for (int i = pos*offset; i<(pos+1)*offset; i++)
+	{
+	    todelete[i/pos] = book[i];
+	}
 	int i;
-	for (i=pos; i<frameCount-1; i++)
+	for (i=pos*offset; i<totalFrameCount-offset; i++)
 		book[i]=book[i+1];
-	book[i] = NULL;
+    for (;i<totalFrameCount;i++)
+        book[i] = NULL;
 	frameCount--;
+	totalFrameCount-=offset;
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
 	SetPos(pos==frameCount ? frameCount-1 : pos, true);
-	delete todelete;
+	for (int j = 0; j<offset; i++)
+        delete todelete[i];
 	return true;
 }
 bool CaptureManager::OnPrev(){
@@ -196,7 +298,7 @@ bool CaptureManager::OnNext(){
 }
 bool CaptureManager::ShowFluorecence(bool show)
 {
-    fluorecence = (show ? 1 : 0);
+    viewFluorescence = show;
 }
 void CaptureManager::Redraw(bool callPlugin){
 	if (!canvas)
@@ -246,9 +348,9 @@ std::vector<float> CaptureManager::GetAreas(int c, float &avgArea){
 	int goodSteps = 0;
 	float totalArea = 0.0;
 	for (int i=0; i<frameCount; i++){
-		if (book[i]->contourArray.size() > c){
+		if (book[i*offset]->contourArray.size() > c){
 			goodSteps++;
-			totalArea += (a[i]=fabs(cvContourArea(book[i]->contourArray[c])));
+			totalArea += (a[i]=fabs(cvContourArea(book[i*offset]->contourArray[c])));
 		}
 	}
 	avgArea = (goodSteps ? totalArea/goodSteps : 0);
@@ -260,7 +362,7 @@ std::vector<float> CaptureManager::GetAreaDiff(int c, float &avgDiff){
 	float totalDiff = 0;
 	int goodSteps = 0;
 	for (int i=0; i<frameCount-1; i++){
-		if (book[i]->contourArray.size() > c){
+		if (book[i*offset]->contourArray.size() > c){
 			goodSteps++;
 			totalDiff += (diff[i] = a[i+1]-a[i]);
 		}
@@ -283,7 +385,7 @@ std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef){
 		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1])) {
 			wxPoint *ps = ContourToPointArray(book[i]->contourArray[c], MyPoint(traj[i+1])-MyPoint(traj[i]).ToWxPoint());
 			img_->RemoveAllContours();
-			img_->AddContour(ps,book[i]->contourArray[c]->total);
+			img_->AddContour(ps,book[i*offset]->contourArray[c]->total);
 			delete[] ps;
 
 			CvSeq *seq = book[i+1]->contourArray[c];
@@ -315,12 +417,12 @@ std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef){
 std::vector<CvPoint> CaptureManager::GetTrajectory(int c){
 	std::vector<CvPoint> traj(frameCount);
 	for (int i=0; i<frameCount; i++){
-		if (book[i]->contourArray.size() <= c)
+		if (book[i*offset]->contourArray.size() <= c)
 			traj[i]=cvPoint(-1,-1);
 		else{
 			CvMoments m;
 			double m00,m10,m01;
-			cvMoments(book[i]->contourArray[c], &m);
+			cvMoments(book[i*offset]->contourArray[c], &m);
 			m00 = cvGetSpatialMoment(&m,0,0);
 			m01 = cvGetSpatialMoment(&m,0,1);
 			m10 = cvGetSpatialMoment(&m,1,0);
@@ -357,10 +459,10 @@ bool CaptureManager::SaveTrackData(const char* file) {
 		fprintf(fp, "#Cell: %d, pointCount: %d\n", c+1, np);
 		for (int j=0; j<frameCount; j++){
 			for (int i=0; i<np; i++){
-				if(book[j]->contourArray.size() <= c || book[j]->contourArray[c]->total <= i)
+				if(book[j*offset]->contourArray.size() <= c || book[j*offset]->contourArray[c]->total <= i)
 					fprintf(fp,"-1 -1 ");
 				else{
-					CvPoint *p = (CvPoint*) cvGetSeqElem(book[j]->contourArray[c], i);
+					CvPoint *p = (CvPoint*) cvGetSeqElem(book[j*offset]->contourArray[c], i);
 					fprintf(fp, "%d\t%d\t", p->x, p->y);
 				}
 			}
@@ -380,7 +482,7 @@ bool CaptureManager::ImportTrackData(const char* file) {
 	//check if there's already some detected cells.
 	bool hasCells = false;
 	for( int i=0; i<frameCount; i++ ){
-		if (book[i]->contourArray.size()){
+		if (book[i*offset]->contourArray.size()){
 			hasCells = true;
 			break;
 		}
@@ -391,7 +493,7 @@ bool CaptureManager::ImportTrackData(const char* file) {
 			return false;
 		else if(reply == wxYES){
 			for( int i=0; i<frameCount; i++ )
-				book[i]->RemoveAllContours();
+				book[i*offset]->RemoveAllContours();
 		}
 	}
 	//TODO: give notice if the movie info of the track-data does not match with current movie.
@@ -412,7 +514,7 @@ bool CaptureManager::ImportTrackData(const char* file) {
 					wxLogError(_T("Unable to parse file %s for cell %d coordinates"), file, c+1);	return false;
 				}
 			}
-			book[j]->AddRoi(roi);
+			book[j*offset]->AddRoi(roi);
 		}
 	}
 	fclose(fp);
@@ -523,9 +625,9 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp) {
 			dc.SetPen(wxPen(wxColour(Preferences::GetColorContourCornerColor())));
 			dc.SetBrush(*wxTRANSPARENT_BRUSH);
 			for (int j=1; j<frameCount; j++){
-				if(book[j]->contourArray.size() <= c || book[j]->contourArray[c]->total <= i)
+				if(book[j]->contourArray.size() <= c || book[j*offset]->contourArray[c]->total <= i)
 					continue;
-				CvPoint *p = (CvPoint*) cvGetSeqElem(book[j]->contourArray[c], i);
+				CvPoint *p = (CvPoint*) cvGetSeqElem(book[j*offset]->contourArray[c], i);
 				dc.DrawLine(scale.x*lastLoc->x,scale.y*lastLoc->y, scale.x*p->x,scale.y*p->y);
 				lastLoc = p;
 			}
@@ -533,14 +635,14 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp) {
 			dc.SetBrush(*wxRED_BRUSH);
 			dc.SetPen(wxPen(*wxRED));
 			for (int j=1; j<frameCount; j++){
-				if(book[j]->contourArray.size() <= c || book[j]->contourArray[c]->total <= i)
+				if(book[j*offset]->contourArray.size() <= c || book[j*offset]->contourArray[c]->total <= i)
 					continue;
-				CvPoint *p = (CvPoint*) cvGetSeqElem(book[j]->contourArray[c], i);
+				CvPoint *p = (CvPoint*) cvGetSeqElem(book[j*offset]->contourArray[c], i);
 				dc.DrawCircle(MyPoint(*p)*scale, Preferences::GetColorContourCornerWidth());
 			}
 		}
-		if(c < book[frameCount-1]->contourArray.size())
-			MyCanvas::DrawContour_static(&dc, book[frameCount-1]->contourArray[c],wxPoint(0,0),scale, true, wxRED);
+		if(c < book[(frameCount-1)*offset]->contourArray.size())
+			MyCanvas::DrawContour_static(&dc, book[(frameCount-1)*offset]->contourArray[c],wxPoint(0,0),scale, true, wxRED);
 	}
 	return true;
 }
@@ -580,7 +682,7 @@ bool CaptureManager::SaveTrajectoryImage(wxBitmap &bmp) {
 		dc.SetPen(wxPen(*wxRED));
 		if(traj[frameCount-1].x>=0){
 			dc.DrawCircle(MyPoint(traj[frameCount-1])*scale, 2*Preferences::GetColorContourCornerWidth());
-			MyCanvas::DrawContour_static(&dc, book[frameCount-1]->contourArray[c],wxPoint(0,0),scale, true, wxRED);
+			MyCanvas::DrawContour_static(&dc, book[(frameCount-1)*offset]->contourArray[c],wxPoint(0,0),scale, true, wxRED);
 		}
 	}
 	return true;
@@ -589,7 +691,7 @@ void CaptureManager::Resize(int width, int height, int method){
 	if (MyPoint(width,height) == MyPoint(size))
 		return;
 	size = cvSize(width,height);
-	for (int i=0; i<frameCount; i++){
+	for (int i=0; i<totalFrameCount; i++){
 		book[i]->Resize(width, height, method);
 	}
 	ReloadCurrentFrame();
@@ -597,7 +699,7 @@ void CaptureManager::Resize(int width, int height, int method){
 void CaptureManager::Crop(CvPoint topleft, CvSize size_){
 	if (size.width == 0)
 		return;
-	for (int i=0; i<frameCount; i++){
+	for (int i=0; i<totalFrameCount; i++){
 		book[i]->Crop(topleft, size_);
 	}
 	size = cvSize(size_.width, size_.height);

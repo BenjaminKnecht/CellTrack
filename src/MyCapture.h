@@ -59,10 +59,11 @@ class MyCapture_Confocal : public MyCapture_Files
 {
 private:
 	int zSlides;
-	MyCapture_Confocal(){};
 public:
+    MyCapture_Confocal(){};
 	MyCapture_Confocal(const wxArrayString &files_, int slides);
 	~MyCapture_Confocal();
     virtual IplImage* queryFrame(int pos_=-1);
 	int getSlideNumber();
+	wxString getFilename(int pos_);
 };

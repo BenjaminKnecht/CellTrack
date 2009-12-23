@@ -5,6 +5,7 @@
 #include "MyCanvas.h"
 #include "CaptureManager.h"
 #include "PluginBase.h"
+#include "ImageJobQueue.h"
 #include <wx/config.h>
 #include <wx/msgdlg.h>
 #include <wx/timer.h>
@@ -41,6 +42,7 @@ public:
 private:
 	// Member variables
 	CaptureManager *cm;
+	ImageJobQueue* queue;
 
 	// config helps in saving/loading configuration parameters in a platform-dependent way.
 	wxConfigBase *config;
@@ -71,7 +73,7 @@ public:
 	void OnSmooth( wxCommandEvent& event );
 	void OnCrop( wxCommandEvent& event );
 	void OnResizeMovie( wxCommandEvent& event );
-
+    void OnThread( wxCommandEvent& event );
 
 	// Navigation events
 	virtual void OnDeleteBefore( wxCommandEvent &event );

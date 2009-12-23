@@ -1,14 +1,14 @@
 #include "ImagePlus.h"
 
 ImagePlus::ImagePlus()
-: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0)
+: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), loaded(false)
 {
 }
-ImagePlus::ImagePlus(IplImage *orig_) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0)
+ImagePlus::ImagePlus(IplImage *orig_) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), loaded(true)
 {
 	SetOriginal(orig_);
 }
-ImagePlus::ImagePlus(const ImagePlus &copy) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(copy.dirty), numContours(copy.numContours)
+ImagePlus::ImagePlus(const ImagePlus &copy) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(copy.dirty), numContours(copy.numContours), loaded(copy.loaded)
 {
 	if ( copy.orig )
 		orig = cvCloneImage(copy.orig);
@@ -61,11 +61,13 @@ void ImagePlus::ReleaseAll()
 		cvReleaseImage(&drawn);
 	RemoveAllContours();
 	dirty = true;
+	loaded = false;
 }
 void ImagePlus::SetOriginal(IplImage *orig_){
 	ReleaseAll();
 	orig = cvCloneImage(orig_);
 	dirty = true;
+	loaded = true;
 }
 // This should no longer be needed. The actual drawing of contours and features
 // are now done in MyCanvas class.

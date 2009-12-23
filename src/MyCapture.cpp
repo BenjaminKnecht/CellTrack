@@ -106,39 +106,19 @@ IplImage* MyCapture_Movie::queryFrame(int pos_){
 }
 IplImage* MyCapture_Confocal::queryFrame(int pos_)
 {
-	if ( pos_ >= 0 )
-		setPos(pos_);
-	if ( pos >= frameCount )
-		throw "no more frames left to query. position passed end of movie.";
-	if (frame)
-		cvReleaseImage(&frame);
-
-    std::ifstream file (files[pos].mb_str(), std::ios::in|std::ios::binary|std::ios::ate);
-    if (file.is_open())
-    {
-        frame = cvCreateImage(size,IPL_DEPTH_8U,3);
-        uchar* data = (uchar*)frame->imageData;
-        std::ifstream::pos_type end = file.tellg();
-        char* memblock = new char [2];
-        file.seekg (768, std::ios::beg);
-        while(file.tellg() < end)
-        {
-            file.read (memblock, 2);
-            int pixVal = ((int)(memblock[0]<<8) + (uchar)memblock[1])/16;
-            *(data++) = (uchar)pixVal;
-            *(data++) = (uchar)pixVal;
-            *(data++) = (uchar)pixVal;
-        }
-        file.close();
-        delete[] memblock;
-    }
-    else
-    {
-        wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image."), files[0], pos);
-        frame = cvCreateImage(size,IPL_DEPTH_8U,3);
-    }
+	return NULL; // because we load dynamically now
 }
 int MyCapture_Confocal::getSlideNumber()
 {
     return zSlides;
 }
+
+wxString MyCapture_Confocal::getFilename(int pos_)
+{
+    if ( pos_ < 0 || pos_ >= frameCount )
+        return _T("");
+    else
+        return files[pos_];
+
+}
+

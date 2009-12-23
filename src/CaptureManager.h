@@ -11,27 +11,36 @@
 
 class MyCanvas;
 class PluginBase;
+class ImageJobQueue;
 
 //manages read/process/write functions from a starting folder/file capture
 class CaptureManager
 {
 private:
 	bool OpenMovie_initialize(MyCapture &capture);
+	bool OpenConfocal_initialize(MyCapture_Confocal &capture);
 public:
 	ImagePlus** book;
 	ImagePlus img;
 	int *frameMap;
 	int frameCount;
-	//int slideCount;
+	int slideCount;
 	int fps;
+	int totalFrameCount;
+	int offset;
 	int pos;
 	int zPos;
-	int fluorecence;
+	bool fluorescence;
+	bool viewFluorescence;
 	MyCanvas *canvas;
 	CvSize size;
 	PluginBase *ReloadListener;
 	PluginBase *RedrawListener;
 	PluginBase *BookChangeListener;
+	ImageJobQueue* m_queue;
+	int loadRadius;
+
+	MyCapture_Confocal m_capture;
 
 public:
 	CvSeq *contours;
@@ -48,7 +57,11 @@ public:
 	int GetFrameCount();
 	CvSize GetSize();
 	int GetPos();
+	int GetTotalPos();
 	bool SetPos(int newpos, bool reload=false);
+	int GetZPos();
+	bool SetZPos(int newpos, bool reload=false);
+	bool SetPos(int newpos, int newZPos, bool reload=false);
 	bool OnDelete();
 	bool OnDeleteBefore();
 	bool OnDeleteAfter();
@@ -56,6 +69,7 @@ public:
 	bool OnNext();
 	bool ShowFluorecence(bool show);
 	void Redraw(bool callPlugin=true);
+	void SetQueue(ImageJobQueue* queue);
 	void SetReloadListener(PluginBase *ReloadListener_=NULL);
 	void SetRedrawListener(PluginBase *RedrawListener_=NULL);
 	void SetBookChangeListener(PluginBase *BookChangeListener_=NULL);
@@ -71,6 +85,7 @@ public:
 	bool SaveAreaData(const char* file);
 	bool SaveDeformationData(const char* file);
 	bool ImportTrackData(const char* file);
+	void LoadNeighborhood();
 
 	std::vector<CvPoint> GetTrajectory(int c); //get trajectory of cth object
 	std::vector<float> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object

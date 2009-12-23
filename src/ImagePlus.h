@@ -21,6 +21,7 @@ public:
 	CvMemStorage *contours_storage;
 	std::vector<std::vector<CvPoint2D32f> > feats;
 	bool dirty; //specifies if drawn need to be updated. no longer needed.
+	bool loaded;
 
 	ImagePlus();
 	~ImagePlus();

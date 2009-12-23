@@ -5,14 +5,17 @@
 #include "CustomEvents.h"
 #include "Preferences.h"
 #include "IncludePlugins.h"
-
+#include "ImageLoader.h"
 
 #define WX_SET_ENABLED(win, to)	if(to) win->Enable(); else win->Disable();
+
+extern const wxEventType wxEVT_IMGTHREAD;
 
 IMPLEMENT_DYNAMIC_CLASS( MyFrame, wxFrame )
 BEGIN_EVENT_TABLE(MyFrame, wxFrame)
 EVT_CUSTOM(EVT_PLUGIN_END, wxID_ANY, MyFrame::OnPluginEnd)
 EVT_TIMER(wxID_ANY, MyFrame::OnTimer)
+EVT_COMMAND(wxID_ANY, wxEVT_IMGTHREAD, MyFrame::OnThread)
 // 	EVT_CLOSE(MyFrame::OnClose)
 //	EVT_BUTTON(wxID_OK, MyFrame::OnOK)
 //	EVT_CANNY( wxID_ANY, MyFrame::OnCanny )
@@ -32,6 +35,8 @@ MyFrame::~MyFrame()
 		delete cm;
 	if (timer)
 		delete timer;
+    if (queue)
+        delete queue;
 }
 
 #define SPLITTER_UNSPLIT_DESTROY(splitter, i)	\
@@ -61,6 +66,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 {
 	config = wxConfig::Get();
 	cm = new CaptureManager();
+	queue = new ImageJobQueue(this);
+
 	cm->SetCanvas(canvas);
 	//	  SetIcon(wxIcon(wxT("celltrack.xpm")));
 	SPLITTER_UNSPLIT_DESTROY( splitterSidebar, 1 )
@@ -86,6 +93,9 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 }
 void MyFrame::myShow(bool askLoad){
 	Show();
+	ImageLoader* imgLoader = new ImageLoader(queue);
+	imgLoader->Run();
+	cm->SetQueue(queue);
 	if (!loaded && askLoad){
 		LoadImagesDialog_ w(this);
 		if(w.ShowModal() == wxID_OK){
@@ -196,6 +206,24 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
                     OnNewMovieOpened();
             wxEndBusyCursor();
         }
+    }
+}
+
+void MyFrame::OnThread( wxCommandEvent& event )
+{
+    switch(event.GetId())
+    {
+        case Job::thread_started:
+            break;
+        case Job::thread_loaded:
+            cm->book[event.GetInt()]->orig = (IplImage*)(event.GetClientData());
+            cm->book[event.GetInt()]->loaded = true;
+            if(cm->GetTotalPos() == event.GetInt())
+                cm->Redraw();
+            break;
+        case Job::thread_deleted:
+            break;
+        default: break;
     }
 }
 
