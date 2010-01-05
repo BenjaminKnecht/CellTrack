@@ -1,5 +1,5 @@
 /* XPM */
-static char *xpm_delete[] = {
+static const char *xpm_delete[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 221 2",
 "   c #1709191278C7",
@@ -258,7 +258,7 @@ static char *xpm_delete[] = {
 "iXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiXiX"
 };
 /* XPM */
-static char *xpm_disabled_delete[] = {
+static const char *xpm_disabled_delete[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 113 2",
 "   c #585858",
@@ -409,7 +409,7 @@ static char *xpm_disabled_delete[] = {
 "2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2.2."
 };
 /* XPM */
-static char *xpm_disabled_help[] = {
+static const char *xpm_disabled_help[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 147 2",
 "   c gray28",
@@ -594,7 +594,7 @@ static char *xpm_disabled_help[] = {
 "M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M."
 };
 /* XPM */
-static char *xpm_disabled_next[] = {
+static const char *xpm_disabled_next[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 149 2",
 "   c gray28",
@@ -781,7 +781,7 @@ static char *xpm_disabled_next[] = {
 "B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B.B."
 };
 /* XPM */
-static char *xpm_disabled_pause[] = {
+static const char *xpm_disabled_pause[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 145 2",
 "   c gray28",
@@ -964,7 +964,7 @@ static char *xpm_disabled_pause[] = {
 "n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n."
 };
 /* XPM */
-static char *xpm_disabled_play[] = {
+static const char *xpm_disabled_play[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 145 2",
 "   c gray28",
@@ -1147,7 +1147,7 @@ static char *xpm_disabled_play[] = {
 "n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n.n."
 };
 /* XPM */
-static char *xpm_disabled_prev[] = {
+static const char *xpm_disabled_prev[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 147 2",
 "   c gray28",
@@ -1332,7 +1332,7 @@ static char *xpm_disabled_prev[] = {
 "M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M.M."
 };
 /* XPM */
-static char *xpm_disabled_stop[] = {
+static const char *xpm_disabled_stop[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 142 2",
 "   c gray28",
@@ -1512,7 +1512,7 @@ static char *xpm_disabled_stop[] = {
 "c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c.c."
 };
 /* XPM */
-static char *xpm_help[] = {
+static const char *xpm_help[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 216 2",
 "   c #171978",
@@ -1766,7 +1766,7 @@ static char *xpm_help[] = {
 "eXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeXeX"
 };
 /* XPM */
-static char *xpm_hover_delete[] = {
+static const char *xpm_hover_delete[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 118 2",
 "   c #59BD5783569C",
@@ -1922,7 +1922,7 @@ static char *xpm_hover_delete[] = {
 "7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7."
 };
 /* XPM */
-static char *xpm_hover_help[] = {
+static const char *xpm_hover_help[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 118 2",
 "   c #59BD5783569C",
@@ -2078,7 +2078,7 @@ static char *xpm_hover_help[] = {
 "7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7.7."
 };
 /* XPM */
-static char *xpm_hover_next[] = {
+static const char *xpm_hover_next[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 119 2",
 "   c #59BD5783569C",
@@ -2235,7 +2235,7 @@ static char *xpm_hover_next[] = {
 "8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8.8."
 };
 /* XPM */
-static char *xpm_hover_pause[] = {
+static const char *xpm_hover_pause[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 115 2",
 "   c #595756",
@@ -2388,7 +2388,7 @@ static char *xpm_hover_pause[] = {
 "4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4.4."
 };
 /* XPM */
-static char *xpm_hover_play[] = {
+static const char *xpm_hover_play[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 151 2",
 "   c #59BD5783569C",
@@ -2577,7 +2577,7 @@ static char *xpm_hover_play[] = {
 "C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C.C."
 };
 /* XPM */
-static char *xpm_hover_prev[] = {
+static const char *xpm_hover_prev[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 117 2",
 "   c #59BD5783569C",
@@ -2732,7 +2732,7 @@ static char *xpm_hover_prev[] = {
 "6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6."
 };
 /* XPM */
-static char *xpm_hover_stop[] = {
+static const char *xpm_hover_stop[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 117 2",
 "   c #595756",
@@ -2887,7 +2887,7 @@ static char *xpm_hover_stop[] = {
 "6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6.6."
 };
 /* XPM */
-static char *xpm_next[] = {
+static const char *xpm_next[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 220 2",
 "   c #1709191278C7",
@@ -3145,7 +3145,7 @@ static char *xpm_next[] = {
 "uXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuX"
 };
 /* XPM */
-static char *xpm_pause[] = {
+static const char *xpm_pause[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 224 2",
 "   c #1709191278C7",
@@ -3407,7 +3407,7 @@ static char *xpm_pause[] = {
 "sXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsXsX"
 };
 /* XPM */
-static char *xpm_play[] = {
+static const char *xpm_play[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 211 2",
 "   c #171978",
@@ -3656,7 +3656,7 @@ static char *xpm_play[] = {
 "8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X8X"
 };
 /* XPM */
-static char *xpm_prev[] = {
+static const char *xpm_prev[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 220 2",
 "   c #1709191278C7",
@@ -3914,7 +3914,7 @@ static char *xpm_prev[] = {
 "uXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuXuX"
 };
 /* XPM */
-static char *xpm_stop[] = {
+static const char *xpm_stop[] = {
 /* columns rows colors chars-per-pixel */
 "32 32 221 2",
 "   c #1709191278C7",
