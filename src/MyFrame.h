@@ -47,10 +47,12 @@ private:
 	// config helps in saving/loading configuration parameters in a platform-dependent way.
 	wxConfigBase *config;
 	wxString cwd;
+	wxString imgDir;
 	PluginBase *hotplug;
 	bool isplaying;
 	wxTimer *timer;
 	bool loaded;
+	int m_zslides;
 
 	wxString getCWD();
 	void EnableMenus(bool enable);
@@ -84,10 +86,11 @@ public:
 	virtual void OnTogglePlay( wxCommandEvent &event );
 	virtual void OnPrev( wxCommandEvent &event );
 	virtual void OnNext( wxCommandEvent &event );
-	virtual void OnFluorecence( wxCommandEvent &event );
+	virtual void OnFluorescence( wxCommandEvent &event );
 	virtual void OnFirst( wxCommandEvent &event );
 	virtual void OnLast( wxCommandEvent &event );
 	virtual void OnScroll( wxScrollEvent &event );
+	virtual void OnVScroll( wxScrollEvent &event );
 	void OnNavigate();
 	void UpdateControls();
 	void OnTimer(wxTimerEvent &e);

@@ -3,7 +3,6 @@
 
 ImageLoader::ImageLoader(ImageJobQueue* queue) : m_queue(queue)
 {
-    loadedElements = 0;
     if(queue)
         wxThread::Create();
 }
@@ -32,7 +31,6 @@ wxThread::ExitCode ImageLoader::Entry()
                 }
                 else
                 {
-                    loadedElements++;
                     img = cvLoadImage((j.m_filename).mb_str());
                     m_queue->Report(Job::thread_loaded, j.m_imgPos, img, j.m_filename);
                 }
@@ -40,7 +38,6 @@ wxThread::ExitCode ImageLoader::Entry()
             case Job::thread_delete:
                 if (j.m_imgPtr)
                 {
-                    loadedElements--;
                     cvReleaseImage(&(j.m_imgPtr));
                     m_queue->Report(Job::thread_deleted, j.m_imgPos);
                 }
@@ -53,6 +50,5 @@ wxThread::ExitCode ImageLoader::Entry()
             default: break;
         }
     }
-    std::cout << "running elements: " << loadedElements << std::endl;
     return (wxThread::ExitCode)img;
 }

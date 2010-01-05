@@ -252,7 +252,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	bSizer1 = new wxBoxSizer( wxVERTICAL );
 	
 	wxBoxSizer* bSizer9;
-	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	bSizer9 = new wxBoxSizer( wxHORIZONTAL );
 	
 	splitterBottombar = new wxSplitterWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxSP_3D );
 	splitterBottombar->SetSashGravity( 1 );
@@ -281,7 +281,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	canvas = new MyCanvas( splitterCanvas, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	canvas->SetMinSize( wxSize( 10,10 ) );
 	
-	splitterCanvas->SplitVertically( canvas2, canvas, 203 );
+	splitterCanvas->SplitVertically( canvas2, canvas, 230 );
 	bSizer37->Add( splitterCanvas, 1, wxEXPAND, 5 );
 	
 	m_panel23->SetSizer( bSizer37 );
@@ -298,6 +298,12 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	splitterBottombar->SplitHorizontally( m_panel4, m_panel12, 244 );
 	bSizer9->Add( splitterBottombar, 1, wxEXPAND, 5 );
+	
+	m_slider2 = new wxSlider( this, wxID_ANY, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_INVERSE|wxSL_VERTICAL );
+	m_slider2->Enable( false );
+	m_slider2->Hide();
+	
+	bSizer9->Add( m_slider2, 0, wxALIGN_CENTER_VERTICAL|wxALIGN_RIGHT|wxEXPAND, 5 );
 	
 	bSizer1->Add( bSizer9, 1, wxEXPAND, 5 );
 	
@@ -360,9 +366,16 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	bSizer3->Add( m_next, 0, wxALIGN_CENTER_VERTICAL, 0 );
 	
-	m_fluorecence = new wxCheckBox( this, wxID_ANY, _("Show Fluorecence image"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_fluorescence = new wxBitmapButton( this, wxID_ANY, wxNullBitmap, wxDefaultPosition, wxSize( 32,32 ), wxBU_AUTODRAW );
+	m_fluorescence->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	m_fluorescence->Enable( false );
+	m_fluorescence->SetToolTip( _("Show/Hide Fluorescence") );
 	
-	bSizer3->Add( m_fluorecence, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	m_fluorescence->SetBackgroundColour( wxSystemSettings::GetColour( wxSYS_COLOUR_APPWORKSPACE ) );
+	m_fluorescence->Enable( false );
+	m_fluorescence->SetToolTip( _("Show/Hide Fluorescence") );
+	
+	bSizer3->Add( m_fluorescence, 0, wxALL, 5 );
 	
 	m_slider = new wxSlider( this, wxID_ANY, 0, 0, 100, wxDefaultPosition, wxDefaultSize, wxSL_BOTH );
 	m_slider->Enable( false );
@@ -423,12 +436,21 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem37->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrajectoryData ) );
 	this->Connect( m_menuItem122->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnHelp ) );
 	this->Connect( m_menuItem13->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnAbout ) );
+	m_slider2->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Connect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
 	m_delete->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnDelete ), NULL, this );
 	m_stop->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnStop ), NULL, this );
 	m_play->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPlay ), NULL, this );
 	m_prev->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPrev ), NULL, this );
 	m_next->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnNext ), NULL, this );
-	m_fluorecence->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorecence ), NULL, this );
+	m_fluorescence->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorescence ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Connect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
@@ -491,12 +513,21 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrajectoryData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnHelp ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnAbout ) );
+	m_slider2->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_LINEDOWN, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_PAGEUP, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_PAGEDOWN, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_THUMBTRACK, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_THUMBRELEASE, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
+	m_slider2->Disconnect( wxEVT_SCROLL_CHANGED, wxScrollEventHandler( MyFrame_::OnVScroll ), NULL, this );
 	m_delete->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnDelete ), NULL, this );
 	m_stop->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnStop ), NULL, this );
 	m_play->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPlay ), NULL, this );
 	m_prev->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnPrev ), NULL, this );
 	m_next->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnNext ), NULL, this );
-	m_fluorecence->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorecence ), NULL, this );
+	m_fluorescence->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( MyFrame_::OnFluorescence ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_TOP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_BOTTOM, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
 	m_slider->Disconnect( wxEVT_SCROLL_LINEUP, wxScrollEventHandler( MyFrame_::OnScroll ), NULL, this );
@@ -3283,19 +3314,16 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* bSizer60;
 	bSizer60 = new wxBoxSizer( wxVERTICAL );
 	
-	
-	bSizer60->Add( 0, 10, 0, wxEXPAND, 5 );
-	
-	m_staticText101 = new wxStaticText( this, wxID_ANY, _("Specify Z range of images."), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText101->Wrap( -1 );
-	bSizer60->Add( m_staticText101, 0, wxALL, 5 );
+	m_staticText101 = new wxStaticText( this, wxID_ANY, _("# of slides must be proper divisor of # of images."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101->Wrap( 200 );
+	bSizer60->Add( m_staticText101, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer40;
 	fgSizer40 = new wxFlexGridSizer( 1, 2, 0, 0 );
 	fgSizer40->SetFlexibleDirection( wxBOTH );
 	fgSizer40->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
-	m_staticText102 = new wxStaticText( this, wxID_ANY, _("Number of Z slices:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText102 = new wxStaticText( this, wxID_ANY, _("Number of Z slides:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText102->Wrap( -1 );
 	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	

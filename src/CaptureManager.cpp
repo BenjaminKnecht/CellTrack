@@ -18,7 +18,7 @@ void CaptureManager::Reset(){
 		delete[] book;
 	}
 	frameCount = 0;
-	slideCount = 0;
+	slideCount = 1;
 	fluorescence = false;
 	viewFluorescence = false;
 	totalFrameCount = 0;
@@ -178,14 +178,17 @@ CvSize CaptureManager::GetSize(){
 int CaptureManager::GetPos(){
 	return pos;
 }
+int CaptureManager::GetZPos(){
+	return zPos;
+}
 int CaptureManager::GetTotalPos()
 {
-	return pos*offset+zPos*2+(viewFluorescence?1:0);
+	return pos*offset+zPos*2+(viewFluorescence?0:1);
 }
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img = *book[pos*offset+zPos*2+(viewFluorescence?1:0)];
+	img = *book[pos*offset+zPos*2+(viewFluorescence?0:1)];
 	//std::cout << "image " << this->GetTotalPos() << " is " << (img.loaded?"ready":"not ready") << std::endl;
 	if (redraw && img.orig)
 		Redraw(callPlugin);
@@ -239,21 +242,17 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
         if (!book[it->first + 1]->orig)
             m_queue->AddJob(Job(Job::thread_load, it->first + 1, m_capture->getFilename(it->first + 1)), it->second);
     }
-
-    if (m_queue->GetLength() > 40)
-        std::cout << "Warning: Loading queue exceeds 40 elements by " << (m_queue->GetLength()-40) << " element(s)!" << std::endl;
-    //std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
 }
 
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img.CloneContours(book[pos*offset+zPos*2+(viewFluorescence?1:0)]);
+	img.CloneContours(book[pos*offset+zPos*2+(viewFluorescence?0:1)]);
 	if (redraw)
 		Redraw(callPlugin);
 }
 void CaptureManager::PushbackCurrentFrame(){
-	*(book[pos*offset+zPos*2+(viewFluorescence?1:0)]) = img;
+	*(book[pos*offset+zPos*2+(viewFluorescence?0:1)]) = img;
 }
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))
@@ -339,7 +338,7 @@ bool CaptureManager::OnPrev(){
 bool CaptureManager::OnNext(){
 	return SetPos(pos+1);
 }
-bool CaptureManager::ShowFluorecence(bool show)
+bool CaptureManager::ShowFluorescence(bool show)
 {
     viewFluorescence = show;
     ReloadCurrentFrame();

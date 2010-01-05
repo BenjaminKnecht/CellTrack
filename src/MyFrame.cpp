@@ -79,9 +79,10 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	SET_ICON_IMAGES( play )
 	SET_ICON_IMAGES( prev )
 	SET_ICON_IMAGES( next )
+	SET_ICON_IMAGES( fluorescence )
 
 	timer = new wxTimer(this);
-	int widths[] = {-1,100};
+	int widths[] = {-1,200};
 	sbar->SetStatusWidths(2, widths);
 
 	if(Config_ReadBool(config,_T("Frame/maximized"), false))
@@ -90,6 +91,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 		ShowFullScreen(true);
 	ShowCanvas2(false);
 	getCWD();
+	imgDir = config->Read(_T("LastFilepath"),cwd);
+	m_zslides = config->Read(_T("SliceNumber"), 33);
 }
 void MyFrame::myShow(bool askLoad){
 	Show();
@@ -179,33 +182,41 @@ void MyFrame::OnOpenImages( wxCommandEvent& event )
 
 void MyFrame::OnOpenConfocal( wxCommandEvent& event )
 {
-    wxFileDialog d(this, _T("Select image files to load"), cwd, _T(""), _T("TIFF files (*.tiff,*.tif)|*.tiff;*.tif|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
+    wxFileDialog d(this, _T("Select image files to load"), imgDir, _T(""), _T("TIFF files (*.tiff,*.tif)|*.tiff;*.tif|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
     if (d.ShowModal() == wxID_OK)
     {
         config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());
         wxArrayString files;
         d.GetFilenames(files);
+        imgDir = d.GetDirectory();
+        config->Write(_T("LastFilepath"), imgDir);
         if (!files.GetCount() && ((float)(files.GetCount()/2) == ((float)files.GetCount())/2.0f))
             return;
         ConfocalDialog_ w(this);
-        int zslides = 1;
+        w.m_zslides->SetValue(m_zslides);
         if(w.ShowModal() == wxID_OK)
+            m_zslides = w.m_zslides->GetValue();
+        else
+            return;
+        while ((float)(files.GetCount()/2/m_zslides) != ((float)files.GetCount())/2.0f/(float)m_zslides)
         {
-            zslides = w.m_zslides->GetValue();
-            while ((float)(files.GetCount()/2/zslides) != ((float)files.GetCount())/2.0f/(float)zslides)
-            {
-                ConfocalDialog_ v(this);
-                v.m_staticText101->SetLabel(_T("Number must be proper divisor."));
-                if(v.ShowModal() == wxID_OK)
-                    zslides = v.m_zslides->GetValue();
-                else
-                    return;
-            }
-            wxBeginBusyCursor();
-                if(cm->OpenConfocal(files, zslides))
-                    OnNewMovieOpened();
-            wxEndBusyCursor();
+            ConfocalDialog_ v(this);
+            v.m_zslides->SetValue(m_zslides);
+            if(v.ShowModal() == wxID_OK)
+                m_zslides = v.m_zslides->GetValue();
+            else
+                return;
         }
+        config->Write(_T("SliceNumber"), m_zslides);
+        wxBeginBusyCursor();
+            if(cm->OpenConfocal(files, m_zslides))
+            {
+                m_slider2->Show();
+                Layout();
+                OnNewMovieOpened();
+            }
+        wxEndBusyCursor();
+
     }
 }
 
@@ -247,6 +258,7 @@ void MyFrame::OnNewMovieOpened()
 	OnNavigate();
 	m_delete->Enable();
 	m_stop->Enable();
+	m_fluorescence->Enable();
 	EnableMenus( true );
 
 	return;
@@ -393,15 +405,20 @@ void MyFrame::OnScroll( wxScrollEvent &event )
 	if (cm->SetPos(m_slider->GetValue()))
 		OnNavigate();
 }
+void MyFrame::OnVScroll( wxScrollEvent &event )
+{
+	if (cm->SetZPos(m_slider2->GetValue()))
+		OnNavigate();
+}
 
 void MyFrame::OnFirst( wxCommandEvent& event )
 {
 	if (cm->SetPos(0))
 		OnNavigate();
 }
-void MyFrame::OnFluorecence( wxCommandEvent &event )
+void MyFrame::OnFluorescence( wxCommandEvent &event )
 {
-    if (cm->ShowFluorecence(m_fluorecence->IsChecked()))
+    if (cm->ShowFluorescence(!(cm->viewFluorescence)))
         OnNavigate();
 }
 
@@ -415,9 +432,12 @@ void MyFrame::UpdateControls(){
 	WX_SET_ENABLED ( m_next, cm->GetPos() < cm->GetFrameCount() -1 );
 	m_slider->SetRange( 0, cm->GetFrameCount() - 1 );
 	m_slider->SetValue( cm->GetPos() );
+	m_slider2->SetRange( 0, cm->slideCount - 1 );
+	m_slider2->SetValue( cm->GetZPos() );
 	WX_SET_ENABLED ( m_slider, cm->GetFrameCount() > 1 );
+	WX_SET_ENABLED ( m_slider2, cm->slideCount > 1 );
 	WX_SET_ENABLED ( m_play, cm->GetFrameCount() > 1 );
-	sbar->SetStatusText(wxString::Format(_T("%d of %d"), cm->pos+1, cm->GetFrameCount()),SBAR_POS);
+	sbar->SetStatusText(wxString::Format(_T("%d of %d | Slice %d of %d"), cm->pos+1, cm->GetFrameCount(), cm->zPos, cm->slideCount),SBAR_POS);
 }
 void MyFrame::OnNavigate()
 {

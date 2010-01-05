@@ -68,7 +68,7 @@ public:
 	bool OnDeleteAfter();
 	bool OnPrev();
 	bool OnNext();
-	bool ShowFluorecence(bool show);
+	bool ShowFluorescence(bool show);
 	void Redraw(bool callPlugin=true);
 	void SetQueue(ImageJobQueue* queue);
 	void SetReloadListener(PluginBase *ReloadListener_=NULL);

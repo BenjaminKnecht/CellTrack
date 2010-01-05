@@ -28,16 +28,16 @@ class wxTextCtrl_double;
 #include <wx/panel.h>
 #include <wx/splitter.h>
 #include <wx/sizer.h>
+#include <wx/slider.h>
 #include <wx/bmpbuttn.h>
 #include <wx/button.h>
-#include <wx/checkbox.h>
-#include <wx/slider.h>
 #include <wx/frame.h>
 #include <wx/stattext.h>
 #include <wx/spinctrl.h>
 #include <wx/textctrl.h>
 #include <wx/choicebk.h>
 #include <wx/radiobox.h>
+#include <wx/checkbox.h>
 #include <wx/statline.h>
 #include <wx/scrolwin.h>
 #include <wx/statbox.h>
@@ -87,12 +87,13 @@ class MyFrame_ : public wxFrame
 		MyCanvas* canvas2;
 		MyCanvas* canvas;
 		wxPanel* m_panel12;
+		wxSlider* m_slider2;
 		wxBitmapButton* m_delete;
 		wxBitmapButton* m_stop;
 		wxBitmapButton* m_play;
 		wxBitmapButton* m_prev;
 		wxBitmapButton* m_next;
-		wxCheckBox* m_fluorecence;
+		wxBitmapButton* m_fluorescence;
 		wxSlider* m_slider;
 		
 		// Virtual event handlers, overide them in your derived class
@@ -143,9 +144,10 @@ class MyFrame_ : public wxFrame
 		virtual void OnExportTrajectoryData( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnHelp( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnAbout( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnVScroll( wxScrollEvent& event ){ event.Skip(); }
 		virtual void OnStop( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPlay( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFluorecence( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnFluorescence( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnScroll( wxScrollEvent& event ){ event.Skip(); }
 		
 	
@@ -166,7 +168,7 @@ class MyFrame_ : public wxFrame
 		
 		void splitterCanvasOnIdle( wxIdleEvent& )
 		{
-		splitterCanvas->SetSashPosition( 203 );
+		splitterCanvas->SetSashPosition( 230 );
 		splitterCanvas->Disconnect( wxEVT_IDLE, wxIdleEventHandler( MyFrame_::splitterCanvasOnIdle ), NULL, this );
 		}
 		
@@ -975,7 +977,6 @@ class ConfocalDialog_ : public wxDialog
 	private:
 	
 	protected:
-		
 		wxStaticText* m_staticText102;
 		wxStdDialogButtonSizer* m_sdbSizer2;
 		wxButton* m_sdbSizer2OK;
