@@ -1,6 +1,7 @@
 #include "CaptureManager.h"
 #include "Preferences.h"
 #include "Util.h"
+#include <set>
 
 CaptureManager::CaptureManager(void)
 : book(NULL), canvas(NULL), RedrawListener(NULL), BookChangeListener(NULL), ReloadListener(NULL)
@@ -51,8 +52,8 @@ bool CaptureManager::OpenMovie( const wxArrayString& files )
 bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides)
 {
     Reset();
-    MyCapture_Confocal capture(files, zSlides);
-    return OpenConfocal_initialize(capture);
+    m_capture = new MyCapture_Confocal(files, zSlides);
+    return OpenConfocal_initialize();
 }
 
 void CaptureManager::SetQueue(ImageJobQueue* queue)
@@ -94,12 +95,12 @@ bool CaptureManager::OpenMovie_initialize(MyCapture &capture)
 	return true;
 }
 
-bool CaptureManager::OpenConfocal_initialize(MyCapture_Confocal &capture)
+bool CaptureManager::OpenConfocal_initialize()
 {
-	if (!capture.IsOK())
+	if (!m_capture->IsOK())
 		return false;
-	slideCount = capture.getSlideNumber();
-	frameCount = capture.frameCount/2/slideCount;
+	slideCount = m_capture->getSlideNumber();
+	frameCount = m_capture->frameCount/2/slideCount;
 	fluorescence = true;
 	totalFrameCount = frameCount*2*slideCount;
 	offset = 2*slideCount;
@@ -125,11 +126,12 @@ bool CaptureManager::OpenConfocal_initialize(MyCapture_Confocal &capture)
 		else
 			book[i+(i%2 == 1 ? 1 : -1)] = new ImagePlus(newframe);
 	}*/
-	m_capture = capture;
+	for (int i=0; i<totalFrameCount; i++)
+	{
+	    book[i] = new ImagePlus();
+	}
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
-	SetPos(0);
-	SetZPos(0);
 	return true;
 }
 
@@ -161,6 +163,7 @@ bool CaptureManager::SaveMovie(const char* avi){
 	}
 	cvReleaseVideoWriter(&writer);
 	cvReleaseImage(&frame_flip);
+	frame_flip = NULL;
 	if (resize)
 		cvReleaseImage(&resized);
 	return true;
@@ -183,26 +186,63 @@ void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
 	img = *book[pos*offset+zPos*2+(viewFluorescence?1:0)];
-	LoadNeighborhood();
-	if (redraw && img.loaded)
+	//std::cout << "image " << this->GetTotalPos() << " is " << (img.loaded?"ready":"not ready") << std::endl;
+	if (redraw && img.orig)
 		Redraw(callPlugin);
 }
 
-void CaptureManager::LoadNeighborhood()
+void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
 {
+    //std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
+    std::set<std::pair<int,int> > toLoad;
+    std::set<int> toUnload;
     for (int i = pos - loadRadius; i<loadRadius+pos+1; i++)
     {
         for (int j = zPos - (loadRadius - abs(i - pos)); j < zPos + (loadRadius - abs(i - pos)) + 1; j++)
         {
             if (i >= 0 && i < frameCount && j >= 0 && j < slideCount)
             {
-                int totalPos = i*offset + j*2;
-                int priority = 2 + abs(pos - i) + abs(zPos - j);
-                m_queue->AddJob(Job(Job::thread_load, totalPos, m_capture.getFilename(totalPos)), priority);
-                m_queue->AddJob(Job(Job::thread_load, totalPos + 1, m_capture.getFilename(totalPos + 1)), priority + (viewFluorescence?1:-1));
+                toUnload.insert(i*offset + j*2);
             }
         }
     }
+
+    for (int i = newpos - loadRadius; i<loadRadius+newpos+1; i++)
+    {
+        for (int j = newZPos - (loadRadius - abs(i - newpos)); j < newZPos + (loadRadius - abs(i - newpos)) + 1; j++)
+        {
+            if (i >= 0 && i < frameCount && j >= 0 && j < slideCount)
+            {
+                std::set<int>::iterator it = toUnload.find(i*offset + j*2);
+                if (it != toUnload.end())
+                    toUnload.erase(it);
+                // No else because of initial state when nothing is loaded yet.
+                // Later I will catch the case of an already loaded image anyway.
+                toLoad.insert(std::pair<int,int>(i*offset + j*2, 2 + abs(newpos - i) + abs(newZPos - j)));
+            }
+        }
+    }
+
+    for (std::set<int>::iterator it = toUnload.begin(); it != toUnload.end(); it++)
+    {
+        m_queue->AddJob(Job(Job::thread_delete, *it, book[*it]->orig), 2);
+        book[*it]->orig = NULL;
+
+        m_queue->AddJob(Job(Job::thread_delete, *it + 1, book[*it + 1]->orig), 2 + (viewFluorescence?1:-1));
+        book[*it + 1]->orig = NULL;
+    }
+
+    for (std::set<std::pair<int,int> >::iterator it = toLoad.begin(); it != toLoad.end(); it++)
+    {
+        if (!book[it->first]->orig)
+            m_queue->AddJob(Job(Job::thread_load, it->first, m_capture->getFilename(it->first)), it->second);
+        if (!book[it->first + 1]->orig)
+            m_queue->AddJob(Job(Job::thread_load, it->first + 1, m_capture->getFilename(it->first + 1)), it->second);
+    }
+
+    if (m_queue->GetLength() > 40)
+        std::cout << "Warning: Loading queue exceeds 40 elements by " << (m_queue->GetLength()-40) << " element(s)!" << std::endl;
+    //std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
 }
 
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
@@ -218,6 +258,7 @@ void CaptureManager::PushbackCurrentFrame(){
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))
 		return false;
+    LoadNeighborhood(newpos, zPos);
 	pos = newpos;
 	ReloadCurrentFrame();
 	return true;
@@ -225,6 +266,7 @@ bool CaptureManager::SetPos(int newpos, bool reload){
 bool CaptureManager::SetZPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=slideCount || (newpos==zPos && img.orig && !reload))
 		return false;
+    LoadNeighborhood(pos, newpos);
 	zPos = newpos;
 	ReloadCurrentFrame();
 	return true;
@@ -233,6 +275,7 @@ bool CaptureManager::SetPos(int newpos, int newZPos, bool reload){
 	if (newpos<0 || newpos>=frameCount || newZPos<0 || newZPos>=slideCount
         || (newZPos==zPos && newpos==pos && img.orig && !reload))
 		return false;
+    LoadNeighborhood(newpos, newZPos);
 	pos = newpos;
 	zPos = newZPos;
 	ReloadCurrentFrame();
@@ -299,6 +342,7 @@ bool CaptureManager::OnNext(){
 bool CaptureManager::ShowFluorecence(bool show)
 {
     viewFluorescence = show;
+    ReloadCurrentFrame();
 }
 void CaptureManager::Redraw(bool callPlugin){
 	if (!canvas)

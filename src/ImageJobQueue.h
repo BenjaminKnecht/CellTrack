@@ -19,9 +19,10 @@ class Job
             thread_deleted,
         };
         Job() : m_cmd(thread_null){}
-        Job(Command cmd, int pos, const wxString& filename) : m_imgPos(pos), m_cmd(cmd), m_filename(filename), m_imgPtr(NULL) {}
-        Job(Command cmd, int pos, IplImage* ptr) : m_imgPos(pos), m_cmd(cmd), m_imgPtr(ptr), m_filename(_T("")) {}
-        Job(Command cmd, int pos, IplImage* ptr, const wxString& filename) : m_imgPos(pos), m_cmd(cmd), m_imgPtr(ptr), m_filename(filename) {}
+        Job(Command cmd) : m_imgPos(0), m_cmd(cmd), m_imgPtr(NULL), m_filename(_T("")) {}
+        Job(Command cmd, const int pos, const wxString& filename) : m_imgPos(pos), m_cmd(cmd), m_filename(filename), m_imgPtr(NULL) {}
+        Job(Command cmd, const int pos, IplImage* ptr) : m_imgPos(pos), m_cmd(cmd), m_imgPtr(ptr), m_filename(_T("")) {}
+        Job(Command cmd, const int pos, IplImage* ptr, const wxString& filename) : m_imgPos(pos), m_cmd(cmd), m_imgPtr(ptr), m_filename(filename) {}
 
         Command m_cmd;
         wxString m_filename;

@@ -211,17 +211,29 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
 
 void MyFrame::OnThread( wxCommandEvent& event )
 {
+    ImagePlus* img = NULL;
     switch(event.GetId())
     {
         case Job::thread_started:
+            std::cout << "Thread started" << std::endl;
             break;
         case Job::thread_loaded:
-            cm->book[event.GetInt()]->orig = (IplImage*)(event.GetClientData());
-            cm->book[event.GetInt()]->loaded = true;
+            //std::cout << "Thread loaded img " << event.GetInt() << std::endl;
+            img = cm->book[event.GetInt()];
+            if(img->orig)
+            {
+                cvReleaseImage(&(img->orig));
+            }
+            img->orig = (IplImage*)(event.GetClientData());
             if(cm->GetTotalPos() == event.GetInt())
-                cm->Redraw();
+            {
+                //std::cout << "Redrawing image " << event.GetInt() << " and is " << (img->loaded?"loaded":"not loaded") << std::endl;
+                cm->ReloadCurrentFrame();
+            }
             break;
         case Job::thread_deleted:
+            //std::cout << "Thread freed img " << event.GetInt() << std::endl;
+            cm->book[event.GetInt()]->orig = NULL;
             break;
         default: break;
     }
@@ -231,7 +243,7 @@ void MyFrame::OnThread( wxCommandEvent& event )
 #include "FilterContoursSidebar.h"
 void MyFrame::OnNewMovieOpened()
 {
-	cm->SetPos( 0 );
+	cm->SetPos(0,0);
 	OnNavigate();
 	m_delete->Enable();
 	m_stop->Enable();
@@ -279,6 +291,7 @@ void MyFrame::OnSaveFrameAs( wxCommandEvent &event )
 }
 void MyFrame::OnClose(wxCloseEvent &event)
 {
+    queue->AddJob(Job(Job::thread_exit),0);
 	config->Write(_T("Frame/maximized"), IsMaximized());
 	config->Write(_T("Frame/fullscreen"), IsFullScreen());
 	config->Write(_T("Frame/iconized"), IsIconized());

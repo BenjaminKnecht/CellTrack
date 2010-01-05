@@ -2,6 +2,7 @@
 #define __IMAGELOADER_H__
 
 #include <wx/thread.h>
+#include <set>
 
 #include "ImageJobQueue.h"
 
@@ -11,8 +12,9 @@ class ImageLoader : public wxThread
         ImageLoader(ImageJobQueue* queue);
     private:
         ImageJobQueue* m_queue;
-
+        int loadedElements;
         virtual wxThread::ExitCode Entry();
+        std::multiset<int> toIgnore;
 };
 
 #endif //__IMAGELOADER_H__

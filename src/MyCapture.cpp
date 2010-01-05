@@ -7,7 +7,7 @@ MyCapture_Files::MyCapture_Files(const wxArrayString& files_)
 {
 	files = files_;
 	if(!(frame = cvLoadImage(files[0].mb_str()))){
-		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec."), files[0]);
+		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec."), files[0].c_str());
 		return;
 	}
 
@@ -84,9 +84,12 @@ IplImage* MyCapture_Files::queryFrame(int pos_)
 	if ( pos >= frameCount )
 		throw "no more frames left to query. position passed end of movie.";
 	if (frame)
+	{
 		cvReleaseImage(&frame);
+		frame = NULL;
+	}
 	if (!(frame = cvLoadImage(files[pos].mb_str()))) {
-		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image."), files[0], pos);
+		wxLogError(_T("Failed to read image file [ %s ]. Corrupt file or unsupported codec. Frame %d is replaced with a blank image."), files[0].c_str(), pos);
 		if (size.width)
 			frame = cvCreateImage(size,8,3);
 	}

@@ -18,7 +18,7 @@ class CaptureManager
 {
 private:
 	bool OpenMovie_initialize(MyCapture &capture);
-	bool OpenConfocal_initialize(MyCapture_Confocal &capture);
+	bool OpenConfocal_initialize();
 public:
 	ImagePlus** book;
 	ImagePlus img;
@@ -34,13 +34,14 @@ public:
 	bool viewFluorescence;
 	MyCanvas *canvas;
 	CvSize size;
+	int test;
 	PluginBase *ReloadListener;
 	PluginBase *RedrawListener;
 	PluginBase *BookChangeListener;
 	ImageJobQueue* m_queue;
 	int loadRadius;
 
-	MyCapture_Confocal m_capture;
+	MyCapture_Confocal* m_capture;
 
 public:
 	CvSeq *contours;
@@ -85,7 +86,7 @@ public:
 	bool SaveAreaData(const char* file);
 	bool SaveDeformationData(const char* file);
 	bool ImportTrackData(const char* file);
-	void LoadNeighborhood();
+	void LoadNeighborhood(int newPos, int newZPos);
 
 	std::vector<CvPoint> GetTrajectory(int c); //get trajectory of cth object
 	std::vector<float> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object

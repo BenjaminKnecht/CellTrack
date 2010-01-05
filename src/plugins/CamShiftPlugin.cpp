@@ -11,7 +11,11 @@ backproject(NULL), hist(NULL), rotation(NULL), shift(NULL), planes(NULL)
 }
 void CamShiftPlugin::ReleaseTemps()
 {
-	if (backproject) cvReleaseImage(&backproject);
+	if (backproject)
+	{
+        cvReleaseImage(&backproject);
+        backproject = NULL;
+	}
 	if (hist) cvReleaseHist(&hist);
 	if (planes){
 		for (int p=0; p<3; p++){
