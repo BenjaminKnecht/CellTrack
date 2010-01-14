@@ -34,7 +34,7 @@ void CamShiftPlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 }
 void CamShiftPlugin::FetchParams()
@@ -45,12 +45,12 @@ void CamShiftPlugin::FetchParams()
 	useFirst = sidebar->useFirst->GetValue();
 }
 
-void CamShiftPlugin::ProcessImage( ImagePlus* img, int pos )
+void CamShiftPlugin::ProcessImage( ImagePlus* img, int pos, int zPos )
 {
 	if (pos==0)
 		return;
 	FetchParams();
-	ImagePlus *oimg = cm->book[useFirst ? 0 : pos-1];
+	ImagePlus *oimg = cm->Access(useFirst ? 0 : pos-1, zPos);
 	CvRect orect, searchwin;
 	CvPoint ocenter;
 
@@ -65,13 +65,13 @@ void CamShiftPlugin::OnOK()
 {
 	wxBeginBusyCursor();
 	if (!GetScope())
-		ProcessImage(cm->book[cm->GetPos()], cm->GetPos());
+		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos(), cm->viewFluorescence), cm->GetPos(), cm->GetZPos());
 	else{
 		FetchParams();
 		ImagePlus *oimg;
 		CvRect orect, searchwin;
 		CvPoint ocenter;
-		oimg = cm->book[0];
+		oimg = cm->Access(0,0,cm->viewFluorescence);
 		int numContours = (int) oimg->contourArray.size();
 		for (int i=1; i<cm->GetFrameCount(); i++)
 			cm->book[i]->CloneContours(oimg);

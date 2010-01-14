@@ -23,7 +23,7 @@ PluginBase::~PluginBase(void)
 void PluginBase::OnNavigate(){
 	if (showsCanvas2){
 		if(cm->GetPos())
-			canvas2->SetImage(*(cm->book[cm->GetPos()-1]));
+			canvas2->SetImage(*(cm->Access(cm->GetPos()-1, cm->GetZPos(), cm->viewFluorescence)));
 		else
 			canvas2->SetImage(ImagePlus());
 	}
@@ -49,23 +49,28 @@ void PluginBase::OnCancel()
 void PluginBase::OnRedraw(  )
 {
 	if ( IsPreviewOn() && cm && cm->GetFrameCount())
-		ProcessImage(&cm->img, cm->GetPos());
+		ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 }
 void PluginBase::OnOK()
 {
 	if (doProcessImageOnOK && GetScope()>=0){
 		wxBeginBusyCursor();
-		if (GetScope()) {
+		if (GetScope())
+		{
 			CreateProgressDlg();
-			for (int i=(GetScope()==1 ? 0 : cm->pos); i<cm->GetFrameCount() && UpdateProgressDlg(i); i++){
-				ProcessImage(cm->book[i], i);
+			for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+			{
+			    for (int j = 0; j<cm->slideCount; j++)
+			    {
+                    ProcessImage(cm->Access(i,j), i, j);
+			    }
 			}
 			DestroyProgressDlg();
 		}
 		else if (IsPreviewOn())
 			cm->PushbackCurrentFrame();
 		else
-			ProcessImage( cm->book[cm->GetPos()] , cm->GetPos() );
+			ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), cm->viewFluorescence), cm->GetPos(), cm->GetZPos());
 		if (!IsPreviewOn())
 			cm->ReloadCurrentFrame(true, false);
 		wxEndBusyCursor();

@@ -185,6 +185,17 @@ int CaptureManager::GetTotalPos()
 {
 	return pos*offset+zPos*2+(viewFluorescence?0:1);
 }
+
+ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence)
+{
+    return book[pos*offset+z*2+(fluorescence?0:1)];
+}
+
+ImagePlus* CaptureManager::DirectAccess(int x)
+{
+    return book[x];
+}
+
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();

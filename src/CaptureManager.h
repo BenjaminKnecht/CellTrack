@@ -19,8 +19,8 @@ class CaptureManager
 private:
 	bool OpenMovie_initialize(MyCapture &capture);
 	bool OpenConfocal_initialize();
+    ImagePlus** book;
 public:
-	ImagePlus** book;
 	ImagePlus img;
 	int *frameMap;
 	int frameCount;
@@ -48,6 +48,8 @@ public:
 
 	CaptureManager(void);
 	~CaptureManager(void);
+	ImagePlus* Access(int pos, int z=0, bool fluorescence=false);
+	ImagePlus* DirectAccess(int x);
 	void Reset();
 	void SetCanvas(MyCanvas *canvas_);
 	MyCanvas* GetCanvas();

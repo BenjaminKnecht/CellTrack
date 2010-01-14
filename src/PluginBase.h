@@ -61,7 +61,7 @@ public:
 	virtual void ShowProcessInfo(){} //override if you wish to give any info (e.g. on the statusbar)
 	virtual void OnNavigate(); //fired by MyFrame after a navigation event. use this if not have Preview
 	virtual void ProcessImage( ImagePlus *img ){} //where the actual plugin processing is done.
-	virtual void ProcessImage( ImagePlus *img, int pos ){ ProcessImage(img); }
+	virtual void ProcessImage( ImagePlus *img, int pos, int zPos ){ ProcessImage(img); }
 	virtual void OnBookChange(){ ReleaseTemps(); } //Triggered by CaptureManager when a frame deleted/new movie loaded.
 	virtual void ReleaseTemps(){} //Release temporary images/structures/memory
 };
