@@ -65,24 +65,28 @@ void CamShiftPlugin::OnOK()
 {
 	wxBeginBusyCursor();
 	if (!GetScope())
-		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos(), cm->viewFluorescence), cm->GetPos(), cm->GetZPos());
+		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
 	else{
 		FetchParams();
 		ImagePlus *oimg;
 		CvRect orect, searchwin;
 		CvPoint ocenter;
-		oimg = cm->Access(0,0,cm->viewFluorescence);
+		oimg = cm->Access(0,0);
 		int numContours = (int) oimg->contourArray.size();
-		for (int i=1; i<cm->GetFrameCount(); i++)
-			cm->book[i]->CloneContours(oimg);
 		int frameCount = cm->GetFrameCount();
-		CreateProgressDlg(numContours*frameCount);
-		bool cont=true;
-		for (int j=0; j<numContours && cont; j++){
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
-				ProcessStatic(j, cm->book[i], cm->book[useFirst ? 0 : i-1], hsizes, criteria,
-		planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
-			}
+		int slideCount = cm->slideCount;
+		CreateProgressDlg(numContours*frameCount*slideCount);
+		for (int slide = 0; slide < slideCount; slide++)
+		{
+            for (int i=1; i<frameCount; i++)
+                    cm->Access(i,slide)->CloneContours(oimg);
+            bool cont=true;
+            for (int j=0; j<numContours && cont; j++){
+                    for (int i=1; i<frameCount && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); i++){
+                        ProcessStatic(j, cm->Access(i,slide), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
+                planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
+                    }
+            }
 		}
 		DestroyProgressDlg();
 	}
