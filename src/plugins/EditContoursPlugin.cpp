@@ -57,9 +57,13 @@ void EditContoursPlugin::OnDeleteSelected()
 }
 void EditContoursPlugin::OnCleanAllFrames()
 {
-	for (int i=0; i<cm->frameCount; i++){
-		cm->book[i]->RemoveAllContours();
-	}
+    for (int j=0; j<cm->slideCount; j++)
+    {
+        for (int i=0; i<cm->frameCount; i++)
+        {
+            cm->Access(i,j,false,true)->RemoveAllContours();
+        }
+    }
 	cm->ReloadCurrentFrame(true);
 	dirty = false;
 	OnNavigate();

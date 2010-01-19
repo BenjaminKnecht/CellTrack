@@ -20,6 +20,7 @@ private:
 	bool OpenMovie_initialize(MyCapture &capture);
 	bool OpenConfocal_initialize();
     ImagePlus** book;
+
 public:
 	ImagePlus img;
 	int *frameMap;
@@ -30,7 +31,7 @@ public:
 	int offset;
 	int pos;
 	int zPos;
-	bool fluorescence;
+	bool hasFluorescence;
 	bool viewFluorescence;
 	MyCanvas *canvas;
 	CvSize size;
@@ -48,9 +49,10 @@ public:
 
 	CaptureManager(void);
 	~CaptureManager(void);
-	ImagePlus* Access(int pos, int z=0, bool fluorescence=false);
+	ImagePlus* Access(int pos, int z=0, bool fluorescence=false, bool noImage=false, bool preload=false);
 	ImagePlus* DirectAccess(int x);
 	void Reset();
+	void Release(int pos, int z, bool fluorescence);
 	void SetCanvas(MyCanvas *canvas_);
 	MyCanvas* GetCanvas();
 	bool OpenMovie(const char* avi);
@@ -89,6 +91,7 @@ public:
 	bool SaveDeformationData(const char* file);
 	bool ImportTrackData(const char* file);
 	void LoadNeighborhood(int newPos, int newZPos);
+	bool IsInNeighborhood(int testPos, int testZPos) const;
 
 	std::vector<CvPoint> GetTrajectory(int c); //get trajectory of cth object
 	std::vector<float> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object

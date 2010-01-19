@@ -92,7 +92,7 @@ void CombinedTrackingPlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 }
 void CombinedTrackingPlugin::OnOK()
@@ -111,41 +111,44 @@ void CombinedTrackingPlugin::OnOK()
 #include "LKContoursPlugin.h"
 #include "TrackContoursPlugin.h"
 #include "NormalizeContoursPlugin.h"
-void CombinedTrackingPlugin::ProcessImage( ImagePlus *img, int pos ){
+void CombinedTrackingPlugin::ProcessImage( ImagePlus *img, int pos, int zPos ){
 	if (pos==0)
 		return;
 	FetchParams();
 
 	if (useMT){
-		ImagePlus *oimg = cm->book[mt_useFirst ? 0 : pos-1];
+		ImagePlus *oimg = cm->Access(mt_useFirst ? 0 : pos-1, zPos);
 		int numContours = (int) oimg->contourArray.size();
 		img->CloneContours(oimg);
 		for (int i=0; i<numContours; i++){
 			MatchTemplatePlugin::ProcessStatic(i, img, oimg, mt_method, mt_winsize, mt_map);
 		}
+		cm->Release(mt_useFirst ? 0 : pos-1, zPos, false);
 	}
 	else if (useCS){
 		CvRect orect, searchwin;
 		CvPoint ocenter;
-		ImagePlus *oimg = cm->book[cs_useFirst ? 0 : pos-1];
+		ImagePlus *oimg = cm->Access(cs_useFirst ? 0 : pos-1, zPos);
 		int numContours = (int) oimg->contourArray.size();
 		img->CloneContours(oimg);
 		for (int i=0; i<numContours; i++)
 			CamShiftPlugin::ProcessStatic(i, img, oimg, cs_hsizes, cs_criteria,
 	cs_planes, cs_hist, cs_backproject, orect, ocenter, searchwin, cs_rotation, cs_shift, false);
+        cm->Release(cs_useFirst ? 0 : pos-1, zPos, false);
 	}
 
 	if (useLK){
-		ImagePlus *oimg = cm->book[pos-1];
+		ImagePlus *oimg = cm->Access(pos-1,zPos);
 		CvPoint *ops=NULL;
-		CvPoint2D32f *opsf=NULL, *psf=NULL; 
+		CvPoint2D32f *opsf=NULL, *psf=NULL;
 		char *status=NULL;
 		int np_total=0;
 		LKContoursPlugin::ProcessStatic(img, oimg, lk_level, lk_winsize, lk_criteria, 0, lk_fixOutliers, lk_intwin, lk_avgLost, lk_gray,lk_ogray,lk_pyr,lk_opyr,ops,psf,opsf,status,lk_useAvailable,np_total,true,true);
+		cm->Release(pos-1, zPos, false);
 	}
 
 	if (useAS){
-		ImagePlus *oimg = cm->book[pos-1];
+		ImagePlus *oimg = cm->Access(pos-1, zPos);
 		as_avgiterations=0;
 		int numContours = (int) oimg->contourArray.size();
 		if (as_useAvailable)
@@ -160,6 +163,7 @@ void CombinedTrackingPlugin::ProcessImage( ImagePlus *img, int pos ){
 		}
 		if (numContours)
 			as_avgiterations/=numContours;
+        cm->Release(pos-1, zPos, false);
 	}
 	if (useNC){
 		NormalizeContoursPlugin::ProcessStatic( img, nc_minLength, nc_maxLength );

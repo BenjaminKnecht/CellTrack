@@ -28,8 +28,8 @@ public:
 	virtual void OnOK();
 	void FetchParams();
 
-	void ProcessImage( ImagePlus *img, int pos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos );
 	static void ProcessStatic
-( int i, ImagePlus *img, ImagePlus *oimg, 
+( int i, ImagePlus *img, ImagePlus *oimg,
  int method, CvSize winsize, IplImage* &map);
 };

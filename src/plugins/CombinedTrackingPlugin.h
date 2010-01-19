@@ -67,5 +67,5 @@ public:
 	void FetchParams();
 
 	void OnOK();
-	void ProcessImage( ImagePlus *img, int pos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos );
 };

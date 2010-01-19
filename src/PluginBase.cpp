@@ -58,19 +58,23 @@ void PluginBase::OnOK()
 		if (GetScope())
 		{
 			CreateProgressDlg();
-			for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
-			{
-			    for (int j = 0; j<cm->slideCount; j++)
-			    {
-                    ProcessImage(cm->Access(i,j), i, j);
-			    }
+			for (int j = 0; j<cm->slideCount; j++)
+            {
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i*j); i++)
+                {
+                    ProcessImage(cm->Access(i,j,cm->viewFluorescence, false, true), i, j);
+                    cm->Release(i,j,cm->viewFluorescence);
+                }
 			}
 			DestroyProgressDlg();
 		}
 		else if (IsPreviewOn())
 			cm->PushbackCurrentFrame();
 		else
+		{
 			ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), cm->viewFluorescence), cm->GetPos(), cm->GetZPos());
+			cm->Release(cm->GetPos(), cm->GetZPos(), cm->viewFluorescence);
+		}
 		if (!IsPreviewOn())
 			cm->ReloadCurrentFrame(true, false);
 		wxEndBusyCursor();
@@ -80,12 +84,12 @@ void PluginBase::OnOK()
 void PluginBase::CreateProgressDlg(int maxFrames)
 {
 	DestroyProgressDlg();
-	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()), maxFrames>=0 ? maxFrames : cm->GetFrameCount(), win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()*cm->slideCount), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount, win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 }
 bool PluginBase::UpdateProgressDlg(int frame){
 	if (!progressDlg)
 		CreateProgressDlg();
-	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, cm->GetFrameCount()));
+	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, cm->GetFrameCount()*cm->slideCount));
 }
 void PluginBase::DestroyProgressDlg(){
 	if (progressDlg){

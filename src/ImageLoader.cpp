@@ -43,7 +43,8 @@ wxThread::ExitCode ImageLoader::Entry()
                 }
                 else
                 {
-                    toIgnore.insert(j.m_imgPos);
+                    if (j.m_imgPos >= 0)
+                        toIgnore.insert(j.m_imgPos);
                 }
                 break;
             case Job::thread_null:

@@ -233,7 +233,8 @@ void MyFrame::OnThread( wxCommandEvent& event )
             img = cm->DirectAccess(event.GetInt());
             if(img->orig)
             {
-                cvReleaseImage(&(img->orig));
+                queue->AddJob(Job(Job::thread_delete, event.GetInt(), (IplImage*)event.GetClientData()), 1);
+                break;
             }
             img->orig = (IplImage*)(event.GetClientData());
             if(cm->GetTotalPos() == event.GetInt())
@@ -244,7 +245,8 @@ void MyFrame::OnThread( wxCommandEvent& event )
             break;
         case Job::thread_deleted:
             //std::cout << "Thread freed img " << event.GetInt() << std::endl;
-            cm->DirectAccess(event.GetInt())->orig = NULL;
+            if (event.GetInt() >= 0)
+                cm->DirectAccess(event.GetInt())->orig = NULL;
             break;
         default: break;
     }
@@ -560,7 +562,7 @@ void MyFrame::ShowCanvas2(bool show){
 }
 //---------------------- Analysis ------------------------------
 bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells){
-	numCells=cm->Access(0,0)->contourArray.size();
+	numCells=cm->Access(0,0,false,true)->contourArray.size();
 	if (!numCells){
 		wxLogError(_T("No cells in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;

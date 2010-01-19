@@ -65,28 +65,41 @@ void CamShiftPlugin::OnOK()
 {
 	wxBeginBusyCursor();
 	if (!GetScope())
+	{
 		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
-	else{
+		cm->Release(cm->GetPos(), cm->GetZPos(), false);
+	}
+	else
+	{
 		FetchParams();
 		ImagePlus *oimg;
 		CvRect orect, searchwin;
 		CvPoint ocenter;
 		oimg = cm->Access(0,0);
 		int numContours = (int) oimg->contourArray.size();
+		cm->Release(0,0, false);
 		int frameCount = cm->GetFrameCount();
 		int slideCount = cm->slideCount;
 		CreateProgressDlg(numContours*frameCount*slideCount);
 		for (int slide = 0; slide < slideCount; slide++)
 		{
+		    oimg = cm->Access(0,slide);
+            numContours = (int) oimg->contourArray.size();
             for (int i=1; i<frameCount; i++)
-                    cm->Access(i,slide)->CloneContours(oimg);
+                cm->Access(i,slide,false,true)->CloneContours(oimg);
             bool cont=true;
-            for (int j=0; j<numContours && cont; j++){
-                    for (int i=1; i<frameCount && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); i++){
-                        ProcessStatic(j, cm->Access(i,slide), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
-                planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
-                    }
+            for (int i=1; i<frameCount && cont; i++)
+            {
+                for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); j++)
+                {
+                    ProcessStatic(j, cm->Access(i,slide,false,false,true), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
+                                planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
+
+                }
+                cm->Release(i-1,slide,false);
             }
+            cm->Release(frameCount-1,slide,false);
+            cm->Release(0,slide,false);
 		}
 		DestroyProgressDlg();
 	}

@@ -35,22 +35,31 @@ void MatchTemplatePlugin::OnOK()
 {
 	wxBeginBusyCursor();
 	if (!GetScope())
-		ProcessImage(cm->book[cm->GetPos()], cm->GetPos());
+		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
 	else{
 		FetchParams();
-		ImagePlus *oimg;
-		oimg = cm->book[0];
+		ImagePlus* oimg = cm->Access(0, 0, false, true);
 		int numContours = (int) oimg->contourArray.size();
 		CreateProgressDlg();
-		for (int i=1; i<cm->GetFrameCount(); i++)
-			cm->book[i]->CloneContours(oimg);
 		int frameCount = cm->GetFrameCount();
-		CreateProgressDlg(numContours*frameCount);
+		int slideCount = cm->slideCount;
+		CreateProgressDlg(numContours*slideCount*frameCount);
 		bool cont=true;
-		for (int j=0; j<numContours && cont; j++){
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
-				ProcessStatic(j, cm->book[i], cm->book[useFirst ? 0 : i-1], method, winsize, map);
-			}
+		for (int slide = 0; slide < slideCount; slide++)
+		{
+		    oimg = cm->Access(0, slide);
+		    for (int i=1; i<cm->GetFrameCount(); i++)
+                cm->Access(i,slide,false,true)->CloneContours(oimg);
+            for (int i=1; i<frameCount && cont; i++)
+            {
+                for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); j++)
+                {
+                    ProcessStatic(j, cm->Access(i,slide, false, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                }
+                cm->Release(i-1,slide,false);
+            }
+            cm->Release(frameCount-1,slide,false);
+            cm->Release(0,slide,false);
 		}
 		DestroyProgressDlg();
 	}

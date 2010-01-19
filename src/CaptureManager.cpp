@@ -19,7 +19,7 @@ void CaptureManager::Reset(){
 	}
 	frameCount = 0;
 	slideCount = 1;
-	fluorescence = false;
+	hasFluorescence = false;
 	viewFluorescence = false;
 	totalFrameCount = 0;
 	offset = 1;
@@ -101,7 +101,7 @@ bool CaptureManager::OpenConfocal_initialize()
 		return false;
 	slideCount = m_capture->getSlideNumber();
 	frameCount = m_capture->frameCount/2/slideCount;
-	fluorescence = true;
+	hasFluorescence = true;
 	totalFrameCount = frameCount*2*slideCount;
 	offset = 2*slideCount;
 	fps = Preferences::GetSavingFpsDefault();
@@ -186,9 +186,43 @@ int CaptureManager::GetTotalPos()
 	return pos*offset+zPos*2+(viewFluorescence?0:1);
 }
 
-ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence)
+void CaptureManager::Release(int pos, int z, bool fluorescence)
 {
-    return book[pos*offset+z*2+(fluorescence?0:1)];
+    // unload previous loaded image
+    if (!IsInNeighborhood(pos, z))
+    {
+        int direct = pos*offset+z*2+(fluorescence?0:1);
+        m_queue->AddJob(Job(Job::thread_delete, direct, book[direct]->orig), 1);
+        book[direct]->orig = NULL;
+    }
+}
+
+ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImage, bool preload)
+{
+    if (pos < 0 || pos >= frameCount || z < 0 || z >= slideCount)
+        return NULL;
+
+    // preload next three pictures
+    if (preload)
+    {
+        for (int i = 1; i <= 3; i++)
+        {
+            int newpos = i + pos;
+            int newZPos = z + newpos/frameCount;
+            if (newZPos <= slideCount)
+            {
+                if (newpos >= frameCount)
+                    newpos = newpos % frameCount;
+                int direct = newpos*offset+newZPos*2+(fluorescence?0:1);
+                if (!book[direct]->orig)
+                    m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 2);
+            }
+        }
+    }
+    ImagePlus* temp = book[pos*offset+z*2+(fluorescence?0:1)];
+    if (!temp->orig && !noImage)
+        temp->orig = cvLoadImage(m_capture->getFilename(pos*offset+z*2+(fluorescence?0:1)).mb_str());
+    return temp;
 }
 
 ImagePlus* CaptureManager::DirectAccess(int x)
@@ -203,6 +237,11 @@ void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	//std::cout << "image " << this->GetTotalPos() << " is " << (img.loaded?"ready":"not ready") << std::endl;
 	if (redraw && img.orig)
 		Redraw(callPlugin);
+}
+
+bool CaptureManager::IsInNeighborhood(int testPos, int testZPos) const
+{
+    return (testPos >= 0 && testPos < frameCount && testZPos > 0 && testZPos < slideCount && abs(testPos - pos) + abs(testZPos - zPos) <= loadRadius);
 }
 
 void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
