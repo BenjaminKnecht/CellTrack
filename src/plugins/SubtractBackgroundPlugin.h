@@ -16,7 +16,7 @@ class SubtractBackgroundPlugin :
 {
 private:
 	SubtractBackgroundSidebar *sidebar;
-	IplImage *avgImg, *temp, *temp32; //temporary images.
+	IplImage **avgImg, *temp, *temp32; //temporary images.
 	CvBGStatModel* gaussModel;
 public:
 	~SubtractBackgroundPlugin(){ ReleaseTemps(); }
@@ -27,6 +27,6 @@ public:
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
 
-	void ProcessImage( ImagePlus *img, int pos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos );
 	void InitModels(bool reinit=false);
 };

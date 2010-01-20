@@ -21,7 +21,7 @@ void TrackContoursPlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 	ShowProcessInfo();
 }
@@ -49,44 +49,57 @@ void TrackContoursPlugin::OnOK()
 {
 	wxBeginBusyCursor();
 	if (!GetScope()){
-		ProcessImage(cm->book[cm->GetPos()], cm->GetPos());
+		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
 		ShowProcessInfo();
 	}
-	else{
+	else
+	{
 		FetchParams();
 		ImagePlus *oimg, *img;
 		IplImage *swap;
 		CvPoint *ps, *ops, *swap_ps;
-		avgiterations=0;
 		float *oEarc=NULL;
-		int numContours = (int) cm->book[0]->contourArray.size();
-		for (int i=1; i<cm->GetFrameCount(); i++){
-			if (useAvailable)
-				cm->book[i]->RemoveContours(numContours, cm->book[i]->contourArray.size()-1);
-			else
-				cm->book[i]->RemoveAllContours();
-		}
 		int frameCount = cm->GetFrameCount();
-		CreateProgressDlg(numContours*frameCount);
-		bool cont=true;
-		for (int j=0; j<numContours && cont; j++){
-			oimg = cm->book[0];
-			for (int i=1; i<frameCount && (cont=progressDlg->Update(j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); i++){
-				img = cm->book[i];
-				int iterations=0;
-				TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
-				avgiterations+=iterations;
-				CV_SWAP( ogray, gray, swap );
-				CV_SWAP( ops, ps, swap_ps);
+        int slideCount = cm->slideCount;
+		avgiterations = new float[slideCount];
+		for (int slide = 0; slide < slideCount; slide++)
+		{
+		    avgiterations[slide]=0;
+            int numContours = (int) cm->Access(0,slide,false,true)->contourArray.size();
+            for (int i=1; i<cm->GetFrameCount(); i++)
+            {
+                if (useAvailable)
+                    cm->Access(i,slide,false,true)->RemoveContours(numContours, cm->Access(i,slide,false,true)->contourArray.size()-1);
+                else
+                    cm->Access(i,slide,false,true)->RemoveAllContours();
+            }
+            CreateProgressDlg(numContours*frameCount*slideCount);
+            bool cont=true;
+
+			oimg = cm->Access(0,slide, false, false, true);
+			for (int i=1; i<frameCount && cont; i++)
+			{
+                for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); j++)
+                {
+                    img = cm->Access(i,slide, false, false, true);
+                    int iterations=0;
+                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                    avgiterations[slide]+=iterations;
+                    cm->Release(i,slide,false);
+                    CV_SWAP( ogray, gray, swap );
+                    CV_SWAP( ops, ps, swap_ps);
+                }
+                if (oEarc){
+                    free(oEarc);
+                    oEarc = NULL;
+                }
 			}
-			if (oEarc){
-				free(oEarc);
-				oEarc = NULL;
-			}
+			cm->Release(0,slide,false);
+			if (numContours)
+                avgiterations[slide]/=numContours;
 		}
 		DestroyProgressDlg();
-		if (numContours)
-			avgiterations/=numContours;
+
 	}
 	cm->ReloadCurrentFrameContours(true, false);
 	wxEndBusyCursor();
@@ -94,12 +107,12 @@ void TrackContoursPlugin::OnOK()
 
 
 #include "cvSnakeTrack.h"
-void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos ){
+void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos ){
 	if (pos==0)
 		return;
 	FetchParams();
-	ImagePlus *oimg = cm->book[pos-1];
-	avgiterations=0;
+	ImagePlus *oimg = cm->Access(pos-1, zPos);
+	avgiterations[zPos]=0;
 	int numContours = (int) oimg->contourArray.size();
 	if (useAvailable)
 		img->RemoveContours(numContours, img->contourArray.size()-1);
@@ -110,10 +123,11 @@ void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos ){
 		int iterations=0;
 		float *nullfloat=NULL;
 		TrackContoursPlugin::ProcessStatic(i, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  false, true, nullfloat);
-		avgiterations+=iterations;
+		avgiterations[zPos]+=iterations;
 	}
 	if (numContours)
-		avgiterations/=numContours;
+		avgiterations[zPos]/=numContours;
+    cm->Release(pos-1, zPos, false);
 }
 // is is the index in oimg.contourArray
 void TrackContoursPlugin::ProcessStatic

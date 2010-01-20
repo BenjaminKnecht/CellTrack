@@ -14,7 +14,7 @@ class TrackContoursPlugin :
 private:
 	TrackContoursSidebar *sidebar;
 	IplImage *gray, *ogray; //temporary images.
-	float avgiterations;
+	float* avgiterations;
 	float alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega;
 	bool useAvailable;
 	CvSize winsize;
@@ -33,7 +33,7 @@ public:
 
 	void FetchParams();
 
-	void ProcessImage( ImagePlus *img, int pos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos );
 	static void ProcessStatic
 ( int i, ImagePlus *img, ImagePlus *oimg, IplImage* &gray, IplImage* &ogray, CvPoint* &ps, CvPoint* &ops,
  float alpha, float beta, float gamma,

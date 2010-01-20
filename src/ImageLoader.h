@@ -12,6 +12,8 @@ class ImageLoader : public wxThread
         ImageLoader(ImageJobQueue* queue);
     private:
         ImageJobQueue* m_queue;
+        int imgInMem;
+        int loadingCalls;
         virtual wxThread::ExitCode Entry();
         std::multiset<int> toIgnore;
 };

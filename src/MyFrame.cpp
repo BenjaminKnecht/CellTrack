@@ -233,7 +233,8 @@ void MyFrame::OnThread( wxCommandEvent& event )
             img = cm->DirectAccess(event.GetInt());
             if(img->orig)
             {
-                queue->AddJob(Job(Job::thread_delete, event.GetInt(), (IplImage*)event.GetClientData()), 1);
+                queue->AddJob(Job(Job::thread_delete, -1, (IplImage*)event.GetClientData()), 1);
+                cm->loadedImgs--;
                 break;
             }
             img->orig = (IplImage*)(event.GetClientData());

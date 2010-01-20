@@ -43,5 +43,6 @@ void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, I
 	CvSeq *seq;
 	cvFindContours( edge, img->CreateContoursStorageOnDemand(clean), &seq, sizeof(CvContour),
 		all ? CV_RETR_LIST : CV_RETR_EXTERNAL,  approx ? CV_CHAIN_APPROX_SIMPLE : CV_CHAIN_APPROX_NONE , cvPoint(0,0) );
+    std::cout << "Just allocated at least " << seq->total * seq->elem_size << " bytes." << std::endl;
 	img->AddContours(seq);
 }

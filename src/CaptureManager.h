@@ -41,6 +41,7 @@ public:
 	PluginBase *BookChangeListener;
 	ImageJobQueue* m_queue;
 	int loadRadius;
+	int loadedImgs;
 
 	MyCapture_Confocal* m_capture;
 

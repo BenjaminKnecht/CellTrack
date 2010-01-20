@@ -20,7 +20,7 @@ void MatchTemplatePlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 }
 void MatchTemplatePlugin::FetchParams()
@@ -66,18 +66,19 @@ void MatchTemplatePlugin::OnOK()
 	cm->ReloadCurrentFrameContours(true, false);
 	wxEndBusyCursor();
 }
-void MatchTemplatePlugin::ProcessImage( ImagePlus* img, int pos )
+void MatchTemplatePlugin::ProcessImage( ImagePlus* img, int pos, int zPos )
 {
 	if (pos==0)
 		return;
 	FetchParams();
-	ImagePlus *oimg = cm->book[useFirst ? 0 : pos-1];
+	ImagePlus *oimg = cm->Access(useFirst ? 0 : pos-1, zPos);
 
 	img->CloneContours(oimg);
 	int numContours = (int) oimg->contourArray.size();
 	for (int i=0; i<numContours; i++){
 		ProcessStatic(i, img, oimg, method, winsize, map);
 	}
+	cm->Release(useFirst ? 0 : pos-1, zPos, false);
 }
 void MatchTemplatePlugin::ProcessStatic
 ( int i, ImagePlus *img, ImagePlus *oimg,

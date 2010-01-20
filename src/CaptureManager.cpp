@@ -26,6 +26,7 @@ void CaptureManager::Reset(){
 	fps = 0;
 	pos = 0;
 	zPos = 0;
+	loadedImgs = 0;
 	size = cvSize(0, 0);
 	img.ReleaseAll();
 	loadRadius = 4;
@@ -292,6 +293,9 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
         if (!book[it->first + 1]->orig)
             m_queue->AddJob(Job(Job::thread_load, it->first + 1, m_capture->getFilename(it->first + 1)), it->second);
     }
+
+    loadedImgs + (toLoad.size() - toUnload.size());
+
 }
 
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){

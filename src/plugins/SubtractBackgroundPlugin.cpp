@@ -4,12 +4,20 @@
 SubtractBackgroundPlugin::SubtractBackgroundPlugin( wxWindow* parent_, MyFrame *win_ ): PluginBase(GetStaticName(), parent_, win_, true, true), avgImg(NULL), temp(NULL), temp32(NULL), gaussModel(NULL) {
 	sidebar =  new SubtractBackgroundSidebar(parent_, this);
 	sidebarw = sidebar;
+    avgImg = new IplImage*[cm->slideCount];
 	DoPreview();
 }
 void SubtractBackgroundPlugin::ReleaseTemps()
 {
-	if (avgImg)
-		cvReleaseImage(&avgImg);
+    if (avgImg)
+    {
+		for (int i=0; i<cm->slideCount; i++)
+		{
+			cvReleaseImage(&avgImg[i]);
+		}
+		delete[] avgImg;
+	}
+
 	if (temp)
 		cvReleaseImage(&temp);
 	if (temp32)
@@ -25,10 +33,10 @@ void SubtractBackgroundPlugin::DoPreview()
 		return;
 	cm->ReloadCurrentFrame(false);
 	InitModels(true);
-	ProcessImage(&cm->img, cm->GetPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 }
-void SubtractBackgroundPlugin::ProcessImage( ImagePlus *img, int pos ){
+void SubtractBackgroundPlugin::ProcessImage( ImagePlus *img, int pos, int zPos ){
 	IplImage *orig = img->orig;
 	InitModels();
 	if (sidebar->method->GetSelection() == 0)
@@ -37,15 +45,16 @@ void SubtractBackgroundPlugin::ProcessImage( ImagePlus *img, int pos ){
 		if (gaussModel)
 			cvReleaseBGStatModel(&gaussModel);
 		if (!gaussModel) {
-			CvGaussBGStatModelParams* params = new CvGaussBGStatModelParams;	
+			CvGaussBGStatModelParams* params = new CvGaussBGStatModelParams;
 			params->win_size = sidebar->win_size->GetValue();
 			params->n_gauss = sidebar->n_gauss->GetValue();
 			params->bg_threshold = sidebar->bg_threshold->GetValue();
 			params->std_threshold = sidebar->std_threshold->GetValue();
 			params->minArea = sidebar->minArea->GetValue();
 			params->weight_init = sidebar->weight_init->GetValue();
-			params->variance_init = sidebar->variance_init->GetValue(); 
-			gaussModel = cvCreateGaussianBGModel( cm->book[0]->orig, params );
+			params->variance_init = sidebar->variance_init->GetValue();
+			gaussModel = cvCreateGaussianBGModel( cm->Access(0,zPos)->orig, params );
+			cm->Release(0,zPos, false);
 			delete params;
 		}
 		int start;
@@ -64,7 +73,10 @@ void SubtractBackgroundPlugin::ProcessImage( ImagePlus *img, int pos ){
 			start = 0;
 
 		for( int i = start; forward ? i<=pos : i>=pos; i+=forward?+1:-1 )
-			cvUpdateBGStatModel( cm->book[i]->orig, gaussModel );
+		{
+			cvUpdateBGStatModel( cm->Access(i,zPos)->orig, gaussModel );
+			cm->Release(i,zPos,false);
+		}
 		//cvCvtColor(gaussModel->foreground, img->orig, CV_GRAY2BGR);
 		cvZero(temp);
 		cvCopy(img->orig, temp, gaussModel->foreground);
@@ -73,19 +85,31 @@ void SubtractBackgroundPlugin::ProcessImage( ImagePlus *img, int pos ){
 }
 void SubtractBackgroundPlugin::InitModels(bool reinit)
 {
-	if (sidebar->method->GetSelection() == 0) {
-		if (!avgImg){
-			IplImage *temp32 = cvCreateImage( cvImageSize(cm->book[0]->orig), IPL_DEPTH_32F, 3); 
-			avgImg = cvCreateImage( cvImageSize(cm->book[0]->orig), IPL_DEPTH_8U, 3 );
-			cvConvertScale(cm->book[0]->orig, temp32);
-			for (int i=1; i<cm->GetFrameCount(); i++)
-				cvAcc(cm->book[i]->orig, temp32);
-			cvConvertScale(temp32, temp32, 1.0/cm->GetFrameCount());
-			cvConvertScale(temp32, avgImg);
+	if (sidebar->method->GetSelection() == 0)
+	{
+        for (int zPos = 0; zPos < cm->slideCount; zPos++)
+        {
+            if (!avgImg[zPos])
+            {
+                IplImage *temp32 = cvCreateImage( cvImageSize(cm->Access(0,zPos, false, false, true)->orig), IPL_DEPTH_32F, 3);
+                avgImg[zPos] = cvCreateImage( cvImageSize(cm->Access(0,zPos)->orig), IPL_DEPTH_8U, 3 );
+                cvConvertScale(cm->Access(0,zPos)->orig, temp32);
+                cm->Release(0,zPos, false);
+                for (int i=1; i<cm->GetFrameCount(); i++)
+                {
+                    cvAcc(cm->Access(i,zPos, false, false, true)->orig, temp32);
+                    cm->Release(i, zPos, false);
+                }
+                cvConvertScale(temp32, temp32, 1.0/cm->GetFrameCount());
+                cvConvertScale(temp32, avgImg[zPos]);
+		    }
 		}
 	}
 	else {
 		if (!temp)
-			temp = cvCreateImage( cvImageSize(cm->book[0]->orig), IPL_DEPTH_8U, 3 );
+		{
+			temp = cvCreateImage( cvImageSize(cm->Access(0)->orig), IPL_DEPTH_8U, 3 );
+			cm->Release(0,0,false);
+		}
 	}
 }
