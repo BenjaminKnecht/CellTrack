@@ -18,7 +18,7 @@ wxThread::ExitCode ImageLoader::Entry()
     {
         Job j = m_queue->Pop();
         std::multiset<int>::iterator it;
-        std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
+        //std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
         switch(j.m_cmd)
         {
             case Job::thread_exit:

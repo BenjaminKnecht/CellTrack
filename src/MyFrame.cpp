@@ -182,7 +182,7 @@ void MyFrame::OnOpenImages( wxCommandEvent& event )
 
 void MyFrame::OnOpenConfocal( wxCommandEvent& event )
 {
-    wxFileDialog d(this, _T("Select image files to load"), imgDir, _T(""), _T("TIFF files (*.tiff,*.tif)|*.tiff;*.tif|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
+    wxFileDialog d(this, _T("Select image files to load"), imgDir, _T(""), _T("All files (*.*)|*.*|TIFF files (*.tiff,*.tif)|*.tiff;*.tif"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
     if (d.ShowModal() == wxID_OK)
     {
         config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());

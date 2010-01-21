@@ -75,6 +75,7 @@ IplImage* MyCapture::queryFrame(int pos_){
 		unsigned char *raw;
 		cvGetRawData(frame, &raw, &step);
 	}
+	std::cout << "depth: " << frame->depth << std::endl;
 	return frame;
 }
 IplImage* MyCapture_Files::queryFrame(int pos_)
