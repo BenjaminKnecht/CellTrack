@@ -21,10 +21,12 @@ public:
 	CvMemStorage *contours_storage;
 	std::vector<std::vector<CvPoint2D32f> > feats;
 	bool dirty; //specifies if drawn need to be updated. no longer needed.
+	bool isFluorescence;
 
 	ImagePlus();
 	~ImagePlus();
 	ImagePlus(IplImage *orig_);
+	ImagePlus(bool fluorescence);
 	// copy constructor
 	ImagePlus(const ImagePlus &copy);
 	// assignment operator

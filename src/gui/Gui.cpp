@@ -137,6 +137,21 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	m_menubar1->Append( menu_contours, _("Detection") );
 	
+	m_menu8 = new wxMenu();
+	wxMenuItem* m_menuItem47;
+	m_menuItem47 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Fluorescense Boundaries") ) , wxEmptyString, wxITEM_CHECK );
+	m_menu8->Append( m_menuItem47 );
+	
+	wxMenuItem* m_menuItem48;
+	m_menuItem48 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Top Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	m_menu8->Append( m_menuItem48 );
+	
+	wxMenuItem* m_menuItem49;
+	m_menuItem49 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Bottom Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	m_menu8->Append( m_menuItem49 );
+	
+	m_menubar1->Append( m_menu8, _("Boundary View") );
+	
 	menu_track = new wxMenu();
 	wxMenuItem* m_menuItem38;
 	m_menuItem38 = new wxMenuItem( menu_track, wxID_ANY, wxString( _("Template-matching") ) + wxT('\t') + wxT("Ctrl+M"), wxEmptyString, wxITEM_NORMAL );
@@ -3193,6 +3208,37 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	
 	
 	fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	c_ColorFContourBorderDraw = new wxCheckBox( m_panel6, wxID_ANY, _("Draw Fluorescence Borders"), wxDefaultPosition, wxDefaultSize, 0 );
+	c_ColorFContourBorderDraw->SetValue(true);
+	
+	fgSizer4->Add( c_ColorFContourBorderDraw, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	c_ColorFContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer4->Add( c_ColorFContourBorderColor, 0, wxALL, 5 );
+	
+	c_ColorFContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	fgSizer4->Add( c_ColorFContourBorderWidth, 0, wxALL, 5 );
+	
+	m_staticText103 = new wxStaticText( m_panel6, wxID_ANY, _("    Top Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText103->Wrap( -1 );
+	fgSizer4->Add( m_staticText103, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	c_ColorTContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 0, 139, 23 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer4->Add( c_ColorTContourBorderColor, 0, wxALL, 5 );
+	
+	c_ColorTContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	fgSizer4->Add( c_ColorTContourBorderWidth, 0, wxALL, 5 );
+	
+	m_staticText104 = new wxStaticText( m_panel6, wxID_ANY, _("    Bottom Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText104->Wrap( -1 );
+	fgSizer4->Add( m_staticText104, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	c_ColorBContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 36, 198, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	fgSizer4->Add( c_ColorBContourBorderColor, 0, wxALL, 5 );
+	
+	c_ColorBContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	fgSizer4->Add( c_ColorBContourBorderWidth, 0, wxALL, 5 );
 	
 	c_ColorContourCornerDraw = new wxCheckBox( m_panel6, wxID_ANY, _("Show corner points"), wxDefaultPosition, wxDefaultSize, 0 );
 	c_ColorContourCornerDraw->SetValue(true);

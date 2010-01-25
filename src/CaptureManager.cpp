@@ -129,7 +129,7 @@ bool CaptureManager::OpenConfocal_initialize()
 	}*/
 	for (int i=0; i<totalFrameCount; i++)
 	{
-	    book[i] = new ImagePlus();
+	    book[i] = new ImagePlus(i%2==0?true:false);
 	}
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();

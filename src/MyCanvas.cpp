@@ -142,7 +142,7 @@ void MyCanvas::DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected, i
 void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, const wxColor *borderColor, int label){
 	wxPoint *ps = ContourToPointArray(seq, shift, scale);
 		if (Preferences::GetColorContourBorderDraw() || selected){
-			dc->SetPen(wxPen(borderColor ? *borderColor : wxColour(selected ? Preferences::GetColorContourSelectedColor() : Preferences::GetColorContourBorderColor()), Preferences::GetColorContourBorderWidth()));
+			dc->SetPen(wxPen(borderColor ? *borderColor : wxColour(selected ? Preferences::GetColorContourSelectedColor() : (img.isFluorescence ? Preferences::GetColorFContourBorderColor() : Preferences::GetColorContourBorderColor())), (img.isFluorescence ? Preferences::GetColorFContourBorderWidth() : Preferences::GetColorContourBorderWidth()));
 			dc->SetBrush(*wxTRANSPARENT_BRUSH);
 			dc->DrawPolygon(seq->total, ps);
 		}

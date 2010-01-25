@@ -69,6 +69,7 @@ class MyFrame_ : public wxFrame
 		wxMenu* menu_go;
 		wxMenu* menu_image;
 		wxMenu* menu_contours;
+		wxMenu* m_menu8;
 		wxMenu* menu_track;
 		wxMenu* menu_analyze;
 		wxMenu* m_menu4;
@@ -922,6 +923,15 @@ class PreferencesDialog_ : public wxDialog
 		wxStaticText* m_staticText22;
 		wxColourPickerCtrl* c_ColorContourSelectedColor;
 		
+		wxCheckBox* c_ColorFContourBorderDraw;
+		wxColourPickerCtrl* c_ColorFContourBorderColor;
+		wxSpinCtrl* c_ColorFContourBorderWidth;
+		wxStaticText* m_staticText103;
+		wxColourPickerCtrl* c_ColorTContourBorderColor;
+		wxSpinCtrl* c_ColorTContourBorderWidth;
+		wxStaticText* m_staticText104;
+		wxColourPickerCtrl* c_ColorBContourBorderColor;
+		wxSpinCtrl* c_ColorBContourBorderWidth;
 		wxCheckBox* c_ColorContourCornerDraw;
 		wxColourPickerCtrl* c_ColorContourCornerColor;
 		wxSpinCtrl* c_ColorContourCornerWidth;

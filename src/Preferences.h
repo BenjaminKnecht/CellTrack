@@ -31,7 +31,7 @@ public:
 	//call this function first to initialize other static variables.
 	// TODO: move this to private: and remove call in myApp when all the
 	// member variables have a corresponding Get..
-	static void InitializeOnDemand(); 
+	static void InitializeOnDemand();
 	static long GetSavingCodec();
 	static CvSize GetSavingSize();
 
@@ -47,6 +47,13 @@ public:
 	DEFINE_PREF_VARIABLE(bool, ColorContourBorderDraw)
 	DEFINE_PREF_VARIABLE(wxString, ColorContourBorderColor)
 	DEFINE_PREF_VARIABLE(int, ColorContourBorderWidth)
+	DEFINE_PREF_VARIABLE(bool, ColorFContourBorderDraw)
+    DEFINE_PREF_VARIABLE(wxString, ColorFContourBorderColor)
+    DEFINE_PREF_VARIABLE(int, ColorFContourBorderWidth)
+    DEFINE_PREF_VARIABLE(wxString, ColorTContourBorderColor)
+    DEFINE_PREF_VARIABLE(int, ColorTContourBorderWidth)
+    DEFINE_PREF_VARIABLE(wxString, ColorBContourBorderColor)
+    DEFINE_PREF_VARIABLE(int, ColorBContourBorderWidth)
 	DEFINE_PREF_VARIABLE(bool, ColorContourCornerDraw)
 	DEFINE_PREF_VARIABLE(wxString, ColorContourCornerColor)
 	DEFINE_PREF_VARIABLE(int, ColorContourCornerWidth)
