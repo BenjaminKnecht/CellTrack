@@ -69,7 +69,7 @@ class MyFrame_ : public wxFrame
 		wxMenu* menu_go;
 		wxMenu* menu_image;
 		wxMenu* menu_contours;
-		wxMenu* m_menu8;
+		wxMenu* menu_contour_views;
 		wxMenu* menu_track;
 		wxMenu* menu_analyze;
 		wxMenu* m_menu4;
@@ -125,6 +125,9 @@ class MyFrame_ : public wxFrame
 		virtual void OnNormalizeContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFindFeatures( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSubtractBackground( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnFluorescenceBorder( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnTopBoundary( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnBottomBoundary( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMatchTemplate( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCamShift( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnLKContours( wxCommandEvent& event ){ event.Skip(); }

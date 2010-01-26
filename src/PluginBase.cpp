@@ -20,8 +20,11 @@ PluginBase::~PluginBase(void)
 	if(progressDlg)
 		progressDlg->Destroy();
 }
-void PluginBase::OnNavigate(){
-	if (showsCanvas2){
+
+void PluginBase::OnNavigate()
+{
+	if (showsCanvas2)
+	{
 		if(cm->GetPos())
 			canvas2->SetImage(*(cm->Access(cm->GetPos()-1, cm->GetZPos(), cm->viewFluorescence)));
 		else
@@ -30,6 +33,7 @@ void PluginBase::OnNavigate(){
 	if (IsPreviewOn())
 		ShowProcessInfo();
 }
+
 void PluginBase::OnEndPreview()
 {
 	if ( cm && cm->GetFrameCount() )
@@ -53,14 +57,15 @@ void PluginBase::OnRedraw(  )
 }
 void PluginBase::OnOK()
 {
-	if (doProcessImageOnOK && GetScope()>=0){
+	if (doProcessImageOnOK && GetScope()>=0)
+	{
 		wxBeginBusyCursor();
 		if (GetScope())
 		{
 			CreateProgressDlg();
 			for (int j = 0; j<cm->slideCount; j++)
             {
-                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i*j); i++)
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount()); i++)
                 {
                     ProcessImage(cm->Access(i,j,cm->viewFluorescence, false, true), i, j);
                     cm->Release(i,j,cm->viewFluorescence);

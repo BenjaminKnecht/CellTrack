@@ -74,11 +74,14 @@ void MyCanvas::OnSize(wxSizeEvent& event)
 		scale = wxRealPoint(1.0,1.0);
 	unsigned char* imgdata = (unsigned char *) malloc(imgwidth*imgheight*3*sizeof(unsigned char));
 	int step = img.orig->widthStep/sizeof(unsigned char);
-	for (int h=0; h<imgheight; h++){
+	for (int h=0; h<imgheight; h++)
+	{
 		//the color order is different BGR-->RGB, so memcpy won't give correct result.
 //		memcpy(imgdata + h*imgwidth*3, img.orig->imageData + h*step, imgwidth*3*sizeof(unsigned char));
-		for (int w=0; w<imgwidth; w++){
-			for (int k=0; k<3; k++){
+		for (int w=0; w<imgwidth; w++)
+		{
+			for (int k=0; k<3; k++)
+			{
 				imgdata[(h*imgwidth+w)*3 + (2-k)] = img.orig->imageData[h*step + w*3 + k];
 			}
 		}
@@ -89,10 +92,12 @@ void MyCanvas::OnSize(wxSizeEvent& event)
 	Refresh( true );
 	Update();
 }
+
 void MyCanvas::SetImage( const ImagePlus& img_ )
 {
 	img = img_;
-	if (!img.orig){
+	if (!img.orig)
+	{
 		Refresh(true);
 		Update();
 		return;
@@ -105,6 +110,7 @@ void MyCanvas::SetImage( const ImagePlus& img_ )
 	wxSizeEvent dummy = wxSizeEvent();
 	OnSize(dummy);
 }
+
 void MyCanvas::DrawContours()
 {
 	if (!img.contours)
@@ -112,13 +118,16 @@ void MyCanvas::DrawContours()
 	wxMemoryDC dc(bmp);
 	CvSeq *seq = img.contours;
 	int i=0;
-	while (seq) {
+	while (seq)
+	{
 		DrawContour(&dc, wxPoint(0,0), seq, selectedContours[i++], i);
 		seq = seq->h_next;
 	}
-	for (int c=0; c<(int)img.feats.size(); c++){
+	for (int c=0; c<(int)img.feats.size(); c++)
+	{
 		dc.SetPen(wxPen(wxColour(selectedContours[c] ? Preferences::GetColorContourSelectedColor() : Preferences::GetColorFeatureColor()), Preferences::GetColorContourBorderWidth()));
-		for (int f=0; f<img.feats[c].size(); f++){
+		for (int f=0; f<img.feats[c].size(); f++)
+		{
 			MyPoint p = MyPoint(img.feats[c][f])*scale;
 			dc.DrawLine(p.x-1, p.y, p.x+1, p.y);
 			dc.DrawLine(p.x, p.y-1, p.x, p.y+1);
@@ -127,6 +136,7 @@ void MyCanvas::DrawContours()
 	if (theRect.x != -1)
 		dc.DrawRectangle(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize());
 }
+
 void MyCanvas::SetContourSelection( int index, bool selected )
 {
 	if (selectedContours[index] == selected)
@@ -136,13 +146,27 @@ void MyCanvas::SetContourSelection( int index, bool selected )
 	wxBufferedDC dc(&cdc);
 	DrawContour(&dc, topleft, img.contourArray[index], selectedContours[index]);
 }
-void MyCanvas::DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected, int label){
-	DrawContour_static(dc, seq, shift, scale, selected, 0, label);
+
+void MyCanvas::DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected, int label)
+{
+    wxColor drawColor = wxColor(Preferences::GetColorContourBorderColor());
+    int borderWidth = Preferences::GetColorContourBorderWidth();
+    if (img.isFluorescence)
+    {
+        drawColor = wxColour(Preferences::GetColorFContourBorderColor());
+        borderWidth = Preferences::GetColorFContourBorderWidth();
+    }
+    if (selected)
+    {
+        drawColor = wxColour(Preferences::GetColorContourSelectedColor());
+    }
+	DrawContour_static(dc, seq, shift, scale, selected, &drawColor, label, borderWidth);
 }
-void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, const wxColor *borderColor, int label){
+
+void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, const wxColor *borderColor, int label, int width){
 	wxPoint *ps = ContourToPointArray(seq, shift, scale);
 		if (Preferences::GetColorContourBorderDraw() || selected){
-			dc->SetPen(wxPen(borderColor ? *borderColor : wxColour(selected ? Preferences::GetColorContourSelectedColor() : (img.isFluorescence ? Preferences::GetColorFContourBorderColor() : Preferences::GetColorContourBorderColor())), (img.isFluorescence ? Preferences::GetColorFContourBorderWidth() : Preferences::GetColorContourBorderWidth()));
+			dc->SetPen(wxPen(*borderColor, width));
 			dc->SetBrush(*wxTRANSPARENT_BRUSH);
 			dc->DrawPolygon(seq->total, ps);
 		}
@@ -520,4 +544,3 @@ void MyCanvas::ResetSelectedContours()
 	}
 	hoverContour = -1;
 }
-

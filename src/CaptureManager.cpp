@@ -30,6 +30,9 @@ void CaptureManager::Reset(){
 	size = cvSize(0, 0);
 	img.ReleaseAll();
 	loadRadius = 4;
+	drawFluorescence = false;
+	drawTopBorder = false;
+	drawBottomBorder = false;
 }
 void CaptureManager::SetCanvas(MyCanvas *canvas_){
 	canvas = canvas_;
@@ -193,7 +196,10 @@ void CaptureManager::Release(int pos, int z, bool fluorescence)
     if (!IsInNeighborhood(pos, z))
     {
         int direct = pos*offset+z*2+(fluorescence?0:1);
-        m_queue->AddJob(Job(Job::thread_delete, direct, book[direct]->orig), 1);
+        if (book[direct]->isLoading)
+            book[direct]->isLoading = false;
+        else
+            m_queue->AddJob(Job(Job::thread_delete, direct, book[direct]->orig), 1);
         book[direct]->orig = NULL;
     }
 }
@@ -215,8 +221,11 @@ ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImag
                 if (newpos >= frameCount)
                     newpos = newpos % frameCount;
                 int direct = newpos*offset+newZPos*2+(fluorescence?0:1);
-                if (!book[direct]->orig)
-                    m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 2);
+                if (!book[direct]->orig && !book[direct]->isLoading)
+                {
+                    m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 1);
+                    book[direct]->isLoading = true;
+                }
             }
         }
     }
@@ -279,19 +288,31 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
 
     for (std::set<int>::iterator it = toUnload.begin(); it != toUnload.end(); it++)
     {
-        m_queue->AddJob(Job(Job::thread_delete, *it, book[*it]->orig), 2);
+        if (book[*it]->isLoading)
+            book[*it]->isLoading = false;
+        else
+            m_queue->AddJob(Job(Job::thread_delete, *it, book[*it]->orig), 2);
         book[*it]->orig = NULL;
 
-        m_queue->AddJob(Job(Job::thread_delete, *it + 1, book[*it + 1]->orig), 2 + (viewFluorescence?1:-1));
+        if (book[*it + 1]->isLoading)
+            book[*it + 1]->isLoading = false;
+        else
+            m_queue->AddJob(Job(Job::thread_delete, *it + 1, book[*it + 1]->orig), 2 + (viewFluorescence?1:-1));
         book[*it + 1]->orig = NULL;
     }
 
     for (std::set<std::pair<int,int> >::iterator it = toLoad.begin(); it != toLoad.end(); it++)
     {
-        if (!book[it->first]->orig)
+        if (!book[it->first]->orig && !book[it->first]->isLoading)
+        {
             m_queue->AddJob(Job(Job::thread_load, it->first, m_capture->getFilename(it->first)), it->second);
-        if (!book[it->first + 1]->orig)
+            book[it->first]->isLoading = true;
+        }
+        if (!book[it->first + 1]->orig && !book[it->first + 1]->isLoading)
+        {
             m_queue->AddJob(Job(Job::thread_load, it->first + 1, m_capture->getFilename(it->first + 1)), it->second);
+            book[it->first + 1]->isLoading = true;
+        }
     }
 
     loadedImgs + (toLoad.size() - toUnload.size());
@@ -386,25 +407,74 @@ bool CaptureManager::OnDelete()
         delete todelete[i];
 	return true;
 }
-bool CaptureManager::OnPrev(){
+
+bool CaptureManager::OnPrev()
+{
 	return SetPos(pos-1);
 }
-bool CaptureManager::OnNext(){
+
+bool CaptureManager::OnNext()
+{
 	return SetPos(pos+1);
 }
+
 bool CaptureManager::ShowFluorescence(bool show)
 {
     viewFluorescence = show;
     ReloadCurrentFrame();
 }
-void CaptureManager::Redraw(bool callPlugin){
+
+void CaptureManager::Redraw(bool callPlugin)
+{
 	if (!canvas)
 		return;
 //	canvas->SetImage(img.ToWxImage());
 	if (callPlugin && RedrawListener)
 		RedrawListener->OnRedraw();
 	canvas->SetImage(img);
+	RedrawBorders();
 }
+
+void CaptureManager::RedrawBorders()
+{
+    if (drawFluorescence)
+    {
+        wxMemoryDC dc(canvas->bmp);
+        CvSeq *seq = Access(GetPos(),GetZPos(),(viewFluorescence?false:true),true)->contours;
+        int i=0;
+        while (seq)
+        {
+            wxColor drawColor = wxColour(Preferences::GetColorFContourBorderColor());
+            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorFContourBorderWidth());
+            seq = seq->h_next;
+        }
+    }
+    if (drawTopBorder && zPos < slideCount-1)
+    {
+        wxMemoryDC dc(canvas->bmp);
+        CvSeq *seq = Access(GetPos(),GetZPos()+1,(viewFluorescence?true:false),true)->contours;
+        int i=0;
+        while (seq)
+        {
+            wxColor drawColor = wxColour(Preferences::GetColorTContourBorderColor());
+            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorTContourBorderWidth());
+            seq = seq->h_next;
+        }
+    }
+    if (drawBottomBorder && zPos > 0)
+    {
+        wxMemoryDC dc(canvas->bmp);
+        CvSeq *seq = Access(GetPos(),GetZPos()-1,(viewFluorescence?true:false), true)->contours;
+        int i=0;
+        while (seq)
+        {
+            wxColor drawColor = wxColour(Preferences::GetColorBContourBorderColor());
+            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorBContourBorderWidth());
+            seq = seq->h_next;
+        }
+    }
+}
+
 void CaptureManager::SetRedrawListener( PluginBase* RedrawListener_ )
 {
 	if (RedrawListener && RedrawListener_)
@@ -478,8 +548,10 @@ std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef){
 	ImagePlus *img_ = new ImagePlus(img);
 	IplImage *gray = cvCreateImage(cvGetSize(img.orig), IPL_DEPTH_8U, 1);
 	IplImage *edge = cvCreateImage(cvGetSize(img.orig), IPL_DEPTH_8U, 1);
-	for (int i=0; i<frameCount-1; i++){
-		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1])) {
+	for (int i=0; i<frameCount-1; i++)
+	{
+		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1]))
+		{
 			wxPoint *ps = ContourToPointArray(book[i]->contourArray[c], MyPoint(traj[i+1])-MyPoint(traj[i]).ToWxPoint());
 			img_->RemoveAllContours();
 			img_->AddContour(ps,book[i*offset]->contourArray[c]->total);

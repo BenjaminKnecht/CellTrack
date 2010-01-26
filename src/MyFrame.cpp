@@ -94,9 +94,12 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	imgDir = config->Read(_T("LastFilepath"),cwd);
 	m_zslides = config->Read(_T("SliceNumber"), 33);
 }
-void MyFrame::myShow(bool askLoad){
+
+void MyFrame::myShow(bool askLoad)
+{
 	Show();
 	ImageLoader* imgLoader = new ImageLoader(queue);
+	imgLoader->SetPriority(70);
 	imgLoader->Run();
 	cm->SetQueue(queue);
 	if (!loaded && askLoad){
@@ -127,6 +130,7 @@ void MyFrame::EnableMenus( bool enable )
 	EnableMenu(menu_go, enable);
 	EnableMenu(menu_image, enable);
 	EnableMenu(menu_contours, enable);
+	EnableMenu(menu_contour_views, enable);
 	EnableMenu(menu_track, enable);
 	EnableMenu(menu_analyze, enable);
 	if(enable)
@@ -231,12 +235,13 @@ void MyFrame::OnThread( wxCommandEvent& event )
         case Job::thread_loaded:
             //std::cout << "Thread loaded img " << event.GetInt() << std::endl;
             img = cm->DirectAccess(event.GetInt());
-            if(img->orig)
+            if(img->orig || !img->isLoading)
             {
                 queue->AddJob(Job(Job::thread_delete, -1, (IplImage*)event.GetClientData()), 1);
                 cm->loadedImgs--;
                 break;
             }
+            img->isLoading = false;
             img->orig = (IplImage*)(event.GetClientData());
             if(cm->GetTotalPos() == event.GetInt())
             {
@@ -647,15 +652,19 @@ void MyFrame::OnPlotDeformation( wxCommandEvent& e )
 }
 
 #include "PictureCanvas.h"
-void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &)){
+void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &))
+{
 	wxBitmap bmp;
-	if((cm->*func)(bmp)){
+	if((cm->*func)(bmp))
+	{
 		ShowImageDialog d(this,wxID_ANY,_T("Cell Tracking"));
 		d.canvas->SetImage(bmp);
 		d.ShowModal();
 	}
 }
-void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &)){
+
+void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &))
+{
 	wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
 	  if (!filename.empty()){
 		setCWD(wxPathOnly(filename));
@@ -731,3 +740,18 @@ void MyFrame::OnAbout(wxCommandEvent &e){
 void MyFrame::OnHelp(wxCommandEvent &e){
 	wxLaunchDefaultBrowser(_T("http://db.cse.ohio-state.edu/CellTrack"));
 }
+void MyFrame::OnFluorescenceBorder( wxCommandEvent& event )
+{
+    cm->drawFluorescence = menu_contour_views->FindItemByPosition(1)->IsChecked();
+}
+
+void MyFrame::OnTopBorder( wxCommandEvent& event )
+{
+    cm->drawTopBorder = menu_contour_views->FindItemByPosition(2)->IsChecked();
+}
+
+void MyFrame::OnBottomBorder( wxCommandEvent& event )
+{
+    cm->drawBottomBorder = menu_contour_views->FindItemByPosition(3)->IsChecked();
+}
+

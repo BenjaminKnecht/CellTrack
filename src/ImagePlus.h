@@ -22,6 +22,7 @@ public:
 	std::vector<std::vector<CvPoint2D32f> > feats;
 	bool dirty; //specifies if drawn need to be updated. no longer needed.
 	bool isFluorescence;
+	bool isLoading;
 
 	ImagePlus();
 	~ImagePlus();

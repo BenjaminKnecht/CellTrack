@@ -1,18 +1,18 @@
 #include "ImagePlus.h"
 
 ImagePlus::ImagePlus()
-: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(false)
+: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(false), isLoading(false)
 {
 }
 ImagePlus::ImagePlus(bool fluorescence)
-: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(fluorescence)
+: orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(fluorescence), isLoading(false)
 {
 }
-ImagePlus::ImagePlus(IplImage *orig_) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(false)
+ImagePlus::ImagePlus(IplImage *orig_) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(true), numContours(0), isFluorescence(false), isLoading(false)
 {
 	SetOriginal(orig_);
 }
-ImagePlus::ImagePlus(const ImagePlus &copy) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(copy.dirty), numContours(copy.numContours), isFluorescence(copy.isFluorescence)
+ImagePlus::ImagePlus(const ImagePlus &copy) : orig(NULL), drawn(NULL), contours(NULL), contours_storage(NULL), dirty(copy.dirty), numContours(copy.numContours), isFluorescence(copy.isFluorescence), isLoading(false)
 {
 	if ( copy.orig )
 		orig = cvCloneImage(copy.orig);
@@ -32,6 +32,7 @@ ImagePlus & ImagePlus::operator = (const ImagePlus &copy)
 		CloneContours(&copy);
 	dirty = copy.dirty;
 	numContours = copy.numContours;
+	isFluorescence = copy.isFluorescence;
 	return *this;
 }
 void ImagePlus::CloneContours(const ImagePlus *copy)

@@ -137,20 +137,20 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	m_menubar1->Append( menu_contours, _("Detection") );
 	
-	m_menu8 = new wxMenu();
-	wxMenuItem* m_menuItem47;
-	m_menuItem47 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Fluorescense Boundaries") ) , wxEmptyString, wxITEM_CHECK );
-	m_menu8->Append( m_menuItem47 );
+	menu_contour_views = new wxMenu();
+	wxMenuItem* m_fluorescenceBoundary;
+	m_fluorescenceBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Fluorescence Boundaries") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_fluorescenceBoundary );
 	
-	wxMenuItem* m_menuItem48;
-	m_menuItem48 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Top Boundary") ) , wxEmptyString, wxITEM_CHECK );
-	m_menu8->Append( m_menuItem48 );
+	wxMenuItem* m_topBoundary;
+	m_topBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Top Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_topBoundary );
 	
-	wxMenuItem* m_menuItem49;
-	m_menuItem49 = new wxMenuItem( m_menu8, wxID_ANY, wxString( _("Show Bottom Boundary") ) , wxEmptyString, wxITEM_CHECK );
-	m_menu8->Append( m_menuItem49 );
+	wxMenuItem* m_bottomBoundary;
+	m_bottomBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Bottom Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_bottomBoundary );
 	
-	m_menubar1->Append( m_menu8, _("Boundary View") );
+	m_menubar1->Append( menu_contour_views, _("Boundary View") );
 	
 	menu_track = new wxMenu();
 	wxMenuItem* m_menuItem38;
@@ -430,6 +430,9 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem71->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnNormalizeContours ) );
 	this->Connect( m_menuItem14->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Connect( m_menuItem10->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
+	this->Connect( m_fluorescenceBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
+	this->Connect( m_topBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBoundary ) );
+	this->Connect( m_bottomBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBoundary ) );
 	this->Connect( m_menuItem38->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnMatchTemplate ) );
 	this->Connect( m_menuItem39->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCamShift ) );
 	this->Connect( m_menuItem382->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnLKContours ) );
@@ -507,6 +510,9 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnNormalizeContours ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBoundary ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBoundary ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnMatchTemplate ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCamShift ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnLKContours ) );
@@ -3164,7 +3170,7 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	m_panel12->SetSizer( bSizer13 );
 	m_panel12->Layout();
 	bSizer13->Fit( m_panel12 );
-	c_Notebook->AddPage( m_panel12, _("Saving"), true );
+	c_Notebook->AddPage( m_panel12, _("Saving"), false );
 	m_panel6 = new wxPanel( c_Notebook, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxTAB_TRAVERSAL );
 	wxBoxSizer* bSizer16;
 	bSizer16 = new wxBoxSizer( wxVERTICAL );
@@ -3275,7 +3281,7 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	m_panel6->SetSizer( bSizer16 );
 	m_panel6->Layout();
 	bSizer16->Fit( m_panel6 );
-	c_Notebook->AddPage( m_panel6, _("Colors"), false );
+	c_Notebook->AddPage( m_panel6, _("Colors"), true );
 	
 	bSizer12->Add( c_Notebook, 1, wxEXPAND | wxALL, 5 );
 	

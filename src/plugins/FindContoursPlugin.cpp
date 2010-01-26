@@ -9,11 +9,13 @@ gray(NULL), edge(NULL)
 	sidebarw = sidebar;
 	DoPreview();
 }
+
 void FindContoursPlugin::ReleaseTemps()
 {
 	if (gray) cvReleaseImage(&gray);
 	if (edge) cvReleaseImage(&edge);
 }
+
 int FindContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
 bool FindContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void FindContoursPlugin::DoPreview()
@@ -26,11 +28,13 @@ void FindContoursPlugin::DoPreview()
 	cm->Redraw(false);
 }
 #include <vector>
-void FindContoursPlugin::ProcessImage( ImagePlus *img ){
+void FindContoursPlugin::ProcessImage( ImagePlus *img )
+{
 	ProcessImage_static(img, gray, edge, sidebar->thresh1->GetValue(), sidebar->thresh2->GetValue(), wxStringToLong(sidebar->aperture->GetStringSelection()), sidebar->dilate->GetValue(), sidebar->erode->GetValue(), sidebar->clean->GetValue(), sidebar->intra->GetSelection(), sidebar->approx->GetValue() );
 }
 
-void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge, double thresh1, double thresh2, int aperture, int dilate, int erode, bool clean, bool all, bool approx ){
+void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge, double thresh1, double thresh2, int aperture, int dilate, int erode, bool clean, bool all, bool approx )
+{
 	IplImage *orig = img->orig;
 	if (!gray)
 		gray = cvCreateImage( cvSize(orig->width, orig->height), IPL_DEPTH_8U, 1 );
