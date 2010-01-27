@@ -742,16 +742,19 @@ void MyFrame::OnHelp(wxCommandEvent &e){
 }
 void MyFrame::OnFluorescenceBorder( wxCommandEvent& event )
 {
-    cm->drawFluorescence = menu_contour_views->FindItemByPosition(1)->IsChecked();
+    cm->drawFluorescence = menu_contour_views->FindItemByPosition(0)->IsChecked();
+    cm->RedrawBorders();
 }
 
-void MyFrame::OnTopBorder( wxCommandEvent& event )
+void MyFrame::OnTopBoundary( wxCommandEvent& event )
 {
-    cm->drawTopBorder = menu_contour_views->FindItemByPosition(2)->IsChecked();
+    cm->drawTopBorder = menu_contour_views->FindItemByPosition(1)->IsChecked();
+    cm->RedrawBorders();
 }
 
-void MyFrame::OnBottomBorder( wxCommandEvent& event )
+void MyFrame::OnBottomBoundary( wxCommandEvent& event )
 {
-    cm->drawBottomBorder = menu_contour_views->FindItemByPosition(3)->IsChecked();
+    cm->drawBottomBorder = menu_contour_views->FindItemByPosition(2)->IsChecked();
+    cm->RedrawBorders();
 }
 

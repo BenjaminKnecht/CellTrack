@@ -457,6 +457,7 @@ void CaptureManager::RedrawBorders()
         while (seq)
         {
             wxColor drawColor = wxColour(Preferences::GetColorTContourBorderColor());
+            //std::cout << "drawing sequence for top border" << std::endl;
             MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorTContourBorderWidth());
             seq = seq->h_next;
         }
@@ -473,6 +474,9 @@ void CaptureManager::RedrawBorders()
             seq = seq->h_next;
         }
     }
+    canvas->DrawRoi();
+    canvas->Refresh( true );
+    canvas->Update();
 }
 
 void CaptureManager::SetRedrawListener( PluginBase* RedrawListener_ )

@@ -111,8 +111,8 @@ public:
 
 	// Boundary View Menu
 	void OnFluorescenceBorder( wxCommandEvent& event );
-	void OnTopBorder( wxCommandEvent& event );
-	void OnBottomBorder( wxCommandEvent& event );
+	void OnTopBoundary( wxCommandEvent& event );
+	void OnBottomBoundary( wxCommandEvent& event );
 
 	//Analysis menu
 	bool SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells);
