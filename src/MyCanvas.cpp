@@ -156,20 +156,23 @@ void MyCanvas::DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected, i
         drawColor = wxColour(Preferences::GetColorFContourBorderColor());
         borderWidth = Preferences::GetColorFContourBorderWidth();
     }
-    if (selected)
+    else if (selected)
     {
         drawColor = wxColour(Preferences::GetColorContourSelectedColor());
+    }
+    else if (!Preferences::GetColorContourBorderDraw())
+    {
+        return;
     }
 	DrawContour_static(dc, seq, shift, scale, selected, &drawColor, label, borderWidth);
 }
 
 void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, const wxColor *borderColor, int label, int width){
 	wxPoint *ps = ContourToPointArray(seq, shift, scale);
-		if (Preferences::GetColorContourBorderDraw() || selected){
-			dc->SetPen(wxPen(*borderColor, width));
-			dc->SetBrush(*wxTRANSPARENT_BRUSH);
-			dc->DrawPolygon(seq->total, ps);
-		}
+        dc->SetPen(wxPen(*borderColor, width));
+        dc->SetBrush(*wxTRANSPARENT_BRUSH);
+        dc->DrawPolygon(seq->total, ps);
+
 
 		if (Preferences::GetColorContourCornerDraw()){
 			dc->SetPen(wxPen(wxColour(Preferences::GetColorContourCornerColor())));
