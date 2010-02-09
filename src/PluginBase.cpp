@@ -57,18 +57,62 @@ void PluginBase::OnRedraw(  )
 }
 void PluginBase::OnOK()
 {
-	if (doProcessImageOnOK && GetScope()>=0)
+	if (doProcessImageOnOK && GetScope()>=0 && GetScope2()>=0)
 	{
 		wxBeginBusyCursor();
-		if (GetScope())
+		if (GetScope() == 1)
 		{
 			CreateProgressDlg();
 			for (int j = 0; j<cm->slideCount; j++)
             {
                 for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount()); i++)
                 {
-                    ProcessImage(cm->Access(i,j,cm->viewFluorescence, false, true), i, j);
-                    cm->Release(i,j,cm->viewFluorescence);
+                    if (GetScope2() != 1)
+                    {
+                        ProcessImage(cm->Access(i,j,false, false, true), i, j);
+                        cm->Release(i,j,false);
+                    }
+                    if (GetScope2() != 0)
+                    {
+                        ProcessImage(cm->Access(i,j,true, false, true), i, j);
+                        cm->Release(i,j,true);
+                    }
+                }
+			}
+			DestroyProgressDlg();
+		}
+		else if (GetScope() == 2)
+		{
+		    CreateProgressDlg(cm->GetFrameCount());
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            {
+                if (GetScope2() != 1)
+                {
+                    ProcessImage(cm->Access(i,cm->GetZPos(),false, false, true), i, cm->GetZPos());
+                    cm->Release(i,cm->GetZPos(),false);
+                }
+                if (GetScope2() != 0)
+                {
+                    ProcessImage(cm->Access(i,cm->GetZPos(),true, false, true), i, cm->GetZPos());
+                    cm->Release(i,cm->GetZPos(),true);
+                }
+			}
+			DestroyProgressDlg();
+		}
+		else if (GetScope() == 3)
+		{
+		    CreateProgressDlg(cm->slideCount);
+            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i); i++)
+            {
+                if (GetScope2() != 1)
+                {
+                    ProcessImage(cm->Access(cm->GetPos(),i,false, false, true), cm->GetPos(), i);
+                    cm->Release(cm->GetPos(),i,false);
+                }
+                if (GetScope2() != 0)
+                {
+                    ProcessImage(cm->Access(cm->GetPos(),i,true, false, true), cm->GetPos(), i);
+                    cm->Release(cm->GetPos(),i,true);
                 }
 			}
 			DestroyProgressDlg();
@@ -77,8 +121,16 @@ void PluginBase::OnOK()
 			cm->PushbackCurrentFrame();
 		else
 		{
-			ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), cm->viewFluorescence), cm->GetPos(), cm->GetZPos());
-			cm->Release(cm->GetPos(), cm->GetZPos(), cm->viewFluorescence);
+		    if (GetScope2() != 1)
+            {
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+                cm->Release(cm->GetPos(), cm->GetZPos(), false);
+			}
+            if (GetScope2() != 0)
+            {
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+                cm->Release(cm->GetPos(), cm->GetZPos(), true);
+            }
 		}
 		if (!IsPreviewOn())
 			cm->ReloadCurrentFrame(true, false);
@@ -89,7 +141,7 @@ void PluginBase::OnOK()
 void PluginBase::CreateProgressDlg(int maxFrames)
 {
 	DestroyProgressDlg();
-	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()*cm->slideCount), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount, win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount, win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 }
 bool PluginBase::UpdateProgressDlg(int frame){
 	if (!progressDlg)

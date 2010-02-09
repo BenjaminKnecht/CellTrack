@@ -204,6 +204,7 @@ class SmoothSidebar_ : public wxPanel
 		wxPanel* m_panel811;
 		wxStaticText* m_staticText24311;
 		wxStaticText* m_staticText243111;
+		wxRadioBox* scope2;
 		wxStaticLine* m_staticline3;
 		wxButton* m_button12;
 		wxButton* m_button13;
@@ -227,7 +228,7 @@ class SmoothSidebar_ : public wxPanel
 		wxSpinCtrl* bilateral2;
 		wxRadioBox* scope;
 		wxCheckBox* preview;
-		SmoothSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 228,350 ), long style = wxTAB_TRAVERSAL );
+		SmoothSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,550 ), long style = wxTAB_TRAVERSAL );
 		~SmoothSidebar_();
 	
 };
@@ -253,6 +254,7 @@ class FindContoursSidebar_ : public wxPanel
 		wxSpinCtrl* erode;
 		wxCheckBox* approx;
 		wxRadioBox* intra;
+		wxRadioBox* scope2;
 		wxCheckBox* clean;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline1;
@@ -269,7 +271,7 @@ class FindContoursSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		FindContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 195,448 ), long style = wxTAB_TRAVERSAL );
+		FindContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,600 ), long style = wxTAB_TRAVERSAL );
 		~FindContoursSidebar_();
 	
 };
@@ -353,6 +355,7 @@ class NormalizeContoursSidebar_ : public wxPanel
 		wxSpinCtrl* minLength;
 		wxCheckBox* isMaxLength;
 		wxSpinCtrl* maxLength;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxButton* m_button122;
 		wxButton* m_button1313;
@@ -369,7 +372,7 @@ class NormalizeContoursSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		NormalizeContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 195,250 ), long style = wxTAB_TRAVERSAL );
+		NormalizeContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,400 ), long style = wxTAB_TRAVERSAL );
 		~NormalizeContoursSidebar_();
 	
 };
@@ -383,6 +386,7 @@ class FilterContoursSidebar_ : public wxPanel
 	
 	protected:
 		wxScrolledWindow* m_scrolledWindow3;
+		wxRadioBox* scope2;
 		wxStaticLine* m_staticline3;
 		wxButton* m_button12;
 		wxButton* m_button13;
@@ -404,7 +408,7 @@ class FilterContoursSidebar_ : public wxPanel
 		wxSpinCtrl* minDist;
 		wxRadioBox* scope;
 		wxCheckBox* preview;
-		FilterContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 200,345 ), long style = wxTAB_TRAVERSAL );
+		FilterContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,450 ), long style = wxTAB_TRAVERSAL );
 		~FilterContoursSidebar_();
 	
 };
@@ -487,6 +491,7 @@ class FindFeaturesSidebar_ : public wxPanel
 		wxSpinCtrl* blockSize;
 		wxStaticText* m_staticText6111;
 		wxSpinCtrl* maxCount;
+		wxRadioBox* scope2;
 		wxCheckBox* clean;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline1;
@@ -504,7 +509,7 @@ class FindFeaturesSidebar_ : public wxPanel
 	public:
 		wxRadioBox* method;
 		wxRadioBox* scope;
-		FindFeaturesSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 190,446 ), long style = wxTAB_TRAVERSAL );
+		FindFeaturesSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,600 ), long style = wxTAB_TRAVERSAL );
 		~FindFeaturesSidebar_();
 	
 };
@@ -554,7 +559,7 @@ class SubtractBackgroundSidebar_ : public wxPanel
 		wxSpinCtrl* minArea;
 		wxSpinCtrl* variance_init;
 		wxCheckBox* preview;
-		SubtractBackgroundSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 210,411 ), long style = wxTAB_TRAVERSAL );
+		SubtractBackgroundSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,500 ), long style = wxTAB_TRAVERSAL );
 		~SubtractBackgroundSidebar_();
 	
 };
@@ -583,6 +588,7 @@ class ImproveContoursSidebar_ : public wxPanel
 		wxSpinCtrl* max_iter;
 		wxStaticText* m_staticText73;
 		wxTextCtrl_double* epsilon;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline2;
 		wxButton* m_button12;
@@ -598,7 +604,7 @@ class ImproveContoursSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		ImproveContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 210,432 ), long style = wxTAB_TRAVERSAL );
+		ImproveContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,600 ), long style = wxTAB_TRAVERSAL );
 		~ImproveContoursSidebar_();
 	
 };
@@ -619,6 +625,7 @@ class MatchTemplateSidebar_ : public wxPanel
 		wxSpinCtrl* width;
 		wxStaticText* m_staticText62;
 		wxSpinCtrl* height;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline17;
 		wxButton* m_button12;
@@ -636,7 +643,7 @@ class MatchTemplateSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		MatchTemplateSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 225,290 ), long style = wxTAB_TRAVERSAL );
+		MatchTemplateSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,400 ), long style = wxTAB_TRAVERSAL );
 		~MatchTemplateSidebar_();
 	
 };
@@ -657,6 +664,7 @@ class CamShiftSidebar_ : public wxPanel
 		wxSpinCtrl* max_iter;
 		wxStaticText* m_staticText73;
 		wxTextCtrl_double* epsilon;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline17;
 		wxButton* m_button12;
@@ -674,7 +682,7 @@ class CamShiftSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		CamShiftSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 195,300 ), long style = wxTAB_TRAVERSAL );
+		CamShiftSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,450 ), long style = wxTAB_TRAVERSAL );
 		~CamShiftSidebar_();
 	
 };
@@ -704,6 +712,7 @@ class LKContoursSidebar_ : public wxPanel
 		wxSpinCtrl* max_iter;
 		wxStaticText* m_staticText73;
 		wxTextCtrl_double* epsilon;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline17;
 		wxButton* m_button12;
@@ -721,7 +730,7 @@ class LKContoursSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		LKContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 214,468 ), long style = wxTAB_TRAVERSAL );
+		LKContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,600 ), long style = wxTAB_TRAVERSAL );
 		~LKContoursSidebar_();
 	
 };
@@ -765,6 +774,7 @@ class TrackContoursSidebar_ : public wxPanel
 		wxSpinCtrl* max_iter;
 		wxStaticText* m_staticText73;
 		wxTextCtrl_double* epsilon;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline2;
 		wxButton* m_button12;
@@ -782,7 +792,7 @@ class TrackContoursSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		TrackContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 236,527 ), long style = wxTAB_TRAVERSAL );
+		TrackContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 280,700 ), long style = wxTAB_TRAVERSAL );
 		~TrackContoursSidebar_();
 	
 };
@@ -871,6 +881,7 @@ class CombinedTrackingSidebar_ : public wxPanel
 		wxSpinCtrl* nc_minLength;
 		wxCheckBox* nc_isMaxLength;
 		wxSpinCtrl* nc_maxLength;
+		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline1;
 		wxButton* m_button122;
@@ -889,7 +900,7 @@ class CombinedTrackingSidebar_ : public wxPanel
 	
 	public:
 		wxRadioBox* scope;
-		CombinedTrackingSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 239,573 ), long style = wxTAB_TRAVERSAL );
+		CombinedTrackingSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,750 ), long style = wxTAB_TRAVERSAL );
 		~CombinedTrackingSidebar_();
 	
 };

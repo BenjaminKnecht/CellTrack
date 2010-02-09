@@ -24,6 +24,7 @@ public:
 	CamShiftPlugin( wxWindow* parent_, MyFrame *win_ );
 	static string GetStaticName() { return "CamShift"; }
 	virtual int GetScope();
+	virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void ReleaseTemps();

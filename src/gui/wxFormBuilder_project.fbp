@@ -1946,7 +1946,7 @@
             <property name="minimum_size">215,350</property>
             <property name="name">SmoothSidebar_</property>
             <property name="pos"></property>
-            <property name="size">228,350</property>
+            <property name="size">250,550</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -3288,7 +3288,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -3302,7 +3302,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -3569,7 +3623,7 @@
             <property name="minimum_size">190,375</property>
             <property name="name">FindContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">195,448</property>
+            <property name="size">250,600</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -4316,7 +4370,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to normal frames only&quot; &quot;Apply on fluorescence frames only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -4329,6 +4383,60 @@
                                     <property name="minimum_size"></property>
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Flourescence frames only&quot; &quot;Both frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
                                     <property name="pos"></property>
                                     <property name="selection">0</property>
                                     <property name="size"></property>
@@ -5923,7 +6031,7 @@
             <property name="minimum_size">190,250</property>
             <property name="name">NormalizeContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">195,250</property>
+            <property name="size">250,400</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -6266,7 +6374,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -6279,6 +6387,60 @@
                                     <property name="minimum_size"></property>
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
                                     <property name="pos"></property>
                                     <property name="selection">0</property>
                                     <property name="size"></property>
@@ -6550,7 +6712,7 @@
             <property name="minimum_size">200,300</property>
             <property name="name">FilterContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">200,345</property>
+            <property name="size">250,450</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -7032,7 +7194,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -7046,7 +7208,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -8201,7 +8417,7 @@
             <property name="minimum_size">190,375</property>
             <property name="name">FindFeaturesSidebar_</property>
             <property name="pos"></property>
-            <property name="size">190,446</property>
+            <property name="size">250,600</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -8900,7 +9116,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -8913,6 +9129,60 @@
                                     <property name="minimum_size"></property>
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
                                     <property name="pos"></property>
                                     <property name="selection">0</property>
                                     <property name="size"></property>
@@ -9233,7 +9503,7 @@
             <property name="minimum_size">200,390</property>
             <property name="name">SubtractBackgroundSidebar_</property>
             <property name="pos"></property>
-            <property name="size">210,411</property>
+            <property name="size">250,500</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -10671,7 +10941,7 @@
             <property name="minimum_size">200,420</property>
             <property name="name">ImproveContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">210,432</property>
+            <property name="size">250,600</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -11658,7 +11928,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -11672,7 +11942,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -11939,7 +12263,7 @@
             <property name="minimum_size">190,290</property>
             <property name="name">MatchTemplateSidebar_</property>
             <property name="pos"></property>
-            <property name="size">225,290</property>
+            <property name="size">300,400</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -12445,7 +12769,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -12459,7 +12783,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -12778,7 +13156,7 @@
             <property name="minimum_size">195,290</property>
             <property name="name">CamShiftSidebar_</property>
             <property name="pos"></property>
-            <property name="size">195,300</property>
+            <property name="size">250,450</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -13295,7 +13673,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -13309,7 +13687,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -13628,7 +14060,7 @@
             <property name="minimum_size">200,425</property>
             <property name="name">LKContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">214,468</property>
+            <property name="size">250,600</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -14685,7 +15117,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -14699,7 +15131,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -15018,7 +15504,7 @@
             <property name="minimum_size">225,510</property>
             <property name="name">TrackContoursSidebar_</property>
             <property name="pos"></property>
-            <property name="size">236,527</property>
+            <property name="size">280,700</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -16672,7 +17158,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -16686,7 +17172,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -17005,7 +17545,7 @@
             <property name="minimum_size">230,375</property>
             <property name="name">CombinedTrackingSidebar_</property>
             <property name="pos"></property>
-            <property name="size">239,573</property>
+            <property name="size">250,750</property>
             <property name="subclass"></property>
             <property name="tooltip"></property>
             <property name="window_extra_style"></property>
@@ -21262,7 +21802,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply to current frame on&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -21276,7 +21816,61 @@
                                     <property name="name">scope</property>
                                     <property name="permission">public</property>
                                     <property name="pos"></property>
-                                    <property name="selection">1</property>
+                                    <property name="selection">0</property>
+                                    <property name="size"></property>
+                                    <property name="style">wxRA_SPECIFY_COLS</property>
+                                    <property name="subclass"></property>
+                                    <property name="tooltip"></property>
+                                    <property name="window_extra_style"></property>
+                                    <property name="window_name"></property>
+                                    <property name="window_style"></property>
+                                    <event name="OnChar"></event>
+                                    <event name="OnEnterWindow"></event>
+                                    <event name="OnEraseBackground"></event>
+                                    <event name="OnKeyDown"></event>
+                                    <event name="OnKeyUp"></event>
+                                    <event name="OnKillFocus"></event>
+                                    <event name="OnLeaveWindow"></event>
+                                    <event name="OnLeftDClick"></event>
+                                    <event name="OnLeftDown"></event>
+                                    <event name="OnLeftUp"></event>
+                                    <event name="OnMiddleDClick"></event>
+                                    <event name="OnMiddleDown"></event>
+                                    <event name="OnMiddleUp"></event>
+                                    <event name="OnMotion"></event>
+                                    <event name="OnMouseEvents"></event>
+                                    <event name="OnMouseWheel"></event>
+                                    <event name="OnPaint"></event>
+                                    <event name="OnRadioBox"></event>
+                                    <event name="OnRightDClick"></event>
+                                    <event name="OnRightDown"></event>
+                                    <event name="OnRightUp"></event>
+                                    <event name="OnSetFocus"></event>
+                                    <event name="OnSize"></event>
+                                    <event name="OnUpdateUI"></event>
+                                </object>
+                            </object>
+                            <object class="sizeritem" expanded="1">
+                                <property name="border">5</property>
+                                <property name="flag">wxALL</property>
+                                <property name="proportion">0</property>
+                                <object class="wxRadioBox" expanded="1">
+                                    <property name="bg"></property>
+                                    <property name="choices">&quot;Normal frames only&quot; &quot;Fluorescence frames only&quot; &quot;All frames&quot;</property>
+                                    <property name="context_help"></property>
+                                    <property name="enabled">1</property>
+                                    <property name="fg"></property>
+                                    <property name="font"></property>
+                                    <property name="hidden">0</property>
+                                    <property name="id">wxID_ANY</property>
+                                    <property name="label"></property>
+                                    <property name="majorDimension">1</property>
+                                    <property name="maximum_size"></property>
+                                    <property name="minimum_size"></property>
+                                    <property name="name">scope2</property>
+                                    <property name="permission">protected</property>
+                                    <property name="pos"></property>
+                                    <property name="selection">0</property>
                                     <property name="size"></property>
                                     <property name="style">wxRA_SPECIFY_COLS</property>
                                     <property name="subclass"></property>
@@ -21583,7 +22177,7 @@
                 </object>
             </object>
         </object>
-        <object class="Dialog" expanded="1">
+        <object class="Dialog" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>

@@ -28,6 +28,7 @@ void CamShiftPlugin::ReleaseTemps()
 	if (shift) cvReleaseMat(&shift);
 }
 int CamShiftPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int CamShiftPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool CamShiftPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void CamShiftPlugin::DoPreview()
 {
@@ -64,12 +65,20 @@ planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, false);
 void CamShiftPlugin::OnOK()
 {
 	wxBeginBusyCursor();
-	if (!GetScope())
+	if (GetScope() == 0) // single
 	{
-		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
-		cm->Release(cm->GetPos(), cm->GetZPos(), false);
+		if (GetScope2() != 1) // both and normal
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), true);
+        }
 	}
-	else
+	else // all
 	{
 		FetchParams();
 		ImagePlus *oimg;
@@ -92,9 +101,16 @@ void CamShiftPlugin::OnOK()
             {
                 for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); j++)
                 {
-                    ProcessStatic(j, cm->Access(i,slide,false,false,true), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
-                                planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
-
+                    if (GetScope2() != 1) // both and normal
+                    {
+                        ProcessStatic(j, cm->Access(i,slide,false,false,true), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
+                                    planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
+                    }
+                    if (GetScope2() != 0) // both and fluorescence
+                    {
+                        ProcessStatic(j, cm->Access(i,slide,true,false,true), cm->Access(useFirst ? 0 : i-1, slide, true), hsizes, criteria,
+                                    planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
+                    }
                 }
                 cm->Release(i-1,slide,false);
             }

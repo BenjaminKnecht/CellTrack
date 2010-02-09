@@ -278,6 +278,7 @@ void MyFrame::OnNewMovieOpened()
 	s->isMinArea->SetValue(true);
 	s->minArea->SetValue(1800);
 	s->scope->SetSelection(1);
+	s->scope2->SetSelection(0);
 	s->preview->SetValue(false);
 	hotplug->OnOK(); OnPluginEnd(dummy);
 	OnImproveContours(dummy );

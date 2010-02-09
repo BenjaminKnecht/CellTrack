@@ -680,11 +680,17 @@ SmoothSidebar_::SmoothSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& 
 	method->AddPage( m_panel811, _("Bilateral"), true );
 	bSizer9->Add( method, 0, wxEXPAND | wxALL, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -815,11 +821,17 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 	intra->SetSelection( 0 );
 	bSizer9->Add( intra, 0, wxALL|wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
 	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Flourescence frames only"), _("Both frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	clean = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Remove previous boundaries"), wxDefaultPosition, wxDefaultSize, 0 );
 	clean->SetValue(true);
@@ -1094,11 +1106,17 @@ NormalizeContoursSidebar_::NormalizeContoursSidebar_( wxWindow* parent, wxWindow
 	
 	bSizer9->Add( sbSizer42, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
 	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -1210,11 +1228,17 @@ FilterContoursSidebar_::FilterContoursSidebar_( wxWindow* parent, wxWindowID id,
 	
 	bSizer9->Add( sbSizer81, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -1459,11 +1483,17 @@ FindFeaturesSidebar_::FindFeaturesSidebar_( wxWindow* parent, wxWindowID id, con
 	method->SetSelection( 0 );
 	bSizer9->Add( method, 0, wxALL|wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
 	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	clean = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Remove previous features"), wxDefaultPosition, wxDefaultSize, 0 );
 	clean->SetValue(true);
@@ -1783,11 +1813,17 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -1904,11 +1940,17 @@ MatchTemplateSidebar_::MatchTemplateSidebar_( wxWindow* parent, wxWindowID id, c
 	
 	bSizer9->Add( sbSizer161, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -2021,11 +2063,17 @@ CamShiftSidebar_::CamShiftSidebar_( wxWindow* parent, wxWindowID id, const wxPoi
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -2195,11 +2243,17 @@ LKContoursSidebar_::LKContoursSidebar_( wxWindow* parent, wxWindowID id, const w
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -2419,11 +2473,17 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 5 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
@@ -2943,11 +3003,17 @@ CombinedTrackingSidebar_::CombinedTrackingSidebar_( wxWindow* parent, wxWindowID
 	m_choicebook3->AddPage( m_panel21, _("Resampling parameters"), false );
 	bSizer9->Add( m_choicebook3, 0, wxEXPAND | wxALL, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply to current frame on") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
-	scope->SetSelection( 1 );
+	scope->SetSelection( 0 );
 	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
 	
 	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
 	preview->SetValue(true);
