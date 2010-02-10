@@ -139,7 +139,6 @@ void MyFrame::EnableMenus( bool enable )
 //	EnableMenuItem(menu_file,wxID_MENU_SAVE,enable);
 }
 
-
 void MyFrame::OnPreferences( wxCommandEvent &event )
 {
 	Preferences d(this);
@@ -427,8 +426,8 @@ void MyFrame::OnFirst( wxCommandEvent& event )
 }
 void MyFrame::OnFluorescence( wxCommandEvent &event )
 {
-    if (cm->ShowFluorescence(!(cm->viewFluorescence)))
-        OnNavigate();
+    cm->ShowFluorescence(!(cm->viewFluorescence));
+    OnNavigate();
 }
 
 void MyFrame::OnLast( wxCommandEvent& event )
@@ -744,18 +743,21 @@ void MyFrame::OnHelp(wxCommandEvent &e){
 void MyFrame::OnFluorescenceBorder( wxCommandEvent& event )
 {
     cm->drawFluorescence = menu_contour_views->FindItemByPosition(0)->IsChecked();
-    cm->RedrawBorders();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
 }
 
 void MyFrame::OnTopBoundary( wxCommandEvent& event )
 {
     cm->drawTopBorder = menu_contour_views->FindItemByPosition(1)->IsChecked();
-    cm->RedrawBorders();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
 }
 
 void MyFrame::OnBottomBoundary( wxCommandEvent& event )
 {
     cm->drawBottomBorder = menu_contour_views->FindItemByPosition(2)->IsChecked();
-    cm->RedrawBorders();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
 }
 

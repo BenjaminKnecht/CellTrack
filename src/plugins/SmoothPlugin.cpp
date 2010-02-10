@@ -11,6 +11,7 @@ void SmoothPlugin::ReleaseTemps()
 	if (temp) cvReleaseImage(&temp);
 }
 int SmoothPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int SmoothPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool SmoothPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void SmoothPlugin::DoPreview()
 {

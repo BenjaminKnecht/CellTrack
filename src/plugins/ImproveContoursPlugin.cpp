@@ -6,7 +6,8 @@ ImproveContoursPlugin::ImproveContoursPlugin( wxWindow* parent_, MyFrame *win_ )
 	sidebarw = sidebar;
 	DoPreview();
 }
-int ImproveContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int ImproveContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int ImproveContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool ImproveContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void ImproveContoursPlugin::DoPreview()
 {

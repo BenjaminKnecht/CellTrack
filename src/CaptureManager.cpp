@@ -36,6 +36,7 @@ void CaptureManager::Reset(){
 }
 void CaptureManager::SetCanvas(MyCanvas *canvas_){
 	canvas = canvas_;
+	canvas->SetCM(this);
 }
 MyCanvas* CaptureManager::GetCanvas()
 {
@@ -244,7 +245,6 @@ void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
 	img = *book[pos*offset+zPos*2+(viewFluorescence?0:1)];
-	//std::cout << "image " << this->GetTotalPos() << " is " << (img.loaded?"ready":"not ready") << std::endl;
 	if (redraw && img.orig)
 		Redraw(callPlugin);
 }
@@ -432,51 +432,6 @@ void CaptureManager::Redraw(bool callPlugin)
 	if (callPlugin && RedrawListener)
 		RedrawListener->OnRedraw();
 	canvas->SetImage(img);
-	RedrawBorders();
-}
-
-void CaptureManager::RedrawBorders()
-{
-    if (drawFluorescence)
-    {
-        wxMemoryDC dc(canvas->bmp);
-        CvSeq *seq = Access(GetPos(),GetZPos(),(viewFluorescence?false:true),true)->contours;
-        int i=0;
-        while (seq)
-        {
-            wxColor drawColor = wxColour(Preferences::GetColorFContourBorderColor());
-            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorFContourBorderWidth());
-            seq = seq->h_next;
-        }
-    }
-    if (drawTopBorder && zPos < slideCount-1)
-    {
-        wxMemoryDC dc(canvas->bmp);
-        CvSeq *seq = Access(GetPos(),GetZPos()+1,(viewFluorescence?true:false),true)->contours;
-        int i=0;
-        while (seq)
-        {
-            wxColor drawColor = wxColour(Preferences::GetColorTContourBorderColor());
-            //std::cout << "drawing sequence for top border" << std::endl;
-            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorTContourBorderWidth());
-            seq = seq->h_next;
-        }
-    }
-    if (drawBottomBorder && zPos > 0)
-    {
-        wxMemoryDC dc(canvas->bmp);
-        CvSeq *seq = Access(GetPos(),GetZPos()-1,(viewFluorescence?true:false), true)->contours;
-        int i=0;
-        while (seq)
-        {
-            wxColor drawColor = wxColour(Preferences::GetColorBContourBorderColor());
-            MyCanvas::DrawContour_static(&dc, seq, wxPoint(0,0), canvas->scale, false, &drawColor, i++, Preferences::GetColorBContourBorderWidth());
-            seq = seq->h_next;
-        }
-    }
-    canvas->DrawRoi();
-    canvas->Refresh( true );
-    canvas->Update();
 }
 
 void CaptureManager::SetRedrawListener( PluginBase* RedrawListener_ )

@@ -16,7 +16,8 @@ void FindContoursPlugin::ReleaseTemps()
 	if (edge) cvReleaseImage(&edge);
 }
 
-int FindContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int FindContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int FindContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool FindContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void FindContoursPlugin::DoPreview()
 {

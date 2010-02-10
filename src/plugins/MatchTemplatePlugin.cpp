@@ -14,6 +14,7 @@ void MatchTemplatePlugin::ReleaseTemps()
 	if (map) cvReleaseImage(&map);
 }
 int MatchTemplatePlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int MatchTemplatePlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool MatchTemplatePlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void MatchTemplatePlugin::DoPreview()
 {
@@ -34,32 +35,153 @@ void MatchTemplatePlugin::FetchParams()
 void MatchTemplatePlugin::OnOK()
 {
 	wxBeginBusyCursor();
-	if (!GetScope())
-		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
-	else{
+	if (GetScope() == 0) // single
+	{
+		if (GetScope2() != 1) // both and normal
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), true);
+        }
+	}
+	else if (GetScope() == 2) // t-direction
+	{
+	    FetchParams();
+		ImagePlus *oimg;
+		CvRect orect, searchwin;
+		CvPoint ocenter;
+
+		int frameCount = cm->GetFrameCount();
+		CreateProgressDlg(frameCount*(GetScope2()==2?2:1));
+		if (GetScope2() != 1) // both and normal
+        {
+            oimg = cm->Access(0,cm->GetZPos());
+            int numContours = (int) oimg->contourArray.size();
+            //cm->Release(0,0, false);
+            for (int i=1; i<frameCount; i++)
+                cm->Access(i,cm->GetZPos(),false,true)->CloneContours(oimg);
+            for (int i=1; i<frameCount && progressDlg->Update(i, wxString::Format(_T("Frame %d of %d"), i+1, frameCount)); i++)
+            {
+                for (int j=0; j<numContours; j++)
+                {
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), false, false, true), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
+                }
+                cm->Release(i-1,cm->GetZPos(),false);
+            }
+            cm->Release(frameCount-1,cm->GetZPos(),false);
+            cm->Release(0,cm->GetZPos(),false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            oimg = cm->Access(0,cm->GetZPos(), true);
+            int numContours = (int) oimg->contourArray.size();
+            //cm->Release(0,0, false);
+            for (int i=1; i<frameCount; i++)
+                cm->Access(i,cm->GetZPos(),true,true)->CloneContours(oimg);
+            for (int i=1; i<frameCount && progressDlg->Update(i+(GetScope2()==2?frameCount:0), wxString::Format(_T("Frame %d of %d"), i+1, frameCount)); i++)
+            {
+                for (int j=0; j<numContours; j++)
+                {
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), false, false, true), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
+                }
+                cm->Release(i-1,cm->GetZPos(),true);
+            }
+            cm->Release(frameCount-1,cm->GetZPos(),true);
+            cm->Release(0,cm->GetZPos(),true);
+        }
+        DestroyProgressDlg();
+	}
+	else if (GetScope() == 3) // z-direction
+	{
+	    FetchParams();
+		ImagePlus *oimg;
+		CvRect orect, searchwin;
+		CvPoint ocenter;
+		int slideCount = cm->slideCount;
+		CreateProgressDlg(slideCount*(GetScope2()==2?2:1));
+		if (GetScope2() != 1) // both and normal
+        {
+            for (int i=1; i<slideCount && progressDlg->Update(i, wxString::Format(_T("Slide %d of %d"), i+1, slideCount)); i++)
+            {
+                oimg = cm->Access(0,i);
+                int numContours = (int) oimg->contourArray.size();
+                cm->Access(cm->GetPos(),i,false,true)->CloneContours(oimg);
+                for (int j=0; j<numContours; j++)
+                {
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i, false, false, true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
+                }
+                cm->Release(cm->GetPos(),i,false);
+                cm->Release(cm->GetPos()-1,i,false);
+                cm->Release(0,i,false);
+            }
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            for (int i=1; i<slideCount && progressDlg->Update(i+(GetScope2()==2?slideCount:0), wxString::Format(_T("Slide %d of %d"), i+1, slideCount)); i++)
+            {
+                oimg = cm->Access(0,i, true);
+                int numContours = (int) oimg->contourArray.size();
+                cm->Access(cm->GetPos(),i,true,true)->CloneContours(oimg);
+
+                for (int j=0; j<numContours; j++)
+                {
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i, false, false, true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
+                }
+                cm->Release(cm->GetPos(),i,true);
+                cm->Release(cm->GetPos()-1,i,true);
+                cm->Release(0,i,true);
+            }
+        }
+        DestroyProgressDlg();
+	}
+	else
+	{
 		FetchParams();
-		ImagePlus* oimg = cm->Access(0, 0, false, true);
-		int numContours = (int) oimg->contourArray.size();
-		CreateProgressDlg();
+		ImagePlus* oimg;
 		int frameCount = cm->GetFrameCount();
 		int slideCount = cm->slideCount;
-		CreateProgressDlg(numContours*slideCount*frameCount);
+		CreateProgressDlg(frameCount*slideCount*(GetScope2()==2?2:1));
 		bool cont=true;
-		for (int slide = 0; slide < slideCount; slide++)
+		for (int slide = 0; slide < slideCount && cont; slide++)
 		{
-		    oimg = cm->Access(0, slide);
-		    for (int i=1; i<cm->GetFrameCount(); i++)
-                cm->Access(i,slide,false,true)->CloneContours(oimg);
-            for (int i=1; i<frameCount && cont; i++)
+		    if (GetScope2() != 1) // both and normal
             {
-                for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); j++)
+                oimg = cm->Access(0, slide,false);
+                for (int i=1; i<frameCount; i++)
+                    cm->Access(i,slide,false,true)->CloneContours(oimg);
+                int numContours = (int) oimg->contourArray.size();
+                for (int i=1; i<frameCount && (cont=progressDlg->Update(slide*frameCount+i, wxString::Format(_T("Frame %d of %d, Slide %d of %d"), i+1, frameCount, slide+1, slideCount))); i++)
                 {
-                    ProcessStatic(j, cm->Access(i,slide, false, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                    for (int j=0; j<numContours; j++)
+                    {
+                        ProcessStatic(j, cm->Access(i,slide, false, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                    }
+                    cm->Release(i-1,slide,false);
                 }
-                cm->Release(i-1,slide,false);
+                cm->Release(frameCount-1,slide,false);
+                cm->Release(0,slide,false);
             }
-            cm->Release(frameCount-1,slide,false);
-            cm->Release(0,slide,false);
+            if (GetScope2() != 0) // both and fluorescence
+            {
+                oimg = cm->Access(0, slide, true);
+                for (int i=1; i<frameCount; i++)
+                    cm->Access(i,slide,true,true)->CloneContours(oimg);
+                int numContours = (int) oimg->contourArray.size();
+                for (int i=1; i<frameCount && cont; i++)
+                {
+                    for (int j=0; j<numContours && (cont=progressDlg->Update(slide*frameCount+i+(GetScope2()==2?frameCount*slideCount:0), wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); j++)
+                    {
+                        ProcessStatic(j, cm->Access(i,slide, true, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                    }
+                    cm->Release(i-1,slide,true);
+                }
+                cm->Release(frameCount-1,slide,true);
+                cm->Release(0,slide,true);
+            }
 		}
 		DestroyProgressDlg();
 	}

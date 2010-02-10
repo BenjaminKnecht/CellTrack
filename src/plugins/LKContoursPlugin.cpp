@@ -17,6 +17,7 @@ void LKContoursPlugin::ReleaseTemps()
 	if (opyr) cvReleaseImage(&opyr);
 }
 int LKContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int LKContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool LKContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void LKContoursPlugin::DoPreview()
 {
@@ -30,12 +31,64 @@ void LKContoursPlugin::DoPreview()
 void LKContoursPlugin::OnOK()
 {
 	wxBeginBusyCursor();
-	if (!GetScope())
+	if (GetScope() == 0) // single
 	{
-		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
-		ShowProcessInfo();
+		if (GetScope2() != 1) // both and normal
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), true);
+        }
+        ShowProcessInfo();
 	}
-	else{
+	else if (GetScope() == 2) // t-direction
+	{
+	    FetchParams();
+		CvPoint *ops=NULL;
+		CvPoint2D32f *opsf=NULL, *psf=NULL,*swap_psf=NULL;
+		char *status=NULL;
+		int np_total=0;
+		IplImage *swap;
+		int flags=0;
+		CreateProgressDlg(cm->GetFrameCount()*(GetScope2()==2?2:1));
+		if (GetScope2() != 1) // both and normal
+        {
+            ImagePlus *oimg=cm->Access(0,cm->GetZPos(),false);
+            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            {
+                ImagePlus* img = cm->Access(i,cm->GetZPos(),false);
+                LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
+                flags |= CV_LKFLOW_PYR_A_READY;
+                CV_SWAP( ogray, gray, swap );
+                CV_SWAP( opyr, pyr, swap );
+                CV_SWAP( opsf, psf, swap_psf);
+                cm->Release(i,cm->GetZPos(), false);
+            }
+            cm->Release(0,cm->GetZPos(),false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            ImagePlus *oimg=cm->Access(0,cm->GetZPos(),true);
+            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i+(GetScope2()==2?cm->GetFrameCount():0)); i++)
+            {
+                ImagePlus* img = cm->Access(i,cm->GetZPos(),true);
+                LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
+                flags |= CV_LKFLOW_PYR_A_READY;
+                CV_SWAP( ogray, gray, swap );
+                CV_SWAP( opyr, pyr, swap );
+                CV_SWAP( opsf, psf, swap_psf);
+                cm->Release(i,cm->GetZPos(), true);
+            }
+            cm->Release(0,cm->GetZPos(),true);
+        }
+		DestroyProgressDlg();
+	}
+	else
+	{
 		FetchParams();
 		CvPoint *ops=NULL;
 		CvPoint2D32f *opsf=NULL, *psf=NULL,*swap_psf=NULL;
@@ -43,21 +96,39 @@ void LKContoursPlugin::OnOK()
 		int np_total=0;
 		IplImage *swap;
 		int flags=0;
-		CreateProgressDlg();
+		CreateProgressDlg(cm->slideCount*cm->GetFrameCount()*(GetScope2()==2?2:1));
 		for (int j=0; j<cm->slideCount; j++)
 		{
-		    ImagePlus *oimg=cm->Access(0,j);
-            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j); i++)
+		    if (GetScope2() != 1) // both and normal
             {
-                ImagePlus* img = cm->Access(i,j);
-                LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
-                flags |= CV_LKFLOW_PYR_A_READY;
-                CV_SWAP( ogray, gray, swap );
-                CV_SWAP( opyr, pyr, swap );
-                CV_SWAP( opsf, psf, swap_psf);
-                cm->Release(i,j, false);
+                ImagePlus *oimg=cm->Access(0,j, false);
+                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j); i++)
+                {
+                    ImagePlus* img = cm->Access(i,j,false);
+                    LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
+                    flags |= CV_LKFLOW_PYR_A_READY;
+                    CV_SWAP( ogray, gray, swap );
+                    CV_SWAP( opyr, pyr, swap );
+                    CV_SWAP( opsf, psf, swap_psf);
+                    cm->Release(i,j, false);
+                }
+                cm->Release(0,j,false);
             }
-            cm->Release(0,j,false);
+            if (GetScope2() != 0) // both and fluorescence
+            {
+                ImagePlus *oimg=cm->Access(0,j, true);
+                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j+(GetScope2()==2?cm->slideCount*cm->GetFrameCount():0)); i++)
+                {
+                    ImagePlus* img = cm->Access(i,j,true);
+                    LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
+                    flags |= CV_LKFLOW_PYR_A_READY;
+                    CV_SWAP( ogray, gray, swap );
+                    CV_SWAP( opyr, pyr, swap );
+                    CV_SWAP( opsf, psf, swap_psf);
+                    cm->Release(i,j, true);
+                }
+                cm->Release(0,j,true);
+            }
 		}
 		DestroyProgressDlg();
 	}

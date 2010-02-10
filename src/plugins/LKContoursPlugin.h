@@ -26,6 +26,7 @@ public:
 	~LKContoursPlugin(){ ReleaseTemps(); }
 	static string GetStaticName() { return "LKContours"; }
 	virtual int GetScope();
+	virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void ReleaseTemps();

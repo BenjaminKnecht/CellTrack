@@ -15,6 +15,7 @@ void TrackContoursPlugin::ReleaseTemps()
 	if (ogray) cvReleaseImage(&ogray);
 }
 int TrackContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int TrackContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool TrackContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void TrackContoursPlugin::DoPreview()
 {
@@ -48,11 +49,103 @@ void TrackContoursPlugin::FetchParams()
 void TrackContoursPlugin::OnOK()
 {
 	wxBeginBusyCursor();
-	if (!GetScope()){
-		ProcessImage(cm->Access(cm->GetPos(), cm->GetZPos()), cm->GetPos(), cm->GetZPos());
-		ShowProcessInfo();
+	if (GetScope() == 0) // single
+	{
+		if (GetScope2() != 1) // both and normal
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), false);
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+            cm->Release(cm->GetPos(), cm->GetZPos(), true);
+        }
+        ShowProcessInfo();
 	}
-	else
+	else if (GetScope() == 2) // t-direction
+	{
+	    FetchParams();
+		ImagePlus *oimg, *img;
+		IplImage *swap;
+		CvPoint *ps, *ops, *swap_ps;
+		float *oEarc=NULL;
+		int frameCount = cm->GetFrameCount();
+		avgiterations = new float[1];
+		CreateProgressDlg(frameCount*(GetScope2()==2?2:1));
+		if (GetScope2() != 1) // both and normal
+        {
+            avgiterations[0]=0;
+            oimg = cm->Access(0,cm->GetZPos(),false);
+            int numContours = (int) oimg->contourArray.size();
+            for (int i=1; i<cm->GetFrameCount(); i++)
+            {
+                if (useAvailable)
+                    cm->Access(i,cm->GetZPos(),false,true)->RemoveContours(numContours, cm->Access(i,cm->GetZPos(),false,true)->contourArray.size()-1);
+                else
+                    cm->Access(i,cm->GetZPos(),false,true)->RemoveAllContours();
+            }
+            oimg = cm->Access(0,cm->GetZPos(), false, false, true);
+            for (int i=1; i<frameCount && progressDlg->Update(i, wxString::Format(_T("Frame %d of %d"), i+1, frameCount)); i++)
+            {
+                for (int j=0; j<numContours; j++)
+                {
+                    img = cm->Access(i,cm->GetZPos(), false, false, true);
+                    int iterations=0;
+                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                    avgiterations[0]+=iterations;
+                    cm->Release(i,cm->GetZPos(),false);
+                    CV_SWAP( ogray, gray, swap );
+                    CV_SWAP( ops, ps, swap_ps);
+                }
+                if (oEarc)
+                {
+                    free(oEarc);
+                    oEarc = NULL;
+                }
+                cm->Release(0,cm->GetZPos(),false);
+                if (numContours)
+                    avgiterations[0]/=numContours;
+            }
+        }
+        if (GetScope2() != 0) // both and fluorescence
+        {
+            avgiterations[0]=0;
+            oimg = cm->Access(0,cm->GetZPos(),true);
+            int numContours = (int) oimg->contourArray.size();
+            for (int i=1; i<cm->GetFrameCount(); i++)
+            {
+                if (useAvailable)
+                    cm->Access(i,cm->GetZPos(),true,true)->RemoveContours(numContours, cm->Access(i,cm->GetZPos(),true,true)->contourArray.size()-1);
+                else
+                    cm->Access(i,cm->GetZPos(),true,true)->RemoveAllContours();
+            }
+            oimg = cm->Access(0,cm->GetZPos(), true, false, true);
+            for (int i=1; i<frameCount && progressDlg->Update(i+(GetScope2()==2?frameCount:0), wxString::Format(_T("Frame %d of %d"), i+1, frameCount)); i++)
+            {
+                for (int j=0; j<numContours; j++)
+                {
+                    img = cm->Access(i,cm->GetZPos(), true, false, true);
+                    int iterations=0;
+                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                    avgiterations[0]+=iterations;
+                    cm->Release(i,cm->GetZPos(),true);
+                    CV_SWAP( ogray, gray, swap );
+                    CV_SWAP( ops, ps, swap_ps);
+                }
+                if (oEarc)
+                {
+                    free(oEarc);
+                    oEarc = NULL;
+                }
+                cm->Release(0,cm->GetZPos(),true);
+                if (numContours)
+                    avgiterations[0]/=numContours;
+            }
+        }
+        DestroyProgressDlg();
+	}
+	else // all
 	{
 		FetchParams();
 		ImagePlus *oimg, *img;
@@ -61,45 +154,83 @@ void TrackContoursPlugin::OnOK()
 		float *oEarc=NULL;
 		int frameCount = cm->GetFrameCount();
         int slideCount = cm->slideCount;
-		avgiterations = new float[slideCount];
-		for (int slide = 0; slide < slideCount; slide++)
+		avgiterations = new float[slideCount*(GetScope2()==2?2:1)];
+		CreateProgressDlg(frameCount*slideCount*(GetScope2()==2?2:1));
+		bool cont=true;
+		for (int slide = 0; slide < slideCount && cont; slide++)
 		{
-		    avgiterations[slide]=0;
-            int numContours = (int) cm->Access(0,slide,false,true)->contourArray.size();
-            for (int i=1; i<cm->GetFrameCount(); i++)
+		    if (GetScope2() != 1) // both and normal
             {
-                if (useAvailable)
-                    cm->Access(i,slide,false,true)->RemoveContours(numContours, cm->Access(i,slide,false,true)->contourArray.size()-1);
-                else
-                    cm->Access(i,slide,false,true)->RemoveAllContours();
-            }
-            CreateProgressDlg(numContours*frameCount*slideCount);
-            bool cont=true;
-
-			oimg = cm->Access(0,slide, false, false, true);
-			for (int i=1; i<frameCount && cont; i++)
-			{
-                for (int j=0; j<numContours && (cont=progressDlg->Update(slide*slideCount+j*frameCount+i, wxString::Format(_T("Cell %d of %d, Frame %d of %d, Slide %d of %d"), j+1,numContours, i+1, frameCount, slide+1, slideCount))); j++)
+                avgiterations[slide]=0;
+                oimg = cm->Access(0,slide,false);
+                int numContours = (int) oimg->contourArray.size();
+                for (int i=1; i<cm->GetFrameCount(); i++)
                 {
-                    img = cm->Access(i,slide, false, false, true);
-                    int iterations=0;
-                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
-                    avgiterations[slide]+=iterations;
-                    cm->Release(i,slide,false);
-                    CV_SWAP( ogray, gray, swap );
-                    CV_SWAP( ops, ps, swap_ps);
+                    if (useAvailable)
+                        cm->Access(i,slide,false,true)->RemoveContours(numContours, cm->Access(i,slide,false,true)->contourArray.size()-1);
+                    else
+                        cm->Access(i,slide,false,true)->RemoveAllContours();
                 }
-                if (oEarc){
-                    free(oEarc);
-                    oEarc = NULL;
+                oimg = cm->Access(0,slide, false, false, true);
+                for (int i=1; i<frameCount && (cont=progressDlg->Update(i+slide*frameCount, wxString::Format(_T("Frame %d of %d, Slide %d of %d"), i+1, frameCount, slide+1, slideCount))); i++)
+                {
+                    for (int j=0; j<numContours; j++)
+                    {
+                        img = cm->Access(i,slide, false, false, true);
+                        int iterations=0;
+                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                        avgiterations[slide]+=iterations;
+                        cm->Release(i,slide,false);
+                        CV_SWAP( ogray, gray, swap );
+                        CV_SWAP( ops, ps, swap_ps);
+                    }
+                    if (oEarc)
+                    {
+                        free(oEarc);
+                        oEarc = NULL;
+                    }
                 }
-			}
-			cm->Release(0,slide,false);
-			if (numContours)
-                avgiterations[slide]/=numContours;
+                cm->Release(0,slide,false);
+                if (numContours)
+                    avgiterations[slide]/=numContours;
+            }
+            if (GetScope2() != 0) // both and fluorescence
+            {
+                avgiterations[slide]=0;
+                oimg = cm->Access(0,slide,true);
+                int numContours = (int) oimg->contourArray.size();
+                for (int i=1; i<cm->GetFrameCount(); i++)
+                {
+                    if (useAvailable)
+                        cm->Access(i,slide,true,true)->RemoveContours(numContours, cm->Access(i,slide,true,true)->contourArray.size()-1);
+                    else
+                        cm->Access(i,slide,true,true)->RemoveAllContours();
+                }
+                oimg = cm->Access(0,slide, true, false, true);
+                for (int i=1; i<frameCount && (cont=progressDlg->Update(i+slide*frameCount+(GetScope2()==2?frameCount*slideCount:0), wxString::Format(_T("Frame %d of %d, Slide %d of %d"), i+1, frameCount, slide+1, slideCount))); i++)
+                {
+                    for (int j=0; j<numContours; j++)
+                    {
+                        img = cm->Access(i,slide, true, false, true);
+                        int iterations=0;
+                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                        avgiterations[slide]+=iterations;
+                        cm->Release(i,slide,true);
+                        CV_SWAP( ogray, gray, swap );
+                        CV_SWAP( ops, ps, swap_ps);
+                    }
+                    if (oEarc)
+                    {
+                        free(oEarc);
+                        oEarc = NULL;
+                    }
+                }
+                cm->Release(0,slide,true);
+                if (numContours)
+                    avgiterations[slide]/=numContours;
+            }
 		}
 		DestroyProgressDlg();
-
 	}
 	cm->ReloadCurrentFrameContours(true, false);
 	wxEndBusyCursor();

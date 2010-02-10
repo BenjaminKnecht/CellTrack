@@ -15117,7 +15117,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>
@@ -17158,7 +17158,7 @@
                                 <property name="proportion">0</property>
                                 <object class="wxRadioBox" expanded="1">
                                     <property name="bg"></property>
-                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot; &quot;Apply in z-direction only&quot;</property>
+                                    <property name="choices">&quot;Apply to current frame only&quot; &quot;Apply to all frames&quot; &quot;Apply in t-direction only&quot;</property>
                                     <property name="context_help"></property>
                                     <property name="enabled">1</property>
                                     <property name="fg"></property>

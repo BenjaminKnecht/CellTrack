@@ -10,6 +10,7 @@
 #include <wx/datetime.h>
 
 class PluginBase;
+class CaptureManager;
 
 class MyCanvas : public wxPanel
 {
@@ -22,11 +23,16 @@ public:
     void OnEraseBackGround(wxEraseEvent& event) {};
 	void OnSize(wxSizeEvent& event);
 	void OnMouse(wxMouseEvent& event);
+	void RefreshContours();
+	void ResetCanvas();
+	void SetCM(CaptureManager* cm_) { cm = cm_; }
 
 public:
 	enum {
 		POINTER_SIZE = 7
 	};
+
+	CaptureManager* cm;
 
 	ImagePlus img; //original img (comes from CaptureManager::img)
 	wxBitmap bmp; //scaled img with contours and features drawn

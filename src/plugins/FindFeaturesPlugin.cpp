@@ -16,7 +16,8 @@ void FindFeaturesPlugin::ReleaseTemps()
 	if (cnt_mask) cvReleaseImage(&cnt_mask);
 	if (tempimg) cvReleaseImage(&tempimg);
 }
-int FindFeaturesPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int FindFeaturesPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int FindFeaturesPlugin::GetScope2() {	return sidebar->scope->GetSelection(); }
 bool FindFeaturesPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void FindFeaturesPlugin::DoPreview()
 {

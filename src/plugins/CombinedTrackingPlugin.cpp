@@ -39,6 +39,7 @@ void CombinedTrackingPlugin::ReleaseTemps()
 	if (as_ogray) cvReleaseImage(&as_ogray);
 }
 int CombinedTrackingPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int CombinedTrackingPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool CombinedTrackingPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void CombinedTrackingPlugin::FetchParams()
 {

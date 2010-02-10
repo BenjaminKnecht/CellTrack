@@ -151,6 +151,7 @@ public:
 	void ShowCanvas2(bool show=true);
 
 	void OnClose(wxCloseEvent& event);
+	//void OnSize(wxSizeEvent& event);
 
 	//	void OnCanny(CannyEvent &event){		wxMessageBox("MyFrame::OnCanny: received custom event");	}
 	void OnTemp( wxCommandEvent& event ){

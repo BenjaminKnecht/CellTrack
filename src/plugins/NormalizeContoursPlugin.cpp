@@ -12,6 +12,7 @@ void NormalizeContoursPlugin::ReleaseTemps()
 {
 }
 int NormalizeContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int NormalizeContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool NormalizeContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void NormalizeContoursPlugin::DoPreview()
 {

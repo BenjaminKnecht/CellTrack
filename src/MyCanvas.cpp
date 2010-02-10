@@ -5,6 +5,7 @@
 #include <wx/image.h>
 #include "Preferences.h"
 #include "MyPoint.h"
+#include "CaptureManager.h"
 #include "Util.h"
 
 IMPLEMENT_DYNAMIC_CLASS(MyCanvas,wxPanel)
@@ -55,9 +56,9 @@ void MyCanvas::OnPaint( wxPaintEvent &event )
 	dc.DrawBitmap(drawn, topleft);
 }
 
-void MyCanvas::OnSize(wxSizeEvent& event)
+void MyCanvas::ResetCanvas()
 {
-	if(!img.orig)
+    if(!img.orig)
 		return;
 	wxSize newsize(0,0);
 	if ( GetSize().GetWidth() * imgheight > GetSize().GetHeight() * imgwidth ){
@@ -87,7 +88,17 @@ void MyCanvas::OnSize(wxSizeEvent& event)
 		}
 	}
 	bmp = wxBitmap(wxImage(imgwidth, imgheight, imgdata, false).Scale(imgwidth*scale.x, imgheight*scale.y));
-	DrawContours();
+}
+
+void MyCanvas::OnSize(wxSizeEvent& event)
+{
+    ResetCanvas();
+	RefreshContours();
+}
+
+void MyCanvas::RefreshContours()
+{
+    DrawContours();
 	DrawRoi();
 	Refresh( true );
 	Update();
@@ -113,28 +124,77 @@ void MyCanvas::SetImage( const ImagePlus& img_ )
 
 void MyCanvas::DrawContours()
 {
-	if (!img.contours)
-		return;
-	wxMemoryDC dc(bmp);
-	CvSeq *seq = img.contours;
-	int i=0;
-	while (seq)
+	if (img.contours)
 	{
-		DrawContour(&dc, wxPoint(0,0), seq, selectedContours[i++], i);
-		seq = seq->h_next;
+        wxMemoryDC dc(bmp);
+        CvSeq *seq = img.contours;
+        int i=0;
+        while (seq)
+        {
+            DrawContour(&dc, wxPoint(0,0), seq, selectedContours[i++], i);
+            seq = seq->h_next;
+        }
+        for (int c=0; c<(int)img.feats.size(); c++)
+        {
+            dc.SetPen(wxPen(wxColour(selectedContours[c] ? Preferences::GetColorContourSelectedColor() : Preferences::GetColorFeatureColor()), Preferences::GetColorContourBorderWidth()));
+            for (int f=0; f<img.feats[c].size(); f++)
+            {
+                MyPoint p = MyPoint(img.feats[c][f])*scale;
+                dc.DrawLine(p.x-1, p.y, p.x+1, p.y);
+                dc.DrawLine(p.x, p.y-1, p.x, p.y+1);
+            }
+        }
+        if (theRect.x != -1)
+            dc.DrawRectangle(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize());
 	}
-	for (int c=0; c<(int)img.feats.size(); c++)
-	{
-		dc.SetPen(wxPen(wxColour(selectedContours[c] ? Preferences::GetColorContourSelectedColor() : Preferences::GetColorFeatureColor()), Preferences::GetColorContourBorderWidth()));
-		for (int f=0; f<img.feats[c].size(); f++)
-		{
-			MyPoint p = MyPoint(img.feats[c][f])*scale;
-			dc.DrawLine(p.x-1, p.y, p.x+1, p.y);
-			dc.DrawLine(p.x, p.y-1, p.x, p.y+1);
-		}
-	}
-	if (theRect.x != -1)
-		dc.DrawRectangle(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize());
+	if (cm && cm->drawFluorescence)
+    {
+        wxMemoryDC dc(bmp);
+        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos(),(cm->viewFluorescence?false:true),true);
+        if (img)
+        {
+            CvSeq *seq = img->contours;
+            int i=0;
+            while (seq)
+            {
+                wxColor drawColor = wxColour(cm->viewFluorescence?Preferences::GetColorContourBorderColor():Preferences::GetColorFContourBorderColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, cm->viewFluorescence?Preferences::GetColorContourBorderWidth():Preferences::GetColorFContourBorderWidth());
+                seq = seq->h_next;
+            }
+        }
+    }
+    if (cm && cm->drawTopBorder && cm->zPos < cm->slideCount-1)
+    {
+        wxMemoryDC dc(bmp);
+        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()+1,(cm->viewFluorescence?true:false),true);
+        if (img)
+        {
+            CvSeq *seq = img->contours;
+            int i=0;
+            while (seq)
+            {
+                wxColor drawColor = wxColour(Preferences::GetColorTContourBorderColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, Preferences::GetColorTContourBorderWidth());
+                seq = seq->h_next;
+            }
+        }
+    }
+    if (cm && cm->drawBottomBorder && cm->zPos > 0)
+    {
+        wxMemoryDC dc(bmp);
+        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()-1,(cm->viewFluorescence?true:false), true);
+        if (img)
+        {
+            CvSeq *seq = img->contours;
+            int i=0;
+            while (seq)
+            {
+                wxColor drawColor = wxColour(Preferences::GetColorBContourBorderColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, Preferences::GetColorBContourBorderWidth());
+                seq = seq->h_next;
+            }
+        }
+    }
 }
 
 void MyCanvas::SetContourSelection( int index, bool selected )

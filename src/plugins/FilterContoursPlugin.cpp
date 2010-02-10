@@ -9,9 +9,10 @@ FilterContoursPlugin::FilterContoursPlugin( wxWindow* parent_, MyFrame *win_ ): 
 	sidebar->maxArea->SetRange(0, maxArea);
 	sidebar->minArea->SetValue(pow(10, ceil(log10(maxArea/100.0))));
 	sidebar->maxArea->SetValue(pow(10, ceil(log10(maxArea/10.0))));
-	DoPreview();	
+	DoPreview();
 }
-int FilterContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int FilterContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
+int FilterContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool FilterContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void FilterContoursPlugin::DoPreview()
 {

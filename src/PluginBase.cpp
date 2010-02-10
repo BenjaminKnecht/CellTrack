@@ -117,8 +117,6 @@ void PluginBase::OnOK()
 			}
 			DestroyProgressDlg();
 		}
-		else if (IsPreviewOn())
-			cm->PushbackCurrentFrame();
 		else
 		{
 		    if (GetScope2() != 1)
@@ -132,8 +130,8 @@ void PluginBase::OnOK()
                 cm->Release(cm->GetPos(), cm->GetZPos(), true);
             }
 		}
-		if (!IsPreviewOn())
-			cm->ReloadCurrentFrame(true, false);
+		//if (!IsPreviewOn())
+        cm->ReloadCurrentFrame(true, false);
 		wxEndBusyCursor();
 	}
 }

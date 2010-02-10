@@ -19,6 +19,7 @@ public:
 	~FilterContoursPlugin(void) {}
 	static string GetStaticName() { return "FilterContours"; }
 	virtual int GetScope();
+    virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 

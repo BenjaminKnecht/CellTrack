@@ -61,6 +61,7 @@ public:
 	CombinedTrackingPlugin( wxWindow* parent_, MyFrame *win_ );
 	static string GetStaticName() { return "CombinedTracking"; }
 	virtual int GetScope();
+	virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
