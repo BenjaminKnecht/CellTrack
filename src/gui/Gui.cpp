@@ -125,6 +125,10 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_menuItem71 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Resample boundaries") ) , wxEmptyString, wxITEM_NORMAL );
 	menu_contours->Append( m_menuItem71 );
 	
+	wxMenuItem* m_menuItem50;
+	m_menuItem50 = new wxMenuItem( menu_contours, wxID_ANY, wxString( _("Copy Boundaries") ) , wxEmptyString, wxITEM_NORMAL );
+	menu_contours->Append( m_menuItem50 );
+	
 	menu_contours->AppendSeparator();
 	
 	wxMenuItem* m_menuItem14;
@@ -428,6 +432,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem121->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnEditContours ) );
 	this->Connect( m_menuItem7->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImproveContours ) );
 	this->Connect( m_menuItem71->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnNormalizeContours ) );
+	this->Connect( m_menuItem50->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCopyContours ) );
 	this->Connect( m_menuItem14->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Connect( m_menuItem10->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
 	this->Connect( m_fluorescenceBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
@@ -508,6 +513,7 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnEditContours ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImproveContours ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnNormalizeContours ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCopyContours ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
@@ -1167,6 +1173,79 @@ NormalizeContoursSidebar_::~NormalizeContoursSidebar_()
 	m_button122->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnOK ), NULL, this );
 	m_button1313->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnCancel ), NULL, this );
 	m_button1211->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( NormalizeContoursSidebar_::OnApply ), NULL, this );
+}
+
+CopyContoursSidebar_::CopyContoursSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )
+{
+	this->SetMinSize( wxSize( 190,250 ) );
+	
+	wxStaticBoxSizer* sbSizer2;
+	sbSizer2 = new wxStaticBoxSizer( new wxStaticBox( this, wxID_ANY, _("Copy Contours") ), wxVERTICAL );
+	
+	m_scrolledWindow3 = new wxScrolledWindow( this, wxID_ANY, wxDefaultPosition, wxDefaultSize, wxHSCROLL|wxVSCROLL );
+	m_scrolledWindow3->SetScrollRate( 5, 5 );
+	wxBoxSizer* bSizer9;
+	bSizer9 = new wxBoxSizer( wxVERTICAL );
+	
+	wxString directionChoices[] = { _("To upper image"), _("To lower image"), _("From fluorescence to normal image"), _("From normal to fluorescence image") };
+	int directionNChoices = sizeof( directionChoices ) / sizeof( wxString );
+	direction = new wxRadioBox( m_scrolledWindow3, wxID_ANY, _("Choose copy direction"), wxDefaultPosition, wxDefaultSize, directionNChoices, directionChoices, 1, wxRA_SPECIFY_COLS );
+	direction->SetSelection( 0 );
+	bSizer9->Add( direction, 0, wxALL, 5 );
+	
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
+	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
+	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
+	scope->SetSelection( 0 );
+	bSizer9->Add( scope, 0, wxALL|wxEXPAND, 2 );
+	
+	wxString scope2Choices[] = { _("Normal frames only"), _("Fluorescence frames only"), _("All frames") };
+	int scope2NChoices = sizeof( scope2Choices ) / sizeof( wxString );
+	scope2 = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scope2NChoices, scope2Choices, 1, wxRA_SPECIFY_COLS );
+	scope2->SetSelection( 0 );
+	bSizer9->Add( scope2, 0, wxALL, 5 );
+	
+	preview = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Show preview"), wxDefaultPosition, wxDefaultSize, 0 );
+	preview->SetValue(true);
+	
+	bSizer9->Add( preview, 0, wxALL, 5 );
+	
+	wxBoxSizer* bSizer111;
+	bSizer111 = new wxBoxSizer( wxHORIZONTAL );
+	
+	m_button122 = new wxButton( m_scrolledWindow3, wxID_ANY, _("OK"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
+	bSizer111->Add( m_button122, 0, wxALL|wxALIGN_BOTTOM, 2 );
+	
+	m_button1313 = new wxButton( m_scrolledWindow3, wxID_ANY, _("Cancel"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
+	bSizer111->Add( m_button1313, 0, wxALL|wxALIGN_BOTTOM, 2 );
+	
+	m_button1211 = new wxButton( m_scrolledWindow3, wxID_ANY, _("Apply"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
+	bSizer111->Add( m_button1211, 0, wxALL|wxALIGN_CENTER_VERTICAL, 2 );
+	
+	bSizer9->Add( bSizer111, 0, wxEXPAND, 5 );
+	
+	m_scrolledWindow3->SetSizer( bSizer9 );
+	m_scrolledWindow3->Layout();
+	bSizer9->Fit( m_scrolledWindow3 );
+	sbSizer2->Add( m_scrolledWindow3, 1, wxEXPAND | wxALL, 0 );
+	
+	this->SetSizer( sbSizer2 );
+	this->Layout();
+	
+	// Connect Events
+	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnChangePreview ), NULL, this );
+	m_button122->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnOK ), NULL, this );
+	m_button1313->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnCancel ), NULL, this );
+	m_button1211->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnApply ), NULL, this );
+}
+
+CopyContoursSidebar_::~CopyContoursSidebar_()
+{
+	// Disconnect Events
+	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnChangePreview ), NULL, this );
+	m_button122->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnOK ), NULL, this );
+	m_button1313->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnCancel ), NULL, this );
+	m_button1211->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( CopyContoursSidebar_::OnApply ), NULL, this );
 }
 
 FilterContoursSidebar_::FilterContoursSidebar_( wxWindow* parent, wxWindowID id, const wxPoint& pos, const wxSize& size, long style ) : wxPanel( parent, id, pos, size, style )

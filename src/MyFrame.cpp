@@ -514,6 +514,7 @@ DEFINE_ONPLUGIN( FindFeatures )
 DEFINE_ONPLUGIN( NormalizeContours )
 DEFINE_ONPLUGIN( ResizeMovie )
 DEFINE_ONPLUGIN( Crop )
+DEFINE_ONPLUGIN( CopyContours )
 
 void MyFrame::OnPluginEnd(wxEvent &event){
 	wxWindow *sidebar=hotplug->GetSidebar(), *bottombar=hotplug->GetBottombar();

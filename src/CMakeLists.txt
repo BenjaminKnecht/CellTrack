@@ -31,6 +31,8 @@ SET( CELLTRACK_SRC_FILES
   lib/wxmathplot-0.03/mpFXVector.cpp
 
   plugins/CamShiftPlugin.cpp
+  plugins/CopyContoursPlugin.cpp
+  plugins/CopyContoursSidebar.cpp
   plugins/FindFeaturesPlugin.cpp
   plugins/ResizeMovieSidebar.cpp
   plugins/CamShiftSidebar.cpp

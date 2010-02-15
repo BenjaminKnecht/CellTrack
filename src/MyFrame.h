@@ -108,6 +108,7 @@ public:
 	void OnCombinedTracking( wxCommandEvent& event );
 	void OnFindFeatures( wxCommandEvent& event );
 	void OnNormalizeContours( wxCommandEvent& event );
+	void OnCopyContours( wxCommandEvent& event );
 
 	// Boundary View Menu
 	void OnFluorescenceBorder( wxCommandEvent& event );

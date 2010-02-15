@@ -14,3 +14,4 @@
 #include "NormalizeContoursPlugin.h"
 #include "CropPlugin.h"
 #include "ResizeMoviePlugin.h"
+#include "CopyContoursPlugin.h"
