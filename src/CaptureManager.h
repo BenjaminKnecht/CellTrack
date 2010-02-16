@@ -62,7 +62,7 @@ public:
 	MyCanvas* GetCanvas();
 	bool OpenMovie(const char* avi);
 	bool OpenMovie(const wxArrayString &files);
-	bool OpenConfocal(const wxArrayString &files, int zSlides);
+	bool OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence);
 	bool SaveMovie(const char* avi);
 	int GetFrameCount();
 	CvSize GetSize();

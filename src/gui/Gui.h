@@ -1033,6 +1033,7 @@ class ConfocalDialog_ : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticText102;
+		wxStaticText* m_staticText106;
 		wxStdDialogButtonSizer* m_sdbSizer2;
 		wxButton* m_sdbSizer2OK;
 		wxButton* m_sdbSizer2Cancel;
@@ -1040,7 +1041,8 @@ class ConfocalDialog_ : public wxDialog
 	public:
 		wxStaticText* m_staticText101;
 		wxSpinCtrl* m_zslides;
-		ConfocalDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load confocal images"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 210,160 ), long style = wxDEFAULT_DIALOG_STYLE );
+		wxCheckBox* m_fluorescence;
+		ConfocalDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load confocal images"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,200 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~ConfocalDialog_();
 	
 };

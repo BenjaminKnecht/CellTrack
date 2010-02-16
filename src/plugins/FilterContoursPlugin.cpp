@@ -5,6 +5,7 @@ FilterContoursPlugin::FilterContoursPlugin( wxWindow* parent_, MyFrame *win_ ): 
 	sidebar =  new FilterContoursSidebar(parent_, this);
 	sidebarw = sidebar;
 	double maxArea = cm->size.width*cm->size.height;
+	std::cout << "Area: " << maxArea << std::endl;
 	sidebar->minArea->SetRange(0, maxArea);
 	sidebar->maxArea->SetRange(0, maxArea);
 	sidebar->minArea->SetValue(pow(10, ceil(log10(maxArea/100.0))));

@@ -3511,7 +3511,7 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	wxBoxSizer* bSizer60;
 	bSizer60 = new wxBoxSizer( wxVERTICAL );
 	
-	m_staticText101 = new wxStaticText( this, wxID_ANY, _("# of slides must be proper divisor of # of images."), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText101 = new wxStaticText( this, wxID_ANY, _("number of slides must be proper divisor of number of images"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText101->Wrap( 200 );
 	bSizer60->Add( m_staticText101, 0, wxALIGN_CENTER|wxALL, 5 );
 	
@@ -3522,10 +3522,19 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	m_staticText102 = new wxStaticText( this, wxID_ANY, _("Number of Z slides:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText102->Wrap( -1 );
-	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_zslides = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 100, 30 );
-	fgSizer40->Add( m_zslides, 0, wxALL, 5 );
+	fgSizer40->Add( m_zslides, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	m_staticText106 = new wxStaticText( this, wxID_ANY, _("Fluorescence image:"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText106->Wrap( -1 );
+	fgSizer40->Add( m_staticText106, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_fluorescence = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
+	m_fluorescence->SetValue(true);
+	
+	fgSizer40->Add( m_fluorescence, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	bSizer60->Add( fgSizer40, 0, wxEXPAND, 5 );
 	
@@ -3535,7 +3544,7 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	m_sdbSizer2Cancel = new wxButton( this, wxID_CANCEL );
 	m_sdbSizer2->AddButton( m_sdbSizer2Cancel );
 	m_sdbSizer2->Realize();
-	bSizer60->Add( m_sdbSizer2, 1, wxALL, 5 );
+	bSizer60->Add( m_sdbSizer2, 1, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 	
 	this->SetSizer( bSizer60 );
 	this->Layout();

@@ -53,6 +53,7 @@ private:
 	wxTimer *timer;
 	bool loaded;
 	int m_zslides;
+	bool loadFluorescence;
 
 	wxString getCWD();
 	void EnableMenus(bool enable);

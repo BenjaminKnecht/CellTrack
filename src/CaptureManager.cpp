@@ -54,10 +54,10 @@ bool CaptureManager::OpenMovie( const wxArrayString& files )
 	MyCapture_Files capture(files);
 	return OpenMovie_initialize(capture);
 }
-bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides)
+bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence)
 {
     Reset();
-    m_capture = new MyCapture_Confocal(files, zSlides);
+    m_capture = new MyCapture_Confocal(files, zSlides, fluorescence);
     return OpenConfocal_initialize();
 }
 
@@ -105,12 +105,20 @@ bool CaptureManager::OpenConfocal_initialize()
 	if (!m_capture->IsOK())
 		return false;
 	slideCount = m_capture->getSlideNumber();
-	frameCount = m_capture->frameCount/2/slideCount;
+	hasFluorescence = m_capture->getFluorescence();
+	frameCount = m_capture->frameCount/(hasFluorescence?2:1)/slideCount;
 	hasFluorescence = true;
-	totalFrameCount = frameCount*2*slideCount;
-	offset = 2*slideCount;
+	totalFrameCount = frameCount*(hasFluorescence?2:1)*slideCount;
+	offset = (hasFluorescence?2:1)*slideCount;
 	fps = Preferences::GetSavingFpsDefault();
-	book = new ImagePlus*[frameCount*2*slideCount];
+	book = new ImagePlus*[frameCount*(hasFluorescence?2:1)*slideCount];
+	IplImage* testImg = NULL;
+	if (testImg = cvLoadImage((m_capture->getFilename(0)).mb_str()))
+    {
+        size = cvSize(testImg->width, testImg->height);
+        cvReleaseImage(&testImg);
+        testImg = NULL;
+    }
 	/*wxProgressDialog progressDlg(_T("Loading movie..."), wxString::Format(_T("Frame 0 of %d"), totalFrameCount),totalFrameCount, NULL, wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 	for (int i=0; i<totalFrameCount; i++){
         if (i == 31)
@@ -133,7 +141,7 @@ bool CaptureManager::OpenConfocal_initialize()
 	}*/
 	for (int i=0; i<totalFrameCount; i++)
 	{
-	    book[i] = new ImagePlus(i%2==0?true:false);
+	    book[i] = new ImagePlus(i%2==0?hasFluorescence:false);
 	}
 	if (BookChangeListener)
 		BookChangeListener->OnBookChange();
@@ -188,7 +196,7 @@ int CaptureManager::GetZPos(){
 }
 int CaptureManager::GetTotalPos()
 {
-	return pos*offset+zPos*2+(viewFluorescence?0:1);
+	return pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1);
 }
 
 void CaptureManager::Release(int pos, int z, bool fluorescence)
@@ -196,7 +204,7 @@ void CaptureManager::Release(int pos, int z, bool fluorescence)
     // unload previous loaded image
     if (!IsInNeighborhood(pos, z))
     {
-        int direct = pos*offset+z*2+(fluorescence?0:1);
+        int direct = pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1);
         if (book[direct]->isLoading)
             book[direct]->isLoading = false;
         else
@@ -221,7 +229,7 @@ ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImag
             {
                 if (newpos >= frameCount)
                     newpos = newpos % frameCount;
-                int direct = newpos*offset+newZPos*2+(fluorescence?0:1);
+                int direct = newpos*offset+newZPos*(hasFluorescence?(2+(fluorescence?0:1)):1);
                 if (!book[direct]->orig && !book[direct]->isLoading)
                 {
                     m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 1);
@@ -230,9 +238,9 @@ ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImag
             }
         }
     }
-    ImagePlus* temp = book[pos*offset+z*2+(fluorescence?0:1)];
+    ImagePlus* temp = book[pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1)];
     if (!temp->orig && !noImage)
-        temp->orig = cvLoadImage(m_capture->getFilename(pos*offset+z*2+(fluorescence?0:1)).mb_str());
+        temp->orig = cvLoadImage(m_capture->getFilename(pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1)).mb_str());
     return temp;
 }
 
@@ -244,7 +252,7 @@ ImagePlus* CaptureManager::DirectAccess(int x)
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img = *book[pos*offset+zPos*2+(viewFluorescence?0:1)];
+	img = *book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)];
 	if (redraw && img.orig)
 		Redraw(callPlugin);
 }
@@ -265,7 +273,7 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
         {
             if (i >= 0 && i < frameCount && j >= 0 && j < slideCount)
             {
-                toUnload.insert(i*offset + j*2);
+                toUnload.insert(i*offset + j*(hasFluorescence?2:1));
             }
         }
     }
@@ -276,12 +284,12 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
         {
             if (i >= 0 && i < frameCount && j >= 0 && j < slideCount)
             {
-                std::set<int>::iterator it = toUnload.find(i*offset + j*2);
+                std::set<int>::iterator it = toUnload.find(i*offset + j*(hasFluorescence?2:1));
                 if (it != toUnload.end())
                     toUnload.erase(it);
                 // No else because of initial state when nothing is loaded yet.
                 // Later I will catch the case of an already loaded image anyway.
-                toLoad.insert(std::pair<int,int>(i*offset + j*2, 2 + abs(newpos - i) + abs(newZPos - j)));
+                toLoad.insert(std::pair<int,int>(i*offset + j*(hasFluorescence?2:1), 2 + abs(newpos - i) + abs(newZPos - j)));
             }
         }
     }
@@ -322,12 +330,12 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img.CloneContours(book[pos*offset+zPos*2+(viewFluorescence?0:1)]);
+	img.CloneContours(book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)]);
 	if (redraw)
 		Redraw(callPlugin);
 }
 void CaptureManager::PushbackCurrentFrame(){
-	*(book[pos*offset+zPos*2+(viewFluorescence?0:1)]) = img;
+	*(book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)]) = img;
 }
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))

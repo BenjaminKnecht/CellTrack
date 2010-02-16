@@ -93,6 +93,7 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	getCWD();
 	imgDir = config->Read(_T("LastFilepath"),cwd);
 	m_zslides = config->Read(_T("SliceNumber"), 33);
+	loadFluorescence = Config_ReadBool(config,_T("LoadFluorescence"), true);
 }
 
 void MyFrame::myShow(bool askLoad)
@@ -193,29 +194,40 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
         d.GetFilenames(files);
         imgDir = d.GetDirectory();
         config->Write(_T("LastFilepath"), imgDir);
-        if (!files.GetCount() && ((float)(files.GetCount()/2) == ((float)files.GetCount())/2.0f))
+        if (!files.GetCount())
             return;
         ConfocalDialog_ w(this);
+        w.m_fluorescence->SetValue(loadFluorescence);
         w.m_zslides->SetValue(m_zslides);
         if(w.ShowModal() == wxID_OK)
+        {
             m_zslides = w.m_zslides->GetValue();
+            loadFluorescence = w.m_fluorescence->GetValue();
+        }
         else
             return;
-        while ((float)(files.GetCount()/2/m_zslides) != ((float)files.GetCount())/2.0f/(float)m_zslides)
+        while (files.GetCount()%((loadFluorescence?2:1)*m_zslides) != 0)
         {
             ConfocalDialog_ v(this);
             v.m_zslides->SetValue(m_zslides);
-            if(v.ShowModal() == wxID_OK)
-                m_zslides = v.m_zslides->GetValue();
+            v.m_fluorescence->SetValue(loadFluorescence);
+            if(w.ShowModal() == wxID_OK)
+            {
+                m_zslides = w.m_zslides->GetValue();
+                loadFluorescence = w.m_fluorescence->GetValue();
+            }
             else
                 return;
         }
         config->Write(_T("SliceNumber"), m_zslides);
+        config->Write(_T("LoadFluorescence"), loadFluorescence);
         wxBeginBusyCursor();
-            if(cm->OpenConfocal(files, m_zslides))
+            if(cm->OpenConfocal(files, m_zslides, loadFluorescence))
             {
                 m_slider2->Show();
                 Layout();
+                if (loadFluorescence)
+                    m_fluorescence->Enable();
                 OnNewMovieOpened();
             }
         wxEndBusyCursor();
@@ -265,7 +277,6 @@ void MyFrame::OnNewMovieOpened()
 	OnNavigate();
 	m_delete->Enable();
 	m_stop->Enable();
-	m_fluorescence->Enable();
 	EnableMenus( true );
 
 	return;

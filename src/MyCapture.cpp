@@ -34,10 +34,11 @@ MyCapture_Movie::MyCapture_Movie(const char* avi)
 	fps = cvGetCaptureProperty(capture, CV_CAP_PROP_FPS);
 	frame_flip = cvCreateImage(size,8,3);
 }
-MyCapture_Confocal::MyCapture_Confocal(const wxArrayString& files_, int zslides)
+MyCapture_Confocal::MyCapture_Confocal(const wxArrayString& files_, int zslides, bool fluorescence)
 : MyCapture_Files(files_)
 {
 	zSlides = zslides;
+	hasFluorescence = fluorescence;
 }
 MyCapture::~MyCapture()
 {
@@ -114,6 +115,11 @@ IplImage* MyCapture_Confocal::queryFrame(int pos_)
 int MyCapture_Confocal::getSlideNumber()
 {
     return zSlides;
+}
+
+bool MyCapture_Confocal::getFluorescence()
+{
+    return hasFluorescence;
 }
 
 wxString MyCapture_Confocal::getFilename(int pos_)
