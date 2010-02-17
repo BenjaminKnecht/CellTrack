@@ -27,7 +27,7 @@ void CamShiftPlugin::ReleaseTemps()
 	if (rotation) cvReleaseMat(&rotation);
 	if (shift) cvReleaseMat(&shift);
 }
-int CamShiftPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int CamShiftPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
 int CamShiftPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool CamShiftPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void CamShiftPlugin::DoPreview()
@@ -35,7 +35,7 @@ void CamShiftPlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
+	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos(), cm->viewFluorescence);
 	cm->Redraw(false);
 }
 void CamShiftPlugin::FetchParams()
@@ -46,21 +46,22 @@ void CamShiftPlugin::FetchParams()
 	useFirst = sidebar->useFirst->GetValue();
 }
 
-void CamShiftPlugin::ProcessImage( ImagePlus* img, int pos, int zPos )
+void CamShiftPlugin::ProcessImage( ImagePlus* img, int pos, int zPos, bool fluorescence )
 {
 	if (pos==0)
 		return;
 	FetchParams();
-	ImagePlus *oimg = cm->Access(useFirst ? 0 : pos-1, zPos);
+	ImagePlus *oimg = cm->Access(useFirst ? 0 : pos-1, zPos, fluorescence);
 	CvRect orect, searchwin;
 	CvPoint ocenter;
 
 	img->CloneContours(oimg);
 	int numContours = (int) oimg->contourArray.size();
-	for (int i=0; i<numContours; i++){
-		ProcessStatic(i, img, oimg, hsizes, criteria,
-planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, false);
+	for (int i=0; i<numContours; i++)
+	{
+		ProcessStatic(i, img, oimg, hsizes, criteria, planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, false);
 	}
+	cm->Release(useFirst ? 0 : pos-1, zPos, fluorescence);
 }
 void CamShiftPlugin::OnOK()
 {
@@ -69,12 +70,12 @@ void CamShiftPlugin::OnOK()
 	{
 		if (GetScope2() != 1) // both and normal
         {
-            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos(), false);
             cm->Release(cm->GetPos(), cm->GetZPos(), false);
         }
         if (GetScope2() != 0) // both and fluorescence
         {
-            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+            ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos(), true);
             cm->Release(cm->GetPos(), cm->GetZPos(), true);
         }
 	}

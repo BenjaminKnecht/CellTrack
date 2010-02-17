@@ -53,7 +53,7 @@ void PluginBase::OnCancel()
 void PluginBase::OnRedraw(  )
 {
 	if ( IsPreviewOn() && cm && cm->GetFrameCount())
-		ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
+		ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos(), cm->viewFluorescence);
 }
 void PluginBase::OnOK()
 {
@@ -69,12 +69,12 @@ void PluginBase::OnOK()
                 {
                     if (GetScope2() != 1)
                     {
-                        ProcessImage(cm->Access(i,j,false, false, true), i, j);
+                        ProcessImage(cm->Access(i,j,false, false, true), i, j, false);
                         cm->Release(i,j,false);
                     }
                     if (GetScope2() != 0)
                     {
-                        ProcessImage(cm->Access(i,j,true, false, true), i, j);
+                        ProcessImage(cm->Access(i,j,true, false, true), i, j, true);
                         cm->Release(i,j,true);
                     }
                 }
@@ -88,12 +88,12 @@ void PluginBase::OnOK()
             {
                 if (GetScope2() != 1)
                 {
-                    ProcessImage(cm->Access(i,cm->GetZPos(),false, false, true), i, cm->GetZPos());
+                    ProcessImage(cm->Access(i,cm->GetZPos(),false, false, true), i, cm->GetZPos(), false);
                     cm->Release(i,cm->GetZPos(),false);
                 }
                 if (GetScope2() != 0)
                 {
-                    ProcessImage(cm->Access(i,cm->GetZPos(),true, false, true), i, cm->GetZPos());
+                    ProcessImage(cm->Access(i,cm->GetZPos(),true, false, true), i, cm->GetZPos(), true);
                     cm->Release(i,cm->GetZPos(),true);
                 }
 			}
@@ -106,12 +106,12 @@ void PluginBase::OnOK()
             {
                 if (GetScope2() != 1)
                 {
-                    ProcessImage(cm->Access(cm->GetPos(),i,false, false, true), cm->GetPos(), i);
+                    ProcessImage(cm->Access(cm->GetPos(),i,false, false, true), cm->GetPos(), i, false);
                     cm->Release(cm->GetPos(),i,false);
                 }
                 if (GetScope2() != 0)
                 {
-                    ProcessImage(cm->Access(cm->GetPos(),i,true, false, true), cm->GetPos(), i);
+                    ProcessImage(cm->Access(cm->GetPos(),i,true, false, true), cm->GetPos(), i, true);
                     cm->Release(cm->GetPos(),i,true);
                 }
 			}
@@ -121,12 +121,12 @@ void PluginBase::OnOK()
 		{
 		    if (GetScope2() != 1)
             {
-                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos());
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false), cm->GetPos(), cm->GetZPos(), false);
                 cm->Release(cm->GetPos(), cm->GetZPos(), false);
 			}
             if (GetScope2() != 0)
             {
-                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos());
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos(), true);
                 cm->Release(cm->GetPos(), cm->GetZPos(), true);
             }
 		}

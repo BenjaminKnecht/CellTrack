@@ -31,7 +31,7 @@ public:
 	virtual void OnOK();
 	void FetchParams();
 
-	void ProcessImage( ImagePlus *img, int pos, int zPos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos, bool fluorescence );
 	static void ProcessStatic
 ( int i, ImagePlus *img, ImagePlus *oimg, int *hsizes, CvTermCriteria criteria,
 IplImage** &planes, CvHistogram* &hist, IplImage* &backproject, CvRect &orect, CvPoint &ocenter, CvRect &searchwin, CvMat* &rotation, CvMat* &shift, bool oready);
