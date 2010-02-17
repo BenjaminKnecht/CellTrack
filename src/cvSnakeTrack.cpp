@@ -44,7 +44,7 @@ icvSnakeTrack8uC1R( unsigned char *src,
 				   CvPoint *opt,
 				    //weights of the original fit
 				   float *oalpha, float *obeta, float *ogamma, float *oteta, float *ozeta, float *oomega,
-				   IplImage *dux, IplImage *odux, IplImage *duy, IplImage *oduy, 
+				   IplImage *dux, IplImage *odux, IplImage *duy, IplImage *oduy,
 				   float *oEarc_static = NULL, bool oEarc_static_ready = false,
 				   int *iterations = NULL)
 {
@@ -68,7 +68,8 @@ icvSnakeTrack8uC1R( unsigned char *src,
 	uchar *map = NULL;
 	int map_width = ((roi.width - 1) >> 3) + 1;
 	int map_height = ((roi.height - 1) >> 3) + 1;
-	CvSepFilter pX, pY;
+	//CvSepFilter pX, pY;
+	cv::Ptr<cv::FilterEngine> pX, pY;
 #define WTILE_SIZE 8
 #define TILE_SIZE (WTILE_SIZE + 2)
 	short dx[TILE_SIZE*TILE_SIZE], dy[TILE_SIZE*TILE_SIZE];
@@ -122,8 +123,10 @@ icvSnakeTrack8uC1R( unsigned char *src,
 
 	if( scheme == _CV_SNAKE_GRAD )
 	{
-		pX.init_deriv( TILE_SIZE+2, CV_8UC1, CV_16SC1, 1, 0, 3 );
-		pY.init_deriv( TILE_SIZE+2, CV_8UC1, CV_16SC1, 0, 1, 3 );
+		//pX.init_deriv( TILE_SIZE+2, CV_8UC1, CV_16SC1, 1, 0, 3 );
+		//pY.init_deriv( TILE_SIZE+2, CV_8UC1, CV_16SC1, 0, 1, 3 );
+		pX = cv::createDerivFilter( CV_8U, CV_16S, 1, 0, 3, cv::BORDER_REPLICATE );
+        pY = cv::createDerivFilter( CV_8U, CV_16S, 0, 1, 3, cv::BORDER_REPLICATE );
 
 		gradient = (float *) cvAlloc( roi.height * roi.width * sizeof( float ));
 		memset((void*)gradient, 0, roi.height*roi.width*sizeof(float));
@@ -303,7 +306,7 @@ INIT_ENERGY_TERM(Eduy)
 						{
 							if( scheme == _CV_SNAKE_GRAD )
 							{
-								// look at map and check status 
+								// look at map and check status
 								int x = (ppt[i].x + k)/WTILE_SIZE;
 								int y = (ppt[i].y + j)/WTILE_SIZE;
 
@@ -321,8 +324,12 @@ INIT_ENERGY_TERM(Eduy)
 									CvMat _src1;
 									cvGetSubArr( _srcp, &_src1, g_roi );
 
-									pX.process( &_src1, &_dx );
-									pY.process( &_src1, &_dy );
+                                    cv::Mat _src_ = cv::cvarrToMat(&_src1);
+                                    cv::Mat _dx_ = cv::cvarrToMat(&_dx);
+                                    cv::Mat _dy_ = cv::cvarrToMat(&_dy);
+
+                                    pX->apply( _src_, _dx_, cv::Rect(0,0,-1,-1), cv::Point(), true );
+                                    pY->apply( _src_, _dy_, cv::Rect(0,0,-1,-1), cv::Point(), true );
 
 									for( l = 0; l < WTILE_SIZE + bottomshift; l++ )
 									{
