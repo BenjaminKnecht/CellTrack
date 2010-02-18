@@ -106,12 +106,12 @@ bool CaptureManager::OpenConfocal_initialize()
 		return false;
 	slideCount = m_capture->getSlideNumber();
 	hasFluorescence = m_capture->getFluorescence();
+	std::cout << "has " << (hasFluorescence?"":"no ") << "fluorescence" << std::endl;
 	frameCount = m_capture->frameCount/(hasFluorescence?2:1)/slideCount;
-	hasFluorescence = true;
 	totalFrameCount = frameCount*(hasFluorescence?2:1)*slideCount;
 	offset = (hasFluorescence?2:1)*slideCount;
 	fps = Preferences::GetSavingFpsDefault();
-	book = new ImagePlus*[frameCount*(hasFluorescence?2:1)*slideCount];
+	book = new ImagePlus*[totalFrameCount];
 	IplImage* testImg = NULL;
 	if (testImg = cvLoadImage((m_capture->getFilename(0)).mb_str()))
     {
@@ -196,15 +196,20 @@ int CaptureManager::GetZPos(){
 }
 int CaptureManager::GetTotalPos()
 {
-	return pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1);
+	return CalculateDirect(pos, zPos, viewFluorescence);
 }
 
-void CaptureManager::Release(int pos, int z, bool fluorescence)
+int CaptureManager::CalculateDirect(int p, int z, bool fluorescence)
+{
+    return p*offset+z*(hasFluorescence?2:1) + ((hasFluorescence&&fluorescence)?0:1);
+}
+
+void CaptureManager::Release(int p, int z, bool fluorescence)
 {
     // unload previous loaded image
-    if (!IsInNeighborhood(pos, z))
+    if (!IsInNeighborhood(p, z))
     {
-        int direct = pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1);
+        int direct = CalculateDirect(p, z, fluorescence);
         if (book[direct]->isLoading)
             book[direct]->isLoading = false;
         else
@@ -213,9 +218,9 @@ void CaptureManager::Release(int pos, int z, bool fluorescence)
     }
 }
 
-ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImage, bool preload)
+ImagePlus* CaptureManager::Access(int p, int z, bool fluorescence, bool noImage, bool preload)
 {
-    if (pos < 0 || pos >= frameCount || z < 0 || z >= slideCount)
+    if (p < 0 || p >= frameCount || z < 0 || z >= slideCount)
         return NULL;
 
     // preload next three pictures
@@ -223,13 +228,13 @@ ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImag
     {
         for (int i = 1; i <= 3; i++)
         {
-            int newpos = i + pos;
+            int newpos = i + p;
             int newZPos = z + newpos/frameCount;
             if (newZPos <= slideCount)
             {
                 if (newpos >= frameCount)
                     newpos = newpos % frameCount;
-                int direct = newpos*offset+newZPos*(hasFluorescence?(2+(fluorescence?0:1)):1);
+                int direct = CalculateDirect(newpos, newZPos, fluorescence);
                 if (!book[direct]->orig && !book[direct]->isLoading)
                 {
                     m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 1);
@@ -238,9 +243,10 @@ ImagePlus* CaptureManager::Access(int pos, int z, bool fluorescence, bool noImag
             }
         }
     }
-    ImagePlus* temp = book[pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1)];
+    int direct = CalculateDirect(p, z, fluorescence);
+    ImagePlus* temp = book[direct];
     if (!temp->orig && !noImage)
-        temp->orig = cvLoadImage(m_capture->getFilename(pos*offset+z*(hasFluorescence?(2+(fluorescence?0:1)):1)).mb_str());
+        temp->orig = cvLoadImage(m_capture->getFilename(direct).mb_str());
     return temp;
 }
 
@@ -252,7 +258,7 @@ ImagePlus* CaptureManager::DirectAccess(int x)
 void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img = *book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)];
+	img = *book[GetTotalPos()];
 	if (redraw && img.orig)
 		Redraw(callPlugin);
 }
@@ -330,12 +336,13 @@ void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
 void CaptureManager::ReloadCurrentFrameContours(bool redraw, bool callPlugin){
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
-	img.CloneContours(book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)]);
+	img.CloneContours(book[GetTotalPos()]);
 	if (redraw)
 		Redraw(callPlugin);
 }
-void CaptureManager::PushbackCurrentFrame(){
-	*(book[pos*offset+zPos*(hasFluorescence?(2+(viewFluorescence?0:1)):1)]) = img;
+void CaptureManager::PushbackCurrentFrame()
+{
+	*(book[GetTotalPos()]) = img;
 }
 bool CaptureManager::SetPos(int newpos, bool reload){
 	if (newpos<0 || newpos>=frameCount || (newpos==pos && img.orig && !reload))

@@ -77,6 +77,7 @@ public:
 	bool OnDeleteAfter();
 	bool OnPrev();
 	bool OnNext();
+	int CalculateDirect(int p, int z, bool fluorescence);
 	bool ShowFluorescence(bool show);
 	void Redraw(bool callPlugin=true);
 	void SetQueue(ImageJobQueue* queue);

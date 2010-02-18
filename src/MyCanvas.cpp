@@ -29,7 +29,7 @@ MyCanvas::~MyCanvas(void)
 
 MyCanvas::MyCanvas(wxWindow* parent_, wxWindowID id, const wxPoint& pos,
 				   const wxSize& size, long style, const wxString& name):
-wxPanel(parent_, id, pos, size, style, name), MouseListener(NULL), topleft(wxPoint(0,0)), scale(wxRealPoint(1.0,1.0)), doingRoi(false), RoiListener(NULL), lastRoiEndTime(wxDateTime::Now()), doingSelectContour(false), SelectContourListener(NULL), selectedContours(NULL), DragContourListener(false), DragVertexListener(NULL), doingDragContour(false), doingDragVertex(false), hoverContour(-1), dv(MyPoint(-1,-1)), draggedContour(-1), doingRect(false), RectListener(NULL)
+wxPanel(parent_, id, pos, size, style, name), MouseListener(NULL), topleft(wxPoint(0,0)), scale(wxRealPoint(1.0,1.0)), doingRoi(false), RoiListener(NULL), lastRoiEndTime(wxDateTime::Now()), doingSelectContour(false), SelectContourListener(NULL), selectedContours(NULL), DragContourListener(false), DragVertexListener(NULL), doingDragContour(false), doingDragVertex(false), hoverContour(-1), dv(MyPoint(-1,-1)), draggedContour(-1), doingRect(false), RectListener(NULL), cm(NULL)
 {
 	bmp.Create(1,1);
 	SetBackgroundColour(*wxBLACK);

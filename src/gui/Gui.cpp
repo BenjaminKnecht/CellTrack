@@ -2322,7 +2322,7 @@ LKContoursSidebar_::LKContoursSidebar_( wxWindow* parent, wxWindowID id, const w
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
 	scope->SetSelection( 0 );
@@ -2552,7 +2552,7 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
-	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only") };
+	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
 	scope->SetSelection( 0 );

@@ -134,10 +134,10 @@ void CamShiftPlugin::OnOK()
 		CvRect orect, searchwin;
 		CvPoint ocenter;
 		int slideCount = cm->slideCount;
-		CreateProgressDlg(slideCount*(GetScope2()==2?2:1));
-		if (GetScope2() != 1) // both and normal
+		CreateProgressDlg(slideCount);
+        for (int i=0; i<slideCount && progressDlg->Update(i, wxString::Format(_T("Slide %d of %d"), i+1, slideCount)); i++)
         {
-            for (int i=1; i<slideCount && progressDlg->Update(i, wxString::Format(_T("Slide %d of %d"), i+1, slideCount)); i++)
+            if (GetScope2() != 1) // both and normal
             {
                 oimg = cm->Access(0,i);
                 int numContours = (int) oimg->contourArray.size();
@@ -151,10 +151,7 @@ void CamShiftPlugin::OnOK()
                 cm->Release(cm->GetPos()-1,i,false);
                 cm->Release(0,i,false);
             }
-        }
-        if (GetScope2() != 0) // both and fluorescence
-        {
-            for (int i=1; i<slideCount && progressDlg->Update(i+(GetScope2()==2?slideCount:0), wxString::Format(_T("Slide %d of %d"), i+1, slideCount)); i++)
+            if (GetScope2() != 0) // both and fluorescence
             {
                 oimg = cm->Access(0,i, true);
                 int numContours = (int) oimg->contourArray.size();

@@ -456,7 +456,7 @@ void MyFrame::UpdateControls(){
 	WX_SET_ENABLED ( m_slider, cm->GetFrameCount() > 1 );
 	WX_SET_ENABLED ( m_slider2, cm->slideCount > 1 );
 	WX_SET_ENABLED ( m_play, cm->GetFrameCount() > 1 );
-	sbar->SetStatusText(wxString::Format(_T("%d of %d | Slice %d of %d"), cm->pos+1, cm->GetFrameCount(), cm->zPos, cm->slideCount),SBAR_POS);
+	sbar->SetStatusText(wxString::Format(_T("%d of %d | Slice %d of %d"), cm->pos+1, cm->GetFrameCount(), cm->zPos+1, cm->slideCount),SBAR_POS);
 }
 void MyFrame::OnNavigate()
 {
