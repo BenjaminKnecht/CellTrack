@@ -91,11 +91,13 @@ public:
 	bool SaveTrajectoryImage(wxBitmap &bmp);
 	bool SaveData_setup(const char* file, FILE* &fp);
 	bool SaveTrackData(const char* file);
+	bool SaveContours(const char* file);
 	bool SaveTrajectoryData(const char* file);
 	bool SaveSpeedData(const char* file);
 	bool SaveAreaData(const char* file);
 	bool SaveDeformationData(const char* file);
 	bool ImportTrackData(const char* file);
+	bool ImportContours(const char* file);
 	void LoadNeighborhood(int newPos, int newZPos);
 	bool IsInNeighborhood(int testPos, int testZPos) const;
 

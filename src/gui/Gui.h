@@ -124,6 +124,8 @@ class MyFrame_ : public wxFrame
 		virtual void OnImproveContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnNormalizeContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCopyContours( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnExportContours( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnImportContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFindFeatures( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSubtractBackground( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFluorescenceBorder( wxCommandEvent& event ){ event.Skip(); }

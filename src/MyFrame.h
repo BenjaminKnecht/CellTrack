@@ -100,6 +100,8 @@ public:
 	void OnFindContours(wxCommandEvent &event );
 	void OnFilterContours(wxCommandEvent &event );
 	void OnEditContours(wxCommandEvent &event );
+	void OnExportContours(wxCommandEvent& e );
+	void OnImportContours(wxCommandEvent& e );
 	void OnImproveContours( wxCommandEvent& event );
 	void OnSubtractBackground( wxCommandEvent& event );
 	void OnTrackContours( wxCommandEvent& event );

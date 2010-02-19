@@ -127,6 +127,7 @@ void PluginBase::OnOK()
             if (GetScope2() != 0)
             {
                 ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos(), true);
+                std::cout << "About to release current image" << std::endl;
                 cm->Release(cm->GetPos(), cm->GetZPos(), true);
             }
 		}

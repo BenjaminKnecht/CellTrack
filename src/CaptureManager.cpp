@@ -209,6 +209,7 @@ void CaptureManager::Release(int p, int z, bool fluorescence)
     // unload previous loaded image
     if (!IsInNeighborhood(p, z))
     {
+
         int direct = CalculateDirect(p, z, fluorescence);
         if (book[direct]->isLoading)
             book[direct]->isLoading = false;
@@ -265,7 +266,7 @@ void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
 
 bool CaptureManager::IsInNeighborhood(int testPos, int testZPos) const
 {
-    return (testPos >= 0 && testPos < frameCount && testZPos > 0 && testZPos < slideCount && abs(testPos - pos) + abs(testZPos - zPos) <= loadRadius);
+    return (testPos >= 0 && testPos < frameCount && testZPos >= 0 && testZPos < slideCount && abs(testPos - pos) + abs(testZPos - zPos) <= loadRadius);
 }
 
 void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
@@ -659,6 +660,133 @@ bool CaptureManager::ImportTrackData(const char* file) {
 			}
 			book[j*offset]->AddRoi(roi);
 		}
+	}
+	fclose(fp);
+	this->ReloadCurrentFrameContours();
+	return true;
+}
+
+bool CaptureManager::SaveContours(const char* file) {
+	FILE *fp;
+	if (!(fp = fopen(file,"w"))){
+		wxLogError(_T("Unable to open file %s"), file);
+		return false;
+	}
+
+	//int numContours=book[0]->contourArray.size();
+	fprintf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n", size.width, size.height, frameCount, fps);
+	for (int slide=0; slide < slideCount; slide++)
+	{
+	    for (int frame=0; frame < frameCount; frame++)
+	    {
+	        for (int fluor = 0; fluor < 2; fluor++)
+	        {
+                int numContours = book[CalculateDirect(frame, slide, (fluor==0?false:true))]->contourArray.size();
+                fprintf(fp, "#Frame: %d, Slide: %d, Fluorescence: %d, Cell count: %d\n", frame, slide, fluor, numContours);
+                for (int cell = 0; cell < numContours; cell++)
+                {
+                    CvSeq *seq = book[CalculateDirect(frame, slide, (fluor==0?false:true))]->contourArray[cell];
+                    int numPoints = seq->total;
+                    fprintf(fp, "#Cell: %d, pointCount: %d\n", cell+1, numPoints);
+                    for (int i=0; i<numPoints; i++)
+                    {
+                        CvPoint* point = (CvPoint*) cvGetSeqElem(seq, i);
+                        fprintf(fp, "%d %d ", point->x, point->y);
+                    }
+                    fprintf(fp,"\n");
+                }
+	        }
+	    }
+	}
+	fclose(fp);
+	return true;
+}
+
+bool CaptureManager::ImportContours(const char* file) {
+	FILE *fp = fopen(file,"r");
+	if (!fp){
+		wxLogError(_T("Unable to open file %s"), file);
+		return false;
+	}
+
+	//check if there's already some detected cells.
+	bool hasCells = false;
+	for( int j=0; j<slideCount; j++)
+	{
+        for( int i=0; i<frameCount; i++ )
+        {
+            for( int k=0; k<2; k++ )
+            {
+                if (book[CalculateDirect(i,j,(k==0?false:true))]->contourArray.size())
+                {
+                    hasCells = true;
+                    break;
+                }
+            }
+        }
+	}
+	if (hasCells){
+		int reply = wxMessageBox(_T("There are already detected cells. Do you want to remove existing cells before importing tracking data?"), _T("Remove existing cells?"), wxYES_NO | wxCANCEL, NULL);
+		if (reply == wxCANCEL)
+			return false;
+		else if(reply == wxYES)
+		{
+			for( int j=0; j<slideCount; j++)
+                for( int i=0; i<frameCount; i++ )
+                    for( int k=0; k<2; k++ )
+                        book[CalculateDirect(i,j,(k==0?false:true))]->RemoveAllContours();
+		}
+	}
+	//TODO: give notice if the movie info of the track-data does not match with current movie.
+	int NumCells;
+	int Width, Height, FrameCount, FSP;
+	if( fscanf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n", &Width, &Height, &FrameCount, &FSP) !=4 )
+	{
+		wxLogError(_T("Unable to parse file header %s"), file);	return false;
+	}
+	int frame = -1, slide = -1, fluor = -1, numContours = -1;
+	bool noErrors = true;
+	while (noErrors)
+	{
+        if( fscanf(fp, "#Frame: %d, Slide: %d, Fluorescence: %d, Cell count: %d\n", &frame, &slide, &fluor, &numContours) != 4)
+        {
+            wxLogError(_T("Unable to parse file %s for frame %d, slide %d and fluor %d"), file, frame, slide, fluor);
+            noErrors = false;
+        }
+        if (frame >= 0 && frame < frameCount && slide >= 0 && slide < slideCount && fluor > -1 && fluor < 2 && noErrors)
+        {
+            for (int cell=0; cell<numContours && noErrors; cell++)
+            {
+                std::cout << "Reading header of cell " << cell+1 << std::endl;
+                int cellid,numPoints;
+                /*if(cell >= 1)
+                {
+                    char* buffer = (char*) malloc (sizeof(char)*1);
+                    fread (buffer,1,1,fp);
+                    std::cout << cell << " -- " << buffer << std::endl;
+                }*/
+                int result = fscanf(fp, "#Cell: %d, pointCount: %d\n", &cellid, &numPoints);
+                if( result !=2 )
+                {
+                    wxLogError(_T("Unable to parse file %s for cell %d header %s"), file, cell+1);
+                    noErrors = false;
+                }
+                std::vector<wxPoint> roi(numPoints);
+                for (int i=0; i<numPoints && noErrors; i++)
+                {
+                    if( fscanf(fp, "%d %d", &roi[i].x, &roi[i].y) !=2 )
+                    {
+                        wxLogError(_T("Unable to parse file %s for cell %d coordinates"), file, cell+1);
+                        noErrors = false;
+                    }
+                    std::cout << roi[i].x << " " << roi[i].y << std::endl;
+                }
+                if (noErrors)
+                    book[CalculateDirect(frame, slide, (fluor==0?true:false))]->AddRoi(roi);
+            }
+        }
+        else
+            noErrors = false;
 	}
 	fclose(fp);
 	this->ReloadCurrentFrameContours();

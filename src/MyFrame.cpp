@@ -724,6 +724,10 @@ void MyFrame::OnExportAreaData(wxCommandEvent& e ){
 void MyFrame::OnExportDeformationData(wxCommandEvent& e ){
 	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveDeformationData);
 }
+void MyFrame::OnExportContours(wxCommandEvent& e )
+{
+	OnExportData(_T("Save Contours as..."), &CaptureManager::SaveContours);
+}
 
 void MyFrame::OnImportTrackData(wxCommandEvent& e )
 {
@@ -732,6 +736,20 @@ void MyFrame::OnImportTrackData(wxCommandEvent& e )
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
 		cm->ImportTrackData(filename.mb_str());
+//TODO: is this necessary?
+        wxSizeEvent dummy = wxSizeEvent();
+		canvas->OnSize(dummy);
+		wxEndBusyCursor();
+	}
+}
+
+void MyFrame::OnImportContours(wxCommandEvent& e )
+{
+	wxString filename = wxFileSelector(_T("Import contours..."), cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
+	  if (!filename.empty()){
+		setCWD(wxPathOnly(filename));
+		wxBeginBusyCursor();
+		cm->ImportContours(filename.mb_str());
 //TODO: is this necessary?
         wxSizeEvent dummy = wxSizeEvent();
 		canvas->OnSize(dummy);
