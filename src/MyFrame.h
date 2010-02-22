@@ -112,6 +112,7 @@ public:
 	void OnFindFeatures( wxCommandEvent& event );
 	void OnNormalizeContours( wxCommandEvent& event );
 	void OnCopyContours( wxCommandEvent& event );
+	void OnCorrectContours( wxCommandEvent& event );
 
 	// Boundary View Menu
 	void OnFluorescenceBorder( wxCommandEvent& event );

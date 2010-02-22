@@ -191,7 +191,7 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
     {
         config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());
         wxArrayString files;
-        d.GetFilenames(files);
+        d.GetPaths(files);
         imgDir = d.GetDirectory();
         config->Write(_T("LastFilepath"), imgDir);
         if (!files.GetCount())
@@ -231,7 +231,6 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
                 OnNewMovieOpened();
             }
         wxEndBusyCursor();
-
     }
 }
 
@@ -241,7 +240,7 @@ void MyFrame::OnThread( wxCommandEvent& event )
     switch(event.GetId())
     {
         case Job::thread_started:
-            std::cout << "Thread started" << std::endl;
+            //std::cout << "Thread started" << std::endl;
             break;
         case Job::thread_loaded:
             //std::cout << "Thread loaded img " << event.GetInt() << std::endl;
@@ -256,7 +255,6 @@ void MyFrame::OnThread( wxCommandEvent& event )
             img->orig = (IplImage*)(event.GetClientData());
             if(cm->GetTotalPos() == event.GetInt())
             {
-                //std::cout << "Redrawing image " << event.GetInt() << " and is " << (img->loaded?"loaded":"not loaded") << std::endl;
                 cm->ReloadCurrentFrame();
             }
             break;
@@ -526,6 +524,7 @@ DEFINE_ONPLUGIN( NormalizeContours )
 DEFINE_ONPLUGIN( ResizeMovie )
 DEFINE_ONPLUGIN( Crop )
 DEFINE_ONPLUGIN( CopyContours )
+DEFINE_ONPLUGIN( CorrectContours )
 
 void MyFrame::OnPluginEnd(wxEvent &event){
 	wxWindow *sidebar=hotplug->GetSidebar(), *bottombar=hotplug->GetBottombar();

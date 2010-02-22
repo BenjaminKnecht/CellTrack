@@ -124,6 +124,7 @@ class MyFrame_ : public wxFrame
 		virtual void OnImproveContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnNormalizeContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCopyContours( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnCorrectContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnImportContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFindFeatures( wxCommandEvent& event ){ event.Skip(); }
@@ -407,6 +408,35 @@ class CopyContoursSidebar_ : public wxPanel
 		wxRadioBox* scope;
 		CopyContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,400 ), long style = wxTAB_TRAVERSAL );
 		~CopyContoursSidebar_();
+	
+};
+
+///////////////////////////////////////////////////////////////////////////////
+/// Class CorrectContoursSidebar_
+///////////////////////////////////////////////////////////////////////////////
+class CorrectContoursSidebar_ : public wxPanel 
+{
+	private:
+	
+	protected:
+		wxScrolledWindow* m_scrolledWindow3;
+		wxRadioBox* scope2;
+		wxCheckBox* preview;
+		wxButton* m_button122;
+		wxButton* m_button1313;
+		wxButton* m_button1211;
+		
+		// Virtual event handlers, overide them in your derived class
+		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnOK( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnCancel( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnApply( wxCommandEvent& event ){ event.Skip(); }
+		
+	
+	public:
+		wxRadioBox* scope;
+		CorrectContoursSidebar_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,400 ), long style = wxTAB_TRAVERSAL );
+		~CorrectContoursSidebar_();
 	
 };
 

@@ -26,7 +26,7 @@ wxThread::ExitCode ImageLoader::Entry()
                 break;
             case Job::thread_load:
                 loadingCalls++;
-                //std::cout << "loading " << j.m_imgPos << std::endl;
+                //std::cout << "img loader: loading " << j.m_imgPos << std::endl;
                 it = toIgnore.find(j.m_imgPos);
                 if (it != toIgnore.end())
                 {

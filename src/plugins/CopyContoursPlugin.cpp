@@ -1,15 +1,13 @@
 #include "CopyContoursPlugin.h"
 //#include "Util.h"
 
-CopyContoursPlugin::CopyContoursPlugin( wxWindow* parent_, MyFrame *win_ ): PluginBase(GetStaticName(), parent_, win_, true, true), temp(NULL) {
+CopyContoursPlugin::CopyContoursPlugin( wxWindow* parent_, MyFrame *win_ ): PluginBase(GetStaticName(), parent_, win_, true, true)
+{
 	sidebar =  new CopyContoursSidebar(parent_, this);
 	sidebarw = sidebar;
 	DoPreview();
 }
-void CopyContoursPlugin::ReleaseTemps()
-{
 
-}
 int CopyContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
 int CopyContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool CopyContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }

@@ -33,6 +33,8 @@ SET( CELLTRACK_SRC_FILES
   plugins/CamShiftPlugin.cpp
   plugins/CopyContoursPlugin.cpp
   plugins/CopyContoursSidebar.cpp
+  plugins/CorrectContoursPlugin.cpp
+  plugins/CorrectContoursSidebar.cpp
   plugins/FindFeaturesPlugin.cpp
   plugins/ResizeMovieSidebar.cpp
   plugins/CamShiftSidebar.cpp

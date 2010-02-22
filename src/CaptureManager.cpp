@@ -1,6 +1,8 @@
 #include "CaptureManager.h"
 #include "Preferences.h"
 #include "Util.h"
+#include <iostream>
+#include <fstream>
 #include <set>
 
 CaptureManager::CaptureManager(void)
@@ -106,7 +108,6 @@ bool CaptureManager::OpenConfocal_initialize()
 		return false;
 	slideCount = m_capture->getSlideNumber();
 	hasFluorescence = m_capture->getFluorescence();
-	std::cout << "has " << (hasFluorescence?"":"no ") << "fluorescence" << std::endl;
 	frameCount = m_capture->frameCount/(hasFluorescence?2:1)/slideCount;
 	totalFrameCount = frameCount*(hasFluorescence?2:1)*slideCount;
 	offset = (hasFluorescence?2:1)*slideCount;
@@ -256,7 +257,8 @@ ImagePlus* CaptureManager::DirectAccess(int x)
     return book[x];
 }
 
-void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin){
+void CaptureManager::ReloadCurrentFrame(bool redraw, bool callPlugin)
+{
 	if (callPlugin && ReloadListener)
 		ReloadListener->OnReload();
 	img = *book[GetTotalPos()];
@@ -272,6 +274,7 @@ bool CaptureManager::IsInNeighborhood(int testPos, int testZPos) const
 void CaptureManager::LoadNeighborhood(int newpos, int newZPos)
 {
     //std::cout << "Queue Size: " << m_queue->GetLength() << std::endl;
+    //std::cout << "Loading: " << newpos << " " << newZPos << std::endl;
     std::set<std::pair<int,int> > toLoad;
     std::set<int> toUnload;
     for (int i = pos - loadRadius; i<loadRadius+pos+1; i++)
@@ -471,13 +474,15 @@ void CaptureManager::SetBookChangeListener( PluginBase* BookChangeListener_ )
 
 
 #include "MyPoint.h"
-std::vector<float> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avgSpeed){
+std::vector<float> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avgSpeed)
+{
 	std::vector<CvPoint> traj = GetTrajectory(c);
 	std::vector<float> s(frameCount-1, 0.0);
 	totalDisp = 0;
 	int goodSteps = 0;
 	for (int i=0; i<frameCount-1; i++){
-		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1])) {
+		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1]))
+		{
 			goodSteps++;
 			totalDisp += (s[i] = MyPoint(traj[i]).Euclidean(MyPoint(traj[i+1])));
 		}
@@ -485,12 +490,16 @@ std::vector<float> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avg
 	avgSpeed = (goodSteps ? totalDisp/goodSteps : 0);
 	return s;
 }
-std::vector<float> CaptureManager::GetAreas(int c, float &avgArea){
+
+std::vector<float> CaptureManager::GetAreas(int c, float &avgArea)
+{
 	std::vector<float> a(frameCount, 0.0);
 	int goodSteps = 0;
 	float totalArea = 0.0;
-	for (int i=0; i<frameCount; i++){
-		if (book[i*offset]->contourArray.size() > c){
+	for (int i=0; i<frameCount; i++)
+	{
+		if (book[i*offset]->contourArray.size() > c)
+		{
 			goodSteps++;
 			totalArea += (a[i]=fabs(cvContourArea(book[i*offset]->contourArray[c])));
 		}
@@ -498,6 +507,7 @@ std::vector<float> CaptureManager::GetAreas(int c, float &avgArea){
 	avgArea = (goodSteps ? totalArea/goodSteps : 0);
 	return a;
 }
+
 std::vector<float> CaptureManager::GetAreaDiff(int c, float &avgDiff){
 	std::vector<float> a = GetAreas(c,avgDiff);
 	std::vector<float> diff(frameCount-1, 0.0);
@@ -667,47 +677,57 @@ bool CaptureManager::ImportTrackData(const char* file) {
 }
 
 bool CaptureManager::SaveContours(const char* file) {
-	FILE *fp;
-	if (!(fp = fopen(file,"w"))){
+	std::ofstream outfile;
+	outfile.open(file, std::ofstream::out);
+	if (!outfile)
+	{
 		wxLogError(_T("Unable to open file %s"), file);
 		return false;
 	}
 
 	//int numContours=book[0]->contourArray.size();
-	fprintf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n", size.width, size.height, frameCount, fps);
-	for (int slide=0; slide < slideCount; slide++)
+	outfile << "#width: " << size.width << ", height: " << size.height << ", frameCount: " << frameCount << ", slideCount: " << slideCount << ", fluorescence: " << (hasFluorescence?"yes":"no") << ", fps: " << fps << std::endl;
+	for (int frame=0; frame < frameCount; frame++)
 	{
-	    for (int frame=0; frame < frameCount; frame++)
-	    {
-	        for (int fluor = 0; fluor < 2; fluor++)
-	        {
-                int numContours = book[CalculateDirect(frame, slide, (fluor==0?false:true))]->contourArray.size();
-                fprintf(fp, "#Frame: %d, Slide: %d, Fluorescence: %d, Cell count: %d\n", frame, slide, fluor, numContours);
+	    for (int slide=0; slide < slideCount; slide++)
+        {
+            for (int fluor=0; fluor < (hasFluorescence?2:1); fluor++)
+            {
+                int direct = CalculateDirect(frame, slide, (fluor==0?true:false));
+                int numContours = book[direct]->contourArray.size();
+
+                outfile << "#Frame: " << frame << ", Slide: " << slide << ", Fluorescence: " << (hasFluorescence&&fluor==0?"yes":"no") << ", Cell count: " << numContours << std::endl;
                 for (int cell = 0; cell < numContours; cell++)
                 {
-                    CvSeq *seq = book[CalculateDirect(frame, slide, (fluor==0?false:true))]->contourArray[cell];
+                    CvSeq *seq = book[direct]->contourArray[cell];
                     int numPoints = seq->total;
-                    fprintf(fp, "#Cell: %d, pointCount: %d\n", cell+1, numPoints);
+                    outfile << "#Cell: " << cell+1 << ", Point Count: " << numPoints << std::endl;
                     for (int i=0; i<numPoints; i++)
                     {
                         CvPoint* point = (CvPoint*) cvGetSeqElem(seq, i);
-                        fprintf(fp, "%d %d ", point->x, point->y);
+                        outfile << point->x << " " << point->y << " ";
                     }
-                    fprintf(fp,"\n");
+                    outfile << std::endl;
                 }
-	        }
-	    }
+            }
+        }
 	}
-	fclose(fp);
+	outfile.flush();
+	outfile.close();
 	return true;
 }
 
-bool CaptureManager::ImportContours(const char* file) {
-	FILE *fp = fopen(file,"r");
-	if (!fp){
+bool CaptureManager::ImportContours(const char* file)
+{
+	std::ifstream infile;
+	std::cout << "opening: " << file << std::endl;
+	infile.open(file, std::ifstream::in);
+	if (!infile)
+	{
 		wxLogError(_T("Unable to open file %s"), file);
 		return false;
 	}
+
 
 	//check if there's already some detected cells.
 	bool hasCells = false;
@@ -725,7 +745,8 @@ bool CaptureManager::ImportContours(const char* file) {
             }
         }
 	}
-	if (hasCells){
+	if (hasCells)
+	{
 		int reply = wxMessageBox(_T("There are already detected cells. Do you want to remove existing cells before importing tracking data?"), _T("Remove existing cells?"), wxYES_NO | wxCANCEL, NULL);
 		if (reply == wxCANCEL)
 			return false;
@@ -739,25 +760,29 @@ bool CaptureManager::ImportContours(const char* file) {
 	}
 	//TODO: give notice if the movie info of the track-data does not match with current movie.
 	int NumCells;
-	int Width, Height, FrameCount, FSP;
-	if( fscanf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n", &Width, &Height, &FrameCount, &FSP) !=4 )
+	int Width, Height, FrameCount, SlideCount, FPS;
+	std::string ignStr, flString;
+	infile >> ignStr >> Width >> ignStr >> ignStr >> Height >> ignStr >> ignStr >> FrameCount >> ignStr >> ignStr >> SlideCount >> ignStr >> ignStr >> flString >> ignStr >> FPS;
+	std::cout << Width << " " << Height << " " << FrameCount << " " << SlideCount << " " << flString << " " << FPS << std::endl;
+
+	bool fluor = (flString.compare("yes,") == 0);
+
+	if (Width != size.width || Height != size.height || FrameCount != frameCount || SlideCount != slideCount || fluor != hasFluorescence || FPS != fps)
 	{
-		wxLogError(_T("Unable to parse file header %s"), file);	return false;
+        int reply = wxMessageBox(_T("The contours to be loaded do not fit the current image series. Proceed?"), _T("Proceed?"), wxYES_NO | wxCANCEL, NULL);
+        if (reply == wxCANCEL)
+                return false;
 	}
-	int frame = -1, slide = -1, fluor = -1, numContours = -1;
+	int frame = -1, slide = -1, numContours = -1;
 	bool noErrors = true;
-	while (noErrors)
+	while (noErrors && !infile.eof())
 	{
-        if( fscanf(fp, "#Frame: %d, Slide: %d, Fluorescence: %d, Cell count: %d\n", &frame, &slide, &fluor, &numContours) != 4)
-        {
-            wxLogError(_T("Unable to parse file %s for frame %d, slide %d and fluor %d"), file, frame, slide, fluor);
-            noErrors = false;
-        }
-        if (frame >= 0 && frame < frameCount && slide >= 0 && slide < slideCount && fluor > -1 && fluor < 2 && noErrors)
+	    flString.clear();
+	    infile >> ignStr >> frame >> ignStr >> ignStr >> slide >> ignStr >> ignStr >> flString >> ignStr >> ignStr >> numContours;
+        if (frame >= 0 && frame < frameCount && slide >= 0 && slide < slideCount && noErrors)
         {
             for (int cell=0; cell<numContours && noErrors; cell++)
             {
-                std::cout << "Reading header of cell " << cell+1 << std::endl;
                 int cellid,numPoints;
                 /*if(cell >= 1)
                 {
@@ -765,30 +790,19 @@ bool CaptureManager::ImportContours(const char* file) {
                     fread (buffer,1,1,fp);
                     std::cout << cell << " -- " << buffer << std::endl;
                 }*/
-                int result = fscanf(fp, "#Cell: %d, pointCount: %d\n", &cellid, &numPoints);
-                if( result !=2 )
-                {
-                    wxLogError(_T("Unable to parse file %s for cell %d header %s"), file, cell+1);
-                    noErrors = false;
-                }
+                infile >> ignStr >> cellid >> ignStr >> ignStr >> ignStr >> numPoints;
                 std::vector<wxPoint> roi(numPoints);
                 for (int i=0; i<numPoints && noErrors; i++)
                 {
-                    if( fscanf(fp, "%d %d", &roi[i].x, &roi[i].y) !=2 )
-                    {
-                        wxLogError(_T("Unable to parse file %s for cell %d coordinates"), file, cell+1);
-                        noErrors = false;
-                    }
+                    infile >> roi[i].x >> roi[i].y;
                     std::cout << roi[i].x << " " << roi[i].y << std::endl;
                 }
                 if (noErrors)
-                    book[CalculateDirect(frame, slide, (fluor==0?true:false))]->AddRoi(roi);
+                    book[CalculateDirect(frame, slide, (flString.compare("yes") == 0))]->AddRoi(roi);
             }
         }
-        else
-            noErrors = false;
 	}
-	fclose(fp);
+	infile.close();
 	this->ReloadCurrentFrameContours();
 	return true;
 }
@@ -878,8 +892,10 @@ bool CaptureManager::SaveDeformationData(const char* file) {
 
 #include <wx/bitmap.h>
 #include <wx/dc.h>
-bool CaptureManager::SaveTrackImage(wxBitmap &bmp) {
-	if (!book[0]->contourArray.size()){
+bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
+{
+	if (!book[0]->contourArray.size())
+	{
 		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
