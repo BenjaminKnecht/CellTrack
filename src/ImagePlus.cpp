@@ -227,7 +227,8 @@ void ImagePlus::AddContour( CvPoint2D32f* ps, int np )
 }
 void ImagePlus::ReplaceContour( int index, CvPoint* ps, int np )
 {
-	if (!np){
+	if (!np)
+	{
 		RemoveContour(index);
 		return;
 	}
