@@ -27,5 +27,5 @@ public:
 	void ProcessImage( ImagePlus *img );
 	static void ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge,
 		double thresh1=150, double thresh2=50, int aperture=3,
-		int dilate=1, int erode=0, bool clean=true, bool all=false, bool approx=true);
+		int dilate=1, int erode=0, bool clean=true, bool all=false, bool approx=true, bool autoThreshold=false);
 };

@@ -133,6 +133,8 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     // (in case the contours have not been cleaned up properly)
     int numBottomCells = bottom->contourArray.size();
     int numTopCells = top->contourArray.size();
+    if (numBottomCells == 0 || numTopCells == 0)
+        return;
     CvSeq* bottomCell;
     CvSeq* topCell;
     bool dirty = false;

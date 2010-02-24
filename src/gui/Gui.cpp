@@ -791,6 +791,10 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 	wxBoxSizer* bSizer9;
 	bSizer9 = new wxBoxSizer( wxVERTICAL );
 	
+	autoThresh = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Choose thresholds automatically"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	bSizer9->Add( autoThresh, 0, wxALL, 5 );
+	
 	wxFlexGridSizer* fgSizer1;
 	fgSizer1 = new wxFlexGridSizer( 2, 2, 0, 0 );
 	fgSizer1->SetFlexibleDirection( wxBOTH );
@@ -892,6 +896,7 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 	this->Layout();
 	
 	// Connect Events
+	autoThresh->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChooseAuto ), NULL, this );
 	thresh2->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
 	thresh1->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
 	aperture->Connect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );
@@ -908,6 +913,7 @@ FindContoursSidebar_::FindContoursSidebar_( wxWindow* parent, wxWindowID id, con
 FindContoursSidebar_::~FindContoursSidebar_()
 {
 	// Disconnect Events
+	autoThresh->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( FindContoursSidebar_::OnChooseAuto ), NULL, this );
 	thresh2->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
 	thresh1->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( FindContoursSidebar_::OnChangeSpin ), NULL, this );
 	aperture->Disconnect( wxEVT_COMMAND_CHOICE_SELECTED, wxCommandEventHandler( FindContoursSidebar_::OnChangeComm ), NULL, this );

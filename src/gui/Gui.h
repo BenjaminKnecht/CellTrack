@@ -246,6 +246,7 @@ class FindContoursSidebar_ : public wxPanel
 	
 	protected:
 		wxScrolledWindow* m_scrolledWindow3;
+		wxCheckBox* autoThresh;
 		wxStaticText* m_staticText7;
 		wxSpinCtrl* thresh2;
 		wxStaticText* m_staticText6;
@@ -266,6 +267,7 @@ class FindContoursSidebar_ : public wxPanel
 		wxButton* m_button13;
 		
 		// Virtual event handlers, overide them in your derived class
+		virtual void OnChooseAuto( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangeSpin( wxSpinEvent& event ){ event.Skip(); }
 		virtual void OnChangeComm( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnChangePreview( wxCommandEvent& event ){ event.Skip(); }

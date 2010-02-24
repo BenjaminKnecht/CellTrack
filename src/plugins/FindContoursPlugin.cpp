@@ -31,10 +31,10 @@ void FindContoursPlugin::DoPreview()
 #include <vector>
 void FindContoursPlugin::ProcessImage( ImagePlus *img )
 {
-	ProcessImage_static(img, gray, edge, sidebar->thresh1->GetValue(), sidebar->thresh2->GetValue(), wxStringToLong(sidebar->aperture->GetStringSelection()), sidebar->dilate->GetValue(), sidebar->erode->GetValue(), sidebar->clean->GetValue(), sidebar->intra->GetSelection(), sidebar->approx->GetValue() );
+	ProcessImage_static(img, gray, edge, sidebar->thresh1->GetValue(), sidebar->thresh2->GetValue(), wxStringToLong(sidebar->aperture->GetStringSelection()), sidebar->dilate->GetValue(), sidebar->erode->GetValue(), sidebar->clean->GetValue(), sidebar->intra->GetSelection(), sidebar->approx->GetValue(), sidebar->autoThresh->GetValue() );
 }
 
-void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge, double thresh1, double thresh2, int aperture, int dilate, int erode, bool clean, bool all, bool approx )
+void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge, double thresh1, double thresh2, int aperture, int dilate, int erode, bool clean, bool all, bool approx, bool autoThreshold )
 {
 	IplImage *orig = img->orig;
 	if (!gray)
@@ -42,6 +42,11 @@ void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, I
 	if (!edge)
 		edge = cvCreateImage( cvSize(orig->width, orig->height), IPL_DEPTH_8U, 1 );
 	cvCvtColor(orig, gray, CV_BGR2GRAY);
+	if (autoThreshold)
+	{
+        thresh2 = cvThreshold(gray, edge, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+        thresh1 = (255-thresh2)/2+thresh2;
+	}
 	cvCanny( gray, edge, thresh1, thresh2, aperture );
 	cvDilate( edge, edge, NULL, dilate );
 	cvErode( edge, edge, NULL, erode );

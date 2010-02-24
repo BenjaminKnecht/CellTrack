@@ -10,6 +10,7 @@ class FindContoursPlugin;
 class FindContoursSidebar : public FindContoursSidebar_
 {
 	DEFINE_PLUGIN_SIDEBAR(FindContours)
+	void OnChooseAuto( wxCommandEvent& event );
 	DECLARE_DYNAMIC_CLASS(FindContoursSidebar)
 };
 
