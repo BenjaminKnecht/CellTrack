@@ -33,6 +33,7 @@ void CorrectContoursPlugin::OnOK()
             {
                 for (int j=0; j<cm->slideCount-1 && UpdateProgressDlg(i*cm->slideCount+j); j++)
                 {
+                    std::cout << "correct image:" << i << ", " << j << std::endl;
                     if (GetScope2() != 1)
                     {
                         ProcessImage_static(cm->Access(i,j,false, true), cm->Access(i,j+1,false, true));
@@ -164,27 +165,68 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     }
     // the top must be smaller than the bottom
     // so we check for every point of the top cell if it is inside the bottom cell
-
-    //CvPoint* topPointsInt = (CvPoint*)malloc( topCell->total*sizeof(CvPoint) );
-    CvPoint2D32f* topPoints = (CvPoint2D32f*)malloc( topCell->total*sizeof(CvPoint2D32f) );
-    cvCvtSeqToArray(topCell, topPoints);
+    CvPoint* topPointsInt = (CvPoint*)malloc( topCell->total*sizeof(CvPoint) );
+    CvPoint* bottomPointsInt = (CvPoint*)malloc( bottomCell->total*sizeof(CvPoint) );
+    //CvPoint2D32f* topPoints = (CvPoint2D32f*)malloc( topCell->total*sizeof(CvPoint2D32f) );
+    //CvPoint2D32f* bottomPoints = (CvPoint2D32f*)malloc( bottomCell->total*sizeof(CvPoint2D32f) );
+    cvCvtSeqToArray(topCell, topPointsInt);
+    cvCvtSeqToArray(bottomCell, bottomPointsInt);
     for (int i=0; i<topCell->total; i++)
     {
+        //double test = cvPointPolygonTest(bottomPoints, topPoints[i], 1);
+
+        //std::cout << test << std::endl;
         // this part is from the cvPointPolygonTest
-        CvSeqReader reader;
+        /*CvSeqBlock block;
+        CvContour header;
+        CvArr* testCell = (CvArr*)bottomCell;
+        CvSeq* contour = (CvSeq*)bottomCell;
+        if( !CV_IS_SEQ(contour) )
+        {
+            std::cout << "z" << std::endl;
+            contour = cvPointSeqFromMat( CV_SEQ_KIND_CURVE + CV_SEQ_FLAG_CLOSED,
+                                                  testCell, &header, &block );
+        }
+        else if( CV_IS_SEQ_POINT_SET(contour) )
+        {
+            std::cout << "x" << std::endl;
+            /*if( contour->header_size == sizeof(CvContour) && !measure_dist )
+            {
+                CvRect r = ((CvContour*)contour)->rect;
+                if( pt.x < r.x || pt.y < r.y ||
+                    pt.x >= r.x + r.width || pt.y >= r.y + r.height )
+                    return -100;
+            }*/
+        //}
+        /*
+        else if( CV_IS_SEQ_CHAIN(contour) )
+        {
+            std::cout << "rr" << std::endl;
+        }
+        else
+            std::cout << "FF" << std::endl;
+*/
+        //CvSeqReader reader;
         int counter = 0;
         int total = bottomCell->total;
-        cvStartReadSeq( bottomCell, &reader, -1 );
-        CvPoint2D32f v0, v, min0, min, pt = topPoints[i];
-        CV_READ_SEQ_ELEM( v, reader );
+        //cvStartReadSeq( bottomCell, &reader, -1 );
+        CvPoint2D32f v0, v, min0, min, pt = cvPointTo32f(topPointsInt[i]);
+        //CvPoint iV;
+        //CV_READ_SEQ_ELEM( iV, reader );
+        //v = cvPointTo32f(iV);
+        v = cvPointTo32f(bottomPointsInt[0]);
         double distance = 0;
         double min_dist_num = FLT_MAX, min_dist_denom = 1;
-        for( int j = 0; j < total; j++ )
+        //std::cout << "testing point (" << pt.x << ", " << pt.y << ") ";
+        for( int j = 1; j < total; j++ )
         {
             double dx, dy, dx1, dy1, dx2, dy2, dist_num, dist_denom = 1;
 
             v0 = v;
-            CV_READ_SEQ_ELEM( v, reader );
+            v = cvPointTo32f(bottomPointsInt[j]);
+            //std::cout << "with point (" << v.x << ", " << v.y << ") " << std::endl;
+            //CV_READ_SEQ_ELEM( iV, reader );
+            //v = cvPointTo32f(iV);
 
             dx = v.x - v0.x; dy = v.y - v0.y;
             dx1 = pt.x - v0.x; dy1 = pt.y - v0.y;
@@ -224,25 +266,41 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
         distance = sqrt(min_dist_num/min_dist_denom);
         if( counter % 2 == 0 )
             distance = -distance;
-
+        //std::cout << "d: " << distance << std::endl;
         // point outside of contour!
         if (distance < 0)
         {
-            double a = ((min0.x - min.x)/(min0.y - min.y));
-            double b = topPoints[i].y + 1/((min0.x - min.x)/(min0.y - min.y))*topPoints[i].x;
-            double c = min.y - ((min0.x - min.x)/(min0.y - min.y))*min.x;
-            double dnewx = (b - c)/(a+1/a);
-            double dnewy = -(1/a)*dnewx+b;
-            int newy = ((int)dnewy);
-            int newx = ((int)dnewx);
-            if (dnewx > topPoints[i].x)
-                newx += 1;
-            if (dnewy > topPoints[i].y)
-                newy += 1;
-            topPoints[i].x = newx;
-            topPoints[i].y = newy;
+            std::cout << "calculating proper position for point " << topPointsInt[i].x << ", " << topPointsInt[i].y << std::endl;
+
+            if( min0.y == min.y)
+            {
+                topPointsInt[i].y = min0.y;
+            }
+            else if (min0.x == min.x)
+            {
+                topPointsInt[i].x = min0.x;
+            }
+            else
+            {
+                double a = (min0.x - min.x)/(min0.y - min.y);
+                double b = ((double)topPointsInt[i].y) + 1/((min0.x - min.x)/(min0.y - min.y))*((double)topPointsInt[i].x);
+                double c = min.y - ((min0.x - min.x)/(min0.y - min.y))*min.x;
+                double dnewx = (b - c)/(a+1/a);
+                double dnewy = -(1/a)*dnewx+b;
+                int newy = ((int)dnewy);
+                int newx = ((int)dnewx);
+                if (dnewx > (double)topPointsInt[i].x)
+                    newx += 1;
+                if (dnewy > (double)topPointsInt[i].y)
+                    newy += 1;
+                topPointsInt[i].x = newx;
+                topPointsInt[i].y = newy;
+            }
+            std::cout << "new position for point " << topPointsInt[i].x << ", " << topPointsInt[i].y << std::endl;
             dirty = true;
         }
     }
-    top->ReplaceContour(biggestCellIndex, topPoints, topCell->total);
+    //std::cout << "finished, replacing with correct boundary.." << std::endl;
+    if (dirty)
+        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);
 }

@@ -720,7 +720,7 @@ bool CaptureManager::SaveContours(const char* file) {
 bool CaptureManager::ImportContours(const char* file)
 {
 	std::ifstream infile;
-	std::cout << "opening: " << file << std::endl;
+	//std::cout << "opening: " << file << std::endl;
 	infile.open(file, std::ifstream::in);
 	if (!infile)
 	{
@@ -763,7 +763,7 @@ bool CaptureManager::ImportContours(const char* file)
 	int Width, Height, FrameCount, SlideCount, FPS;
 	std::string ignStr, flString;
 	infile >> ignStr >> Width >> ignStr >> ignStr >> Height >> ignStr >> ignStr >> FrameCount >> ignStr >> ignStr >> SlideCount >> ignStr >> ignStr >> flString >> ignStr >> FPS;
-	std::cout << Width << " " << Height << " " << FrameCount << " " << SlideCount << " " << flString << " " << FPS << std::endl;
+	//std::cout << Width << " " << Height << " " << FrameCount << " " << SlideCount << " " << flString << " " << FPS << std::endl;
 
 	bool fluor = (flString.compare("yes,") == 0);
 
@@ -795,7 +795,7 @@ bool CaptureManager::ImportContours(const char* file)
                 for (int i=0; i<numPoints && noErrors; i++)
                 {
                     infile >> roi[i].x >> roi[i].y;
-                    std::cout << roi[i].x << " " << roi[i].y << std::endl;
+                    //std::cout << roi[i].x << " " << roi[i].y << std::endl;
                 }
                 if (noErrors)
                     book[CalculateDirect(frame, slide, (flString.compare("yes") == 0))]->AddRoi(roi);
