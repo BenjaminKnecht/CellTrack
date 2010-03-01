@@ -45,7 +45,7 @@ void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, I
 	if (autoThreshold)
 	{
         thresh2 = cvThreshold(gray, edge, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
-        thresh1 = (255-thresh2)/2+thresh2;
+        thresh1 = (255+thresh2)/2;
 	}
 	cvCanny( gray, edge, thresh1, thresh2, aperture );
 	cvDilate( edge, edge, NULL, dilate );

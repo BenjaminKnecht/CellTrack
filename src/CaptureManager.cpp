@@ -779,6 +779,7 @@ bool CaptureManager::ImportContours(const char* file)
 	{
 	    flString.clear();
 	    infile >> ignStr >> frame >> ignStr >> ignStr >> slide >> ignStr >> ignStr >> flString >> ignStr >> ignStr >> numContours;
+	    //std::cout << frame << " " << slide << " " << flString << " " << numContours << " " << std::endl;
         if (frame >= 0 && frame < frameCount && slide >= 0 && slide < slideCount && noErrors)
         {
             for (int cell=0; cell<numContours && noErrors; cell++)
@@ -797,8 +798,9 @@ bool CaptureManager::ImportContours(const char* file)
                     infile >> roi[i].x >> roi[i].y;
                     //std::cout << roi[i].x << " " << roi[i].y << std::endl;
                 }
+
                 if (noErrors)
-                    book[CalculateDirect(frame, slide, (flString.compare("yes") == 0))]->AddRoi(roi);
+                    book[CalculateDirect(frame, slide, (flString.compare("yes,") == 0))]->AddRoi(roi);
             }
         }
 	}

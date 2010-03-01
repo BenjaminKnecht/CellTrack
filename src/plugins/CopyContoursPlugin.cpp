@@ -16,12 +16,83 @@ void CopyContoursPlugin::DoPreview()
 	if (!IsPreviewOn())
 		return;
 	cm->ReloadCurrentFrameContours(false);
-	ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
+	//ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos());
 	cm->Redraw(false);
 	ShowProcessInfo();
 }
 
-void CopyContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos )
+void CopyContoursPlugin::OnOK()
+{
+	if (doProcessImageOnOK && GetScope()>=0 && GetScope2()>=0)
+	{
+		wxBeginBusyCursor();
+		if (GetScope() == 1)
+		{
+			CreateProgressDlg();
+			for (int j = 0; j<cm->slideCount; j++)
+            {
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount()); i++)
+                {
+                    if (GetScope2() != 1)
+                    {
+                        ProcessImage(cm->Access(i,j,false, true), i, j, false);
+                    }
+                    if (GetScope2() != 0)
+                    {
+                        ProcessImage(cm->Access(i,j,true, true), i, j, true);
+                    }
+                }
+			}
+			DestroyProgressDlg();
+		}
+		else if (GetScope() == 2)
+		{
+		    CreateProgressDlg(cm->GetFrameCount());
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            {
+                if (GetScope2() != 1)
+                {
+                    ProcessImage(cm->Access(i,cm->GetZPos(),false, true), i, cm->GetZPos(), false);
+                }
+                if (GetScope2() != 0)
+                {
+                    ProcessImage(cm->Access(i,cm->GetZPos(),true, true), i, cm->GetZPos(), true);
+                }
+			}
+			DestroyProgressDlg();
+		}
+		else if (GetScope() == 3)
+		{
+		    CreateProgressDlg(cm->slideCount);
+            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i); i++)
+            {
+                if (GetScope2() != 1)
+                {
+                    ProcessImage(cm->Access(cm->GetPos(),i,false, true), cm->GetPos(), i, false);
+                }
+                if (GetScope2() != 0)
+                {
+                    ProcessImage(cm->Access(cm->GetPos(),i,true, true), cm->GetPos(), i, true);
+                }
+			}
+			DestroyProgressDlg();
+		}
+		else
+		{
+		    if (GetScope2() != 1)
+            {
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), false, true), cm->GetPos(), cm->GetZPos(), false);
+			}
+            if (GetScope2() != 0)
+            {
+                ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true, true), cm->GetPos(), cm->GetZPos(), true);
+            }
+		}
+		wxEndBusyCursor();
+	}
+}
+
+void CopyContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos, bool fluor )
 {
     int targetPos, targetZPos;
     bool targetFluorescence;
@@ -32,7 +103,7 @@ void CopyContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos )
         {
             targetPos = pos;
             targetZPos = zPos+1;
-            targetFluorescence = img->isFluorescence;
+            targetFluorescence = fluor;
         }
         else return;
     }
@@ -42,23 +113,24 @@ void CopyContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos )
         {
             targetPos = pos;
             targetZPos = zPos-1;
-            targetFluorescence = img->isFluorescence;
+            targetFluorescence = fluor;
         }
         else return;
     }
     else
     {
+        if (!cm->hasFluorescence)
+            return;
         targetPos = pos;
         targetZPos = zPos;
-        targetFluorescence = !(img->isFluorescence);
-        if(mode == 3 && img->isFluorescence)
+        targetFluorescence = !fluor;
+        if(mode == 3 && fluor)
             return;
-        if(mode == 2 && !(img->isFluorescence))
+        if(mode == 2 && !fluor)
             return;
     }
-    ImagePlus* target = cm->Access(targetPos, targetZPos, targetFluorescence);
+    ImagePlus* target = cm->Access(targetPos, targetZPos, targetFluorescence, true);
     ProcessImage_static(img, target);
-    cm->Release(targetPos, targetZPos, targetFluorescence);
 }
 
 void CopyContoursPlugin::ProcessImage_static( ImagePlus *source, ImagePlus* target )

@@ -9,8 +9,7 @@
 
 class CopyContoursSidebar;
 
-class CopyContoursPlugin :
-	public PluginBase
+class CopyContoursPlugin : public PluginBase
 {
 private:
 	CopyContoursSidebar *sidebar;
@@ -22,8 +21,9 @@ public:
 	virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
+	virtual void OnOK();
 
-	void ProcessImage( ImagePlus *img, int pos, int zPos );
-	static void ProcessImage_static( ImagePlus *source, ImagePlus* target );
+	void ProcessImage( ImagePlus* img, int pos, int zPos, bool fluor );
+	static void ProcessImage_static( ImagePlus* source, ImagePlus* target );
 };
 #endif /* __CopyContoursPlugin__ */
