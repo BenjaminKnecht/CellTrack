@@ -10,7 +10,7 @@ void SmoothPlugin::ReleaseTemps()
 {
 	if (temp) cvReleaseImage(&temp);
 }
-int SmoothPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
+int SmoothPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
 int SmoothPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
 bool SmoothPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void SmoothPlugin::DoPreview()
@@ -22,9 +22,11 @@ void SmoothPlugin::DoPreview()
 	cm->Redraw(false);
 }
 #define SMOOTH_CORRECT_WINDOW(x)	(x==0 ? 0 : 2*x-1)
-void SmoothPlugin::ProcessImage( ImagePlus *img ){
+void SmoothPlugin::ProcessImage( ImagePlus *img )
+{
 	IplImage *orig = img->orig;
-	if (!temp){
+	if (!temp)
+	{
 		temp = cvCreateImage( cvSize(orig->width, orig->height), IPL_DEPTH_8U, 3 );
 	}
 	const static int METHOD_MAP[] = {CV_BLUR, CV_GAUSSIAN, CV_MEDIAN, CV_BILATERAL};
@@ -34,7 +36,8 @@ void SmoothPlugin::ProcessImage( ImagePlus *img ){
 		cvSmooth(orig, orig, method, SMOOTH_CORRECT_WINDOW(sidebar->blur1->GetValue()), SMOOTH_CORRECT_WINDOW(sidebar->blur2->GetValue()));
 	else if (method == CV_GAUSSIAN)
 		cvSmooth(orig, orig, method, SMOOTH_CORRECT_WINDOW(sidebar->gauss1->GetValue()), SMOOTH_CORRECT_WINDOW(sidebar->gauss2->GetValue()), sidebar->gauss3->GetValue(), sidebar->gauss4->GetValue());
-	else if (method == CV_MEDIAN || method == CV_BILATERAL){
+	else if (method == CV_MEDIAN || method == CV_BILATERAL)
+	{
 		cvCopyImage(orig, temp);
 		if (method == CV_MEDIAN)
 			cvSmooth(temp, orig, method, SMOOTH_CORRECT_WINDOW(sidebar->median1->GetValue()));

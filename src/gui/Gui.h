@@ -653,6 +653,7 @@ class ImproveContoursSidebar_ : public wxPanel
 		wxSpinCtrl* max_iter;
 		wxStaticText* m_staticText73;
 		wxTextCtrl_double* epsilon;
+		wxCheckBox* use_blur;
 		wxRadioBox* scope2;
 		wxCheckBox* preview;
 		wxStaticLine* m_staticline2;

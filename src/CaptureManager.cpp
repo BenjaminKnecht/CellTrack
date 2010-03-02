@@ -828,14 +828,17 @@ bool CaptureManager::SaveTrajectoryData(const char* file) {
 	fclose(fp);
 	return true;
 }
-bool CaptureManager::SaveSpeedData(const char* file) {
+
+bool CaptureManager::SaveSpeedData(const char* file)
+{
 	FILE *fp;
 	if(!SaveData_setup(file,fp)) return false;
 
 	int numContours=book[0]->contourArray.size();
 	fprintf(fp, "#width: %d, height: %d, frameCount: %d, fps: %d\n", size.width, size.height, frameCount, numContours, fps);
 	fprintf(fp, "#cellCount: %d\n", numContours);
-	for (int c=0; c<numContours; c++){
+	for (int c=0; c<numContours; c++)
+	{
 		CvSeq *oseq = book[0]->contourArray[c];
 		int np = oseq->total;
 		float totalDisp, avgSpeed;
@@ -849,7 +852,9 @@ bool CaptureManager::SaveSpeedData(const char* file) {
 	fclose(fp);
 	return true;
 }
-bool CaptureManager::SaveAreaData(const char* file) {
+
+bool CaptureManager::SaveAreaData(const char* file)
+{
 	FILE *fp;
 	if(!SaveData_setup(file,fp)) return false;
 

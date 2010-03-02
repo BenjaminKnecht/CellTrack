@@ -247,7 +247,8 @@ IplImage** &planes, CvHistogram* &hist, IplImage* &backproject, CvRect &orect, C
 	if (!shift)
 		shift = cvCreateMat(2,1,CV_32FC1);
 
-	if (!oready){
+	if (!oready)
+	{
 		orect = cvBoundingRect(oimg->contourArray[i],1);
 		cvCvtPixToPlane( oimg->orig, planes[0], planes[1], planes[2], 0 );
         for (int p=0; p<3; p++)

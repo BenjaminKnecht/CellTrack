@@ -1985,6 +1985,10 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 	
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
+	use_blur = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Use blurred image"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	bSizer9->Add( use_blur, 0, wxALL, 5 );
+	
 	wxString scopeChoices[] = { _("Apply to current frame only"), _("Apply to all frames"), _("Apply in t-direction only"), _("Apply in z-direction only") };
 	int scopeNChoices = sizeof( scopeChoices ) / sizeof( wxString );
 	scope = new wxRadioBox( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, scopeNChoices, scopeChoices, 1, wxRA_SPECIFY_COLS );
@@ -2033,6 +2037,7 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
 	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
 	epsilon->Connect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
+	use_blur->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Connect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnCancel ), NULL, this );
@@ -2049,6 +2054,7 @@ ImproveContoursSidebar_::~ImproveContoursSidebar_()
 	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
 	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( ImproveContoursSidebar_::OnChangeSpin ), NULL, this );
 	epsilon->Disconnect( wxEVT_COMMAND_TEXT_UPDATED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
+	use_blur->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangeComm ), NULL, this );
 	preview->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnChangePreview ), NULL, this );
 	m_button12->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnOK ), NULL, this );
 	m_button13->Disconnect( wxEVT_COMMAND_BUTTON_CLICKED, wxCommandEventHandler( ImproveContoursSidebar_::OnCancel ), NULL, this );

@@ -270,33 +270,54 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
         // point outside of contour!
         if (distance < 0)
         {
-            std::cout << "calculating proper position for point " << topPointsInt[i].x << ", " << topPointsInt[i].y << std::endl;
-
-            if( min0.y == min.y)
+            std::cout << "calculating proper position for point " << pt.x << ", " << pt.y << std::endl;
+            // check if distance is between two points or point and a line
+            double qdist0 = (min0.x - pt.x)*(min0.x - pt.x) + (min0.y - pt.y)*(min0.y - pt.y);
+            double qdist = (min.x - pt.x)*(min.x - pt.x) + (min.y - pt.y)*(min.y - pt.y);
+            if (distance*distance == qdist0)
             {
+                // point is closest to min0
+                topPointsInt[i].x = min0.x;
                 topPointsInt[i].y = min0.y;
             }
-            else if (min0.x == min.x)
+            else if (distance*distance == qdist)
             {
-                topPointsInt[i].x = min0.x;
+                // point is closest to min
+                topPointsInt[i].x = min.x;
+                topPointsInt[i].y = min.y;
             }
             else
             {
-                double a = (min0.x - min.x)/(min0.y - min.y);
-                double b = ((double)topPointsInt[i].y) + 1/((min0.x - min.x)/(min0.y - min.y))*((double)topPointsInt[i].x);
-                double c = min.y - ((min0.x - min.x)/(min0.y - min.y))*min.x;
-                double dnewx = (b - c)/(a+1/a);
-                double dnewy = -(1/a)*dnewx+b;
-                int newy = ((int)dnewy);
-                int newx = ((int)dnewx);
-                if (dnewx > (double)topPointsInt[i].x)
-                    newx += 1;
-                if (dnewy > (double)topPointsInt[i].y)
-                    newy += 1;
-                topPointsInt[i].x = newx;
-                topPointsInt[i].y = newy;
+                // point is closest to line between min and min0
+                if( min0.y == min.y)
+                {
+                    // for vertical lines
+                    topPointsInt[i].y = min0.y;
+                }
+                else if (min0.x == min.x)
+                {
+                    // for horizontal lines
+                    topPointsInt[i].x = min0.x;
+                }
+                else
+                {
+                    // for general lines
+                    double a = (min0.x - min.x)/(min0.y - min.y);
+                    double b = (pt.y) + 1/((min0.x - min.x)/(min0.y - min.y))*(pt.x);
+                    double c = min.y - ((min0.x - min.x)/(min0.y - min.y))*min.x;
+                    double dnewx = a*(b - c)/(a*a + 1);
+                    double dnewy = -(1/a)*dnewx+b;
+                    int newy = ((int)dnewy);
+                    int newx = ((int)dnewx);
+                    if (dnewx > pt.x)
+                        newx += 1;
+                    if (dnewy > pt.y)
+                        newy += 1;
+                    topPointsInt[i].x = newx;
+                    topPointsInt[i].y = newy;
+                }
             }
-            std::cout << "new position for point " << topPointsInt[i].x << ", " << topPointsInt[i].y << std::endl;
+            std::cout << "new position for point " << i << ": (" << topPointsInt[i].x << ", " << topPointsInt[i].y << ")" << std::endl;
             dirty = true;
         }
     }

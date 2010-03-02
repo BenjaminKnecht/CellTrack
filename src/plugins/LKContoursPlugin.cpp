@@ -174,7 +174,8 @@ void LKContoursPlugin::OnOK()
 	cm->ReloadCurrentFrameContours(true, false);
 	wxEndBusyCursor();
 }
-void LKContoursPlugin::FetchParams(){
+void LKContoursPlugin::FetchParams()
+{
 	level=sidebar->level->GetValue();
 	winsize=cvSize(2*sidebar->width->GetValue()-1, 2*sidebar->height->GetValue()-1);
 	criteria=cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, sidebar->max_iter->GetValue(), sidebar->epsilon->GetValue());
@@ -182,7 +183,9 @@ void LKContoursPlugin::FetchParams(){
 	intwin = sidebar->intwin->GetValue();
 	useAvailable = sidebar->useAvailable->GetValue();
 }
-void LKContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos, bool fluorescence ){
+
+void LKContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos, bool fluorescence )
+{
 	if (pos==0)
 		return;
 	FetchParams();
@@ -217,10 +220,12 @@ void LKContoursPlugin::ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level,
 	cvCvtColor(img->orig, gray, CV_BGR2GRAY);
 	int numContours = (int) oimg->contourArray.size();
 	int np_max=0;
-	if (!(flags & CV_LKFLOW_PYR_A_READY)) {
+	if (!(flags & CV_LKFLOW_PYR_A_READY))
+	{
 		cvCvtColor(oimg->orig, ogray, CV_BGR2GRAY);
 		np_total=0;
-		for (int i=0; i<numContours; i++){
+		for (int i=0; i<numContours; i++)
+		{
 			int np = oimg->contourArray[i]->total;
 			np_total+= (np + oimg->feats[i].size());
 			np_max = MAX(np, np_max);
@@ -233,8 +238,10 @@ void LKContoursPlugin::ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level,
 	if (!np_total)
 		return;
 
-	if (!(flags & CV_LKFLOW_PYR_A_READY) || rebuild_opsf){
-		for (int i=0, j=0; i<numContours; i++){
+	if (!(flags & CV_LKFLOW_PYR_A_READY) || rebuild_opsf)
+	{
+		for (int i=0, j=0; i<numContours; i++)
+		{
 			CvSeq *seq = oimg->contourArray[i];
 			int np = seq->total, nf=oimg->feats[i].size();
 			cvCvtSeqToArray(seq, ops);
@@ -244,15 +251,19 @@ void LKContoursPlugin::ProcessStatic(ImagePlus *img, ImagePlus *oimg, int level,
 				opsf[j] = oimg->feats[i][k];
 		}
 	}
-	if (useAvailable){
-		for (int i=0, j=0; i<numContours; i++){
+	if (useAvailable)
+	{
+		for (int i=0, j=0; i<numContours; i++)
+		{
 			CvSeq *seq = i<(int)img->contourArray.size() ? img->contourArray[i] : NULL;
-			if (!seq || seq->total != oimg->contourArray[i]->total || img->feats[i].size() != oimg->feats[i].size()){
+			if (!seq || seq->total != oimg->contourArray[i]->total || img->feats[i].size() != oimg->feats[i].size())
+			{
 				int np = oimg->contourArray[i]->total, nf=oimg->feats[i].size();
 				memcpy(&(psf[j]), &(opsf[j]), (np+nf)*sizeof(CvPoint2D32f));
 				j+=(np+nf);
 			}
-			else{
+			else
+			{
 				int np = seq->total, nf=img->feats[i].size();
 				cvCvtSeqToArray(seq, ops);
 				for (int k=0; k<np; k++, j++)
