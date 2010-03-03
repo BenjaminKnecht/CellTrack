@@ -2597,6 +2597,10 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	
 	sbSizer16->Add( useAvailable, 0, wxALL, 5 );
 	
+	use_blur = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Use blurred image"), wxDefaultPosition, wxDefaultSize, 0 );
+	
+	sbSizer16->Add( use_blur, 0, wxALL, 5 );
+	
 	bSizer9->Add( sbSizer16, 0, wxEXPAND, 5 );
 	
 	wxStaticBoxSizer* sbSizer161;
@@ -2705,6 +2709,7 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	oteta->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	gradient->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	useAvailable->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	use_blur->Connect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	width->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	height->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	max_iter->Connect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
@@ -2729,6 +2734,7 @@ TrackContoursSidebar_::~TrackContoursSidebar_()
 	oteta->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	gradient->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	useAvailable->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
+	use_blur->Disconnect( wxEVT_COMMAND_CHECKBOX_CLICKED, wxCommandEventHandler( TrackContoursSidebar_::OnChangeComm ), NULL, this );
 	width->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	height->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );
 	max_iter->Disconnect( wxEVT_COMMAND_SPINCTRL_UPDATED, wxSpinEventHandler( TrackContoursSidebar_::OnChangeSpin ), NULL, this );

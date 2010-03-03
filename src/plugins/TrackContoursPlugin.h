@@ -17,6 +17,7 @@ private:
 	float* avgiterations;
 	float alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega;
 	bool useAvailable;
+	bool useBlur;
 	CvSize winsize;
 	int scheme;
 	CvTermCriteria criteria;
@@ -40,5 +41,5 @@ public:
  float alpha, float beta, float gamma,
  float oalpha, float obeta, float ogamma, float oteta, float ozeta, float oomega,
  CvSize winsize, int scheme, CvTermCriteria criteria,
- bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool oEarc_ready = false);
+ bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool blur, bool oEarc_ready = false);
 };

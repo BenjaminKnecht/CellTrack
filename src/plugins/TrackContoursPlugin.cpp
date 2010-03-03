@@ -43,6 +43,7 @@ void TrackContoursPlugin::FetchParams()
 	ozeta = sidebar->ozeta->GetValue();
 	oomega = sidebar->oomega->GetValue();
 	useAvailable = sidebar->useAvailable->GetValue();
+	useBlur = sidebar->use_blur->GetValue();
 	winsize = cvSize(2*sidebar->width->GetValue()-1, 2*sidebar->height->GetValue()-1);
 	scheme = sidebar->gradient->GetValue();
 	criteria = cvTermCriteria(CV_TERMCRIT_ITER|CV_TERMCRIT_EPS, sidebar->max_iter->GetValue(), sidebar->epsilon->GetValue());
@@ -93,7 +94,7 @@ void TrackContoursPlugin::OnOK()
                 {
                     img = cm->Access(i,cm->GetZPos(), false, false, true);
                     int iterations=0;
-                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, useBlur, true);
                     //avgiterations[0]+=iterations;
                     cm->Release(i,cm->GetZPos(),false);
                     CV_SWAP( ogray, gray, swap );
@@ -128,7 +129,7 @@ void TrackContoursPlugin::OnOK()
                 {
                     img = cm->Access(i,cm->GetZPos(), true, false, true);
                     int iterations=0;
-                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                    TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, useBlur, true);
                     //avgiterations[0]+=iterations;
                     cm->Release(i,cm->GetZPos(),true);
                     CV_SWAP( ogray, gray, swap );
@@ -179,7 +180,7 @@ void TrackContoursPlugin::OnOK()
                     {
                         img = cm->Access(i,slide, false, false, true);
                         int iterations=0;
-                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, useBlur, true);
                         //avgiterations[slide]+=iterations;
                         cm->Release(i,slide,false);
                         CV_SWAP( ogray, gray, swap );
@@ -214,9 +215,9 @@ void TrackContoursPlugin::OnOK()
                     {
                         img = cm->Access(i,slide, true, false, true);
                         int iterations=0;
-                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, true);
+                        TrackContoursPlugin::ProcessStatic(j, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  i>1, i==cm->GetFrameCount()-1, oEarc, useBlur, true);
                         //avgiterations[slide]+=iterations;
-                        cm->Release(i,slide,true);
+                        cm->Release(i, slide, true);
                         CV_SWAP( ogray, gray, swap );
                         CV_SWAP( ops, ps, swap_ps);
                     }
@@ -226,7 +227,7 @@ void TrackContoursPlugin::OnOK()
                         oEarc = NULL;
                     }
                 }
-                cm->Release(0,slide,true);
+                cm->Release(0, slide, true);
                 //if (numContours)
                 //    avgiterations[slide]/=numContours;
             }
@@ -239,7 +240,8 @@ void TrackContoursPlugin::OnOK()
 
 
 #include "cvSnakeTrack.h"
-void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos ){
+void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos )
+{
 	if (pos==0)
 		return;
 	FetchParams();
@@ -250,11 +252,12 @@ void TrackContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos ){
 		img->RemoveContours(numContours, img->contourArray.size()-1);
 	else
 		img->RemoveAllContours();
-	for (int i=0; i<numContours; i++){
+	for (int i=0; i<numContours; i++)
+	{
 		CvPoint *ps, *ops;
 		int iterations=0;
 		float *nullfloat=NULL;
-		TrackContoursPlugin::ProcessStatic(i, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  false, true, nullfloat);
+		TrackContoursPlugin::ProcessStatic(i, img, oimg, gray, ogray, ps, ops, alpha, beta, gamma, oalpha, obeta, ogamma, oteta, ozeta, oomega, winsize, scheme, criteria, useAvailable, iterations,  false, true, nullfloat, useBlur);
 		//avgiterations[zPos]+=iterations;
 	}
 	//if (numContours)
@@ -267,7 +270,8 @@ void TrackContoursPlugin::ProcessStatic
  float alpha, float beta, float gamma,
  float oalpha, float obeta, float ogamma, float oteta, float ozeta, float oomega,
  CvSize winsize, int scheme, CvTermCriteria criteria,
- bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool oEarc_ready){
+ bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool blur, bool oEarc_ready)
+{
 	if (!gray)
 		gray = cvCreateImage( cvSize(img->orig->width, img->orig->height), IPL_DEPTH_8U, 1 );
 	if (!ogray)
@@ -276,19 +280,23 @@ void TrackContoursPlugin::ProcessStatic
 	int numContours = (int) oimg->contourArray.size();
 	int np = oimg->contourArray[i]->total;
 
-	if (!oready){
+	if (!oready)
+	{
 		CvSeq *oseq = oimg->contourArray[i];
 		cvCvtColor(oimg->orig, ogray, CV_BGR2GRAY);
 		ops = (CvPoint*)malloc( np*sizeof(CvPoint) );
 		cvCvtSeqToArray(oseq,ops);
-		if (oEarc_ready && !oEarc){
+		if (oEarc_ready && !oEarc)
+		{
 			oEarc = (float *) malloc(np*sizeof(float));
 			oEarc_ready  = false;
 		}
 	}
 	CvSeq *seq = i<img->contourArray.size() ? img->contourArray[i] : NULL;
 	bool usingAvailable = useAvailable && seq && seq->total == np;
-	if (usingAvailable){
+	if (usingAvailable)
+	{
+	    //std::cout << "Use available..." << std::endl;
 		usingAvailable = true;
 		if(!oready)
 			ps = (CvPoint*)malloc( np*sizeof(CvPoint) );
@@ -298,9 +306,19 @@ void TrackContoursPlugin::ProcessStatic
 		ps = ops;
 	criteria.epsilon *= np;
 	iterations=0;
-	cvSnakeImageTrack( gray, ps, np,
+    IplImage* temp = cvCreateImage( cvSize(img->orig->width, img->orig->height), IPL_DEPTH_8U, 1 );
+    IplImage* otemp = cvCreateImage( cvSize(oimg->orig->width, oimg->orig->height), IPL_DEPTH_8U, 1 );
+    cvCopyImage(gray, temp);
+    cvCopyImage(ogray, otemp);
+    if (blur)
+    {
+        std::cout << "Use blur..." << std::endl;
+        cvSmooth(temp, gray, CV_MEDIAN, 3);
+        cvSmooth(otemp, ogray, CV_MEDIAN, 3);
+    }
+	cvSnakeImageTrack( temp, ps, np,
 		&alpha, &beta, &gamma,
-		ogray, ops, &oalpha, &obeta, &ogamma, &oteta, &ozeta, &oomega,
+		otemp, ops, &oalpha, &obeta, &ogamma, &oteta, &ozeta, &oomega,
 		CV_VALUE, winsize, criteria, scheme, oEarc, oEarc_ready, &iterations
 		);
 	if (useAvailable && i<img->contourArray.size())
@@ -309,11 +327,14 @@ void TrackContoursPlugin::ProcessStatic
 		img->AddContour(ps,np);
 	if (!useAvailable || img->feats[i].size() != oimg->feats[i].size())
 		img->feats[i] = oimg->feats[i];
-	if (freetemps){
-		if (ps!=ops){
+	if (freetemps)
+	{
+		if (ps!=ops)
+		{
 			free(ps); ps=NULL;
 		}
 		free(ops); ops = NULL;
 	}
-
+	cvReleaseImage(&temp);
+	cvReleaseImage(&otemp);
 }

@@ -832,6 +832,7 @@ class TrackContoursSidebar_ : public wxPanel
 		wxSpinCtrl* oteta;
 		wxCheckBox* gradient;
 		wxCheckBox* useAvailable;
+		wxCheckBox* use_blur;
 		wxStaticText* m_staticText71;
 		wxSpinCtrl* width;
 		wxStaticText* m_staticText62;
