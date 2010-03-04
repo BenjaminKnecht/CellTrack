@@ -124,7 +124,7 @@ void MyCanvas::SetImage( const ImagePlus& img_ )
 
 void MyCanvas::DrawContours()
 {
-	if (img.contours)
+	if (img.contours && cm && cm->drawBorder)
 	{
         wxMemoryDC dc(bmp);
         CvSeq *seq = img.contours;
@@ -147,7 +147,7 @@ void MyCanvas::DrawContours()
         if (theRect.x != -1)
             dc.DrawRectangle(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize());
 	}
-	if (cm && cm->drawFluorescence)
+	if (cm && (cm->drawOtherBorder || cm->drawOtherPoints))
     {
         wxMemoryDC dc(bmp);
         ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos(),(cm->viewFluorescence?false:true),true);
@@ -158,12 +158,13 @@ void MyCanvas::DrawContours()
             while (seq)
             {
                 wxColor drawColor = wxColour(cm->viewFluorescence?Preferences::GetColorContourBorderColor():Preferences::GetColorFContourBorderColor());
-                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, cm->viewFluorescence?Preferences::GetColorContourBorderWidth():Preferences::GetColorFContourBorderWidth());
+                wxColor pointColor = wxColour(cm->viewFluorescence?Preferences::GetColorContourPointColor():Preferences::GetColorFContourPointColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, cm->drawOtherBorder, &drawColor, cm->drawOtherPoints, &pointColor, i++, cm->viewFluorescence?Preferences::GetColorContourBorderWidth():Preferences::GetColorFContourBorderWidth());
                 seq = seq->h_next;
             }
         }
     }
-    if (cm && cm->drawTopBorder && cm->zPos < cm->slideCount-1)
+    if (cm && (cm->drawTopBorder || cm->drawTopPoints) && cm->zPos < cm->slideCount-1)
     {
         wxMemoryDC dc(bmp);
         ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()+1,(cm->viewFluorescence?true:false),true);
@@ -174,12 +175,13 @@ void MyCanvas::DrawContours()
             while (seq)
             {
                 wxColor drawColor = wxColour(Preferences::GetColorTContourBorderColor());
-                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, Preferences::GetColorTContourBorderWidth());
+                wxColor pointColor = wxColour(Preferences::GetColorTContourPointColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, cm->drawTopBorder, &drawColor, cm->drawTopPoints, &pointColor, i++, Preferences::GetColorTContourBorderWidth());
                 seq = seq->h_next;
             }
         }
     }
-    if (cm && cm->drawBottomBorder && cm->zPos > 0)
+    if (cm && (cm->drawBottomBorder || cm->drawBottomPoints) && cm->zPos > 0)
     {
         wxMemoryDC dc(bmp);
         ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()-1,(cm->viewFluorescence?true:false), true);
@@ -190,7 +192,8 @@ void MyCanvas::DrawContours()
             while (seq)
             {
                 wxColor drawColor = wxColour(Preferences::GetColorBContourBorderColor());
-                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, &drawColor, i++, Preferences::GetColorBContourBorderWidth());
+                wxColor pointColor = wxColour(Preferences::GetColorBContourPointColor());
+                DrawContour_static(&dc, seq, wxPoint(0,0), scale, false, cm->drawBottomBorder, &drawColor, cm->drawBottomPoints, &pointColor, i++, Preferences::GetColorBContourBorderWidth());
                 seq = seq->h_next;
             }
         }
@@ -210,41 +213,43 @@ void MyCanvas::SetContourSelection( int index, bool selected )
 void MyCanvas::DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected, int label)
 {
     wxColor drawColor = wxColor(Preferences::GetColorContourBorderColor());
+    wxColor pointColor = wxColor(Preferences::GetColorContourPointColor());
     int borderWidth = Preferences::GetColorContourBorderWidth();
     if (img.isFluorescence)
     {
         drawColor = wxColour(Preferences::GetColorFContourBorderColor());
+        pointColor = wxColour(Preferences::GetColorFContourPointColor());
         borderWidth = Preferences::GetColorFContourBorderWidth();
     }
-    else if (selected)
+    if (selected)
     {
         drawColor = wxColour(Preferences::GetColorContourSelectedColor());
     }
-    else if (!Preferences::GetColorContourBorderDraw())
-    {
-        return;
-    }
-	DrawContour_static(dc, seq, shift, scale, selected, &drawColor, label, borderWidth);
+	DrawContour_static(dc, seq, shift, scale, selected, cm->drawBorder, &drawColor, cm->drawPoints, &pointColor, label, borderWidth);
 }
 
-void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, const wxColor *borderColor, int label, int width){
+void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoint scale, bool selected, bool drawBorder, const wxColor *borderColor, bool drawPoints, const wxColor *pointColor, const int label, int width)
+{
 	wxPoint *ps = ContourToPointArray(seq, shift, scale);
+	if (drawBorder)
+	{
         dc->SetPen(wxPen(*borderColor, width));
         dc->SetBrush(*wxTRANSPARENT_BRUSH);
         dc->DrawPolygon(seq->total, ps);
+	}
 
-
-		if (Preferences::GetColorContourCornerDraw()){
-			dc->SetPen(wxPen(wxColour(Preferences::GetColorContourCornerColor())));
-			dc->SetBrush(*wxTRANSPARENT_BRUSH);
-//			dc->SetBrush(wxBrush(wxColor(Preferences::GetColorContourCornerColor())));
-			dc->DrawCircle(ps[0], Preferences::GetColorContourCornerWidth()/2);
-			for (int i=1; i<seq->total; i++)
-				dc->DrawRectangle(ps[i]-MyPoint(Preferences::GetColorContourCornerWidth())/2, MyPoint(Preferences::GetColorContourCornerWidth()).ToSize());
-		}
-		dc->SetTextForeground(Preferences::GetColorContourBorderColor());
-		dc->DrawText(wxString::Format(_T("%d"), label), ps[0]);
-		delete[] ps;
+    if (drawPoints)
+    {
+        dc->SetPen(wxPen(*pointColor));
+        dc->SetBrush(*wxTRANSPARENT_BRUSH);
+//		dc->SetBrush(wxBrush(wxColor(Preferences::GetColorContourCornerColor())));
+        dc->DrawCircle(ps[0], width/2);
+        for (int i=1; i<seq->total; i++)
+            dc->DrawRectangle(ps[i]-MyPoint(width)/2, MyPoint(width).ToSize());
+    }
+    dc->SetTextForeground(*borderColor);
+    dc->DrawText(wxString::Format(_T("%d"), label), ps[0]);
+    delete[] ps;
 }
 void MyCanvas::DrawRoi(bool lastPointOnly)
 {
@@ -261,8 +266,8 @@ void MyCanvas::DrawRoi(bool lastPointOnly)
 		mdc.DrawLine(TO_BMP(roi[i]), TO_BMP(roi[j]));
 		mdc.DrawLine(TO_BMP(roi[j]), TO_BMP(roi[i]));
 	}
-	mdc.SetPen(wxPen(wxColour(Preferences::GetColorContourCornerColor())));
-	mdc.SetBrush(wxBrush(wxColor(Preferences::GetColorContourCornerColor())));
+	mdc.SetPen(wxPen(wxColour(Preferences::GetColorContourPointColor())));
+	mdc.SetBrush(wxBrush(wxColor(Preferences::GetColorContourPointColor())));
 	mdc.DrawCircle(TO_BMP(roi[0]), POINTER_SIZE/2);
 	mdc.SetBrush(*wxTRANSPARENT_BRUSH);
 	for (i=lastPointOnly ? (signed)roi.size()-1 : 0; i>0 && i<(signed)roi.size(); i++)
@@ -287,21 +292,26 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 		// Check if we need to add a new point:
 		if (inrange &&
 			(e.LeftDown() ||
-			(e.LeftDClick() && (wxDateTime::Now()-lastRoiEndTime).IsLongerThan(wxTimeSpan::Milliseconds(500))) )) {
-				if (!roi.size() || MyPoint(lastPoint-newPoint).ToDist_Manhattan())
-					roi.push_back(newPoint);
-			DrawRoi(true);
-			Update();
-			if(roi.size()>1 && (e.LeftDClick() ||  MyPoint(roi[0]-roi.back()).ToDistSqr() <= 2)){
+			(e.LeftDClick() && (wxDateTime::Now()-lastRoiEndTime).IsLongerThan(wxTimeSpan::Milliseconds(500))) ))
+        {
+            if (!roi.size() || MyPoint(lastPoint-newPoint).ToDist_Manhattan())
+                roi.push_back(newPoint);
+            DrawRoi(true);
+            Update();
+			if(roi.size()>1 && (e.LeftDClick() ||  MyPoint(roi[0]-roi.back()).ToDistSqr() <= 2))
+			{
 				if (e.LeftDown() && !e.LeftDClick())
 					lastRoiEndTime = wxDateTime::Now();
 				OnRoi();
 			}
 		}
-		else {
-			if (MyPoint(oldMousePos) >= wxPoint(0,0)) {
+		else
+		{
+			if (MyPoint(oldMousePos) >= wxPoint(0,0))
+			{
 				// Restore previous drawings from the bmp:
-				if (roi.size()) {
+				if (roi.size())
+				{
 					MyPoint width = TO_BMP(oldMousePos - lastPoint);
 					MyPoint width_sign(width.x>0 ? 1:-1, width.y>0 ? 1:-1);
 					int penwidth = wxMax(dc.GetPen().GetWidth(),Preferences::GetColorContourBorderWidth())+1;
@@ -310,15 +320,17 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 				}
 				dc.Blit(TO_CANVAS(oldMousePos)-MyPoint(pointerSize)/2, pointerSize, &mdc, TO_BMP(oldMousePos)-MyPoint(pointerSize)/2);
 			}
-			if (inrange) {
-				if (roi.size()){
+			if (inrange)
+			{
+				if (roi.size())
+				{
 					dc.SetPen(wxPen(wxColour(Preferences::GetColorContourBorderColor()), Preferences::GetColorContourBorderWidth()));
 					dc.DrawLine(TO_CANVAS(lastPoint), TO_CANVAS(newPoint));
 					dc.DrawLine(TO_CANVAS(newPoint), TO_CANVAS(lastPoint));
 	//				dc.DrawLine(TO_CANVAS(roi[0]), TO_CANVAS(newPoint));
 	//				dc.DrawLine(TO_CANVAS(newPoint), TO_CANVAS(roi[0]));
 				}
-				dc.SetPen(wxPen(wxColour(Preferences::GetColorContourCornerColor()),1));
+				dc.SetPen(wxPen(wxColour(Preferences::GetColorContourPointColor()),1));
 				if ( roi.size()<2 || MyPoint(roi[0]-newPoint).ToDistSqr() > 2)
 					dc.SetBrush(*wxTRANSPARENT_BRUSH);
 				dc.DrawRectangle(TO_CANVAS(newPoint)-MyPoint(pointerSize)/2, pointerSize);
@@ -326,66 +338,80 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 			}
 		}
 	}
-	if (doingSelectContour){
+	if (doingSelectContour)
+	{
 		wxClientDC cdc(this);
 		wxBufferedDC dc(&cdc);
 		int minSeq = -1;
 		if (!e.Leaving())
 			minSeq = GetContourHit(newPoint);
-		if (minSeq != hoverContour){
+		if (minSeq != hoverContour)
+		{
 			if(hoverContour>=0)
 				DrawContour(&dc, topleft, img.contourArray[hoverContour], selectedContours[hoverContour]);
 			hoverContour = minSeq;
-			if(hoverContour>=0){
+			if(hoverContour>=0)
+			{
 				DrawContour(&dc, topleft, img.contourArray[hoverContour], !selectedContours[hoverContour]);
 			}
 		}
 		if (hoverContour>=0 && e.LeftDown())
 			OnSelectContour();
 	}
-	if (doingDragContour){
-		if (e.LeftDown()){
-			if((draggedContour = GetContourHit(newPoint))>=0){
+	if (doingDragContour)
+	{
+		if (e.LeftDown())
+		{
+			if((draggedContour = GetContourHit(newPoint))>=0)
+			{
 				draggedContourOrig = cvBoundingRect(img.contourArray[draggedContour],1);
 				draggedContourRect = draggedContourOrig;
 				dragStart = newPoint;
 				selectedContours[draggedContour] = selectedContours[draggedContour];
 			}
 		}
-		if (draggedContour>=0 && (e.Dragging() || e.LeftUp() || e.Entering())){
+		if (draggedContour>=0 && (e.Dragging() || e.LeftUp() || e.Entering()))
+		{
 			CvPoint shift = MyPoint(newPoint - dragStart).ToCvPoint();
 			CvRect newRect;
 			RestrictRectShift(shift, newRect, draggedContourRect, cvRect(0,0,imgwidth,imgheight));
-			if (MyPoint(shift)!=0){
+			if (MyPoint(shift)!=0)
+			{
 				ShiftContour(img.contourArray[draggedContour], shift);
 				dragStart = newPoint;
 				draggedContourRect = newRect;
                 wxSizeEvent dummy = wxSizeEvent();
                 OnSize(dummy);
 			}
-			if (!e.LeftIsDown()){
+			if (!e.LeftIsDown())
+			{
 				selectedContours[draggedContour] = !selectedContours[draggedContour];
 				OnDragContour();
 			}
 		}
 	}
-	if (doingRect) {
+	if (doingRect)
+	{
 		bool inrange = !e.Leaving() && MyPoint(newPoint) >= wxPoint(0,0) && MyPoint(newPoint) <= wxPoint(imgwidth, imgheight);
-		if (inrange){
+		if (inrange)
+		{
 			wxClientDC cdc(this);
 			wxBufferedDC dc(&cdc);
 			wxMemoryDC mdc(drawn);
-			if (e.LeftDown()){
+			if (e.LeftDown())
+			{
 				if (theRect.x >=0)
 					dc.Blit(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize(), &mdc, TO_BMP(theRect.GetTopLeft()));
 				theRect.SetTopLeft(newPoint);
 				theRect.SetBottomRight(newPoint);
 				drawingRect = true;
 			}
-			if (drawingRect && theRect.x>=0 && (e.Dragging() || e.LeftUp() || e.Entering())) {
+			if (drawingRect && theRect.x>=0 && (e.Dragging() || e.LeftUp() || e.Entering()))
+			{
 				dc.Blit(TO_CANVAS(theRect.GetTopLeft()), MyPoint(MyPoint(theRect.GetSize())*scale).ToSize(), &mdc, TO_BMP(theRect.GetTopLeft()));
 				theRect.SetBottomRight(newPoint);
-				if (!e.LeftIsDown()){
+				if (!e.LeftIsDown())
+				{
 					drawingRect = false;
 					OnRect();
 				}
@@ -395,28 +421,35 @@ void MyCanvas::OnMouse( wxMouseEvent& e )
 			}
 		}
 	}
-	if (doingDragVertex){
-		if (e.LeftDown()){
+	if (doingDragVertex)
+	{
+		if (e.LeftDown())
+		{
 			if(dv!=-1)
 				dv=dv;
-			if((dv = GetVertexHit(newPoint))!=-1){
+			if((dv = GetVertexHit(newPoint))!=-1)
+			{
 				dvOrig = MyPoint(newPoint).ToCvPoint();
 			}
 		}
-		else if (dv!=-1 && (e.Dragging() || e.LeftUp() || e.Entering())){
-			if (MyPoint(0,0)<=newPoint && MyPoint(imgwidth,imgheight)>=newPoint){
+		else if (dv!=-1 && (e.Dragging() || e.LeftUp() || e.Entering()))
+		{
+			if (MyPoint(0,0)<=newPoint && MyPoint(imgwidth,imgheight)>=newPoint)
+			{
 				CvPoint *p = (CvPoint*) cvGetSeqElem(img.contourArray[dv.x], dv.y);
 				p->x = newPoint.x;
 				p->y = newPoint.y;
                 wxSizeEvent dummy = wxSizeEvent();
                 OnSize(dummy);
 			}
-			if (!e.LeftIsDown()){
+			if (!e.LeftIsDown())
+			{
 				OnDragVertex();
 			}
 		}
 	}
-	if (MouseListener){
+	if (MouseListener)
+	{
 		e.m_x = newPoint.x;
 		e.m_y = newPoint.y;
 		MouseListener->OnMouse(e);
@@ -430,9 +463,11 @@ int MyCanvas::GetContourHit( wxPoint p )
 	int minSeq = -1, i=0;
 	double minDist,d;
 	CvSeq *seq = img.contours;
-	while(seq) {
+	while(seq)
+	{
 		d=cvPointPolygonTest(seq,cvPoint2D32f(p.x,p.y),1);
-		if (d>=0 && (minSeq<0 || d<minDist)){
+		if (d>=0 && (minSeq<0 || d<minDist))
+		{
 			minDist = d;
 			minSeq = i;
 		}
@@ -442,11 +477,14 @@ int MyCanvas::GetContourHit( wxPoint p )
 	return minSeq;
 }
 
-MyPoint MyCanvas::GetVertexHit(const MyPoint &p, int fuzz){
+MyPoint MyCanvas::GetVertexHit(const MyPoint &p, int fuzz)
+{
 	int i=0;
 	CvSeq *seq = img.contours;
-	while(seq) {
-		for (int j=0; j<seq->total; j++){
+	while(seq)
+	{
+		for (int j=0; j<seq->total; j++)
+		{
 			CvPoint *pp = (CvPoint*) cvGetSeqElem(seq, j);
 			if(MyPoint(MyPoint(pp) - p).ToDist_Manhattan()<=1)
 				return MyPoint(i,j);
@@ -480,7 +518,8 @@ void MyCanvas::BeginRoi()
 void MyCanvas::CancelRoi()
 {
 	doingRoi = false;
-	if (roi.size()){
+	if (roi.size())
+	{
 		roi.clear();
 		DrawRoi();
 		Refresh();
@@ -504,11 +543,13 @@ void MyCanvas::BeginDragContour()
 void MyCanvas::CancelDragContour()
 {
 	doingDragContour = false;
-	if (draggedContour>=0){
+	if (draggedContour>=0)
+	{
 		CvPoint shift = MyPoint(draggedContourOrig.x - draggedContourRect.x, draggedContourOrig.y-draggedContourRect.y).ToCvPoint();
 		CvRect newRect;
 		RestrictRectShift(shift, newRect, draggedContourRect, cvRect(0,0,imgwidth,imgheight));
-		if (MyPoint(shift)!=0){
+		if (MyPoint(shift)!=0)
+		{
 			ShiftContour(img.contourArray[draggedContour], shift);
 			Refresh();
 			Update();
@@ -531,7 +572,8 @@ void MyCanvas::BeginRect()
 void MyCanvas::CancelRect()
 {
 	doingRect = false;
-	if (theRect.x>=0){
+	if (theRect.x>=0)
+	{
 		wxClientDC cdc(this);
 		wxBufferedDC dc(&cdc);
 		wxMemoryDC mdc(drawn);
@@ -551,6 +593,7 @@ void MyCanvas::BeginDragVertex()
 	doingDragVertex = true;
 	dv = MyPoint(-1,-1);
 }
+
 void MyCanvas::CancelDragVertex()
 {
 	doingDragVertex = false;
@@ -562,6 +605,7 @@ void MyCanvas::CancelDragVertex()
 		Update();
 	}
 }
+
 void MyCanvas::OnDragVertex()
 {
 	doingDragVertex = false;
@@ -576,10 +620,12 @@ void MyCanvas::BeginSelectContour()
 	doingSelectContour = true;
 	hoverContour = -1;
 }
+
 void MyCanvas::CancelSelectContour()
 {
 	doingSelectContour = false;
-	if (hoverContour>=0 && hoverContour<(signed) img.contourArray.size()){
+	if (hoverContour>=0 && hoverContour<(signed) img.contourArray.size())
+	{
 		wxClientDC cdc(this);
 		wxBufferedDC dc(&cdc);
 		DrawContour(&dc, topleft, img.contourArray[hoverContour],selectedContours[hoverContour]);
@@ -595,12 +641,14 @@ void MyCanvas::OnSelectContour()
 	if (SelectContourListener)
 		SelectContourListener->OnSelectContour(hoverContour);
 }
+
 void MyCanvas::ResetSelectedContours()
 {
 	if(selectedContours)
 		delete[] selectedContours;
 	selectedContours = NULL;
-	if (img.contourArray.size()){
+	if (img.contourArray.size())
+	{
 		selectedContours = new bool[img.contourArray.size()];
 		for (unsigned int i=0; i<img.contourArray.size(); i++)
 			selectedContours[i] = false;

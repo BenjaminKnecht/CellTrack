@@ -91,7 +91,7 @@ public:
 	void SetImage(const ImagePlus& img_);
 	void DrawContours();
 	void DrawContour(wxDC *dc, wxPoint shift, CvSeq *seq, bool selected=false, int label=0);
-	static void DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift=wxPoint(0,0), wxRealPoint scale=wxRealPoint(1,1), bool selected=false, const wxColor *borderColor=NULL, int label=0, int width=3);
+	static void DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift=wxPoint(0,0), wxRealPoint scale=wxRealPoint(1,1), bool selected=false, bool drawBorder=true, const wxColor *borderColor=NULL, bool drawPoints=false, const wxColor *pointColor=NULL, int label=0, int width=3);
 	void SetContourSelection(int index, bool selected);
 
 };

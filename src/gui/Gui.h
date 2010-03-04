@@ -129,9 +129,14 @@ class MyFrame_ : public wxFrame
 		virtual void OnImportContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFindFeatures( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSubtractBackground( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnFluorescenceBorder( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnTopBoundary( wxCommandEvent& event ){ event.Skip(); }
-		virtual void OnBottomBoundary( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnBorder( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnPoints( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnOtherBorder( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnOtherPoints( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnTopBorder( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnTopPoints( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnBottomBorder( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnBottomPoints( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnMatchTemplate( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnCamShift( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnLKContours( wxCommandEvent& event ){ event.Skip(); }
@@ -997,27 +1002,31 @@ class PreferencesDialog_ : public wxDialog
 		wxPanel* m_panel6;
 		
 		wxStaticText* m_staticText111;
+		wxStaticText* m_staticText109;
 		wxStaticText* m_staticText112;
-		wxCheckBox* c_ColorContourBorderDraw;
+		wxStaticText* m_staticText106;
 		wxColourPickerCtrl* c_ColorContourBorderColor;
+		wxColourPickerCtrl* c_ColorContourPointColor;
 		wxSpinCtrl* c_ColorContourBorderWidth;
 		wxStaticText* m_staticText22;
 		wxColourPickerCtrl* c_ColorContourSelectedColor;
 		
-		wxCheckBox* c_ColorFContourBorderDraw;
+		
+		wxStaticText* m_staticText107;
 		wxColourPickerCtrl* c_ColorFContourBorderColor;
+		wxColourPickerCtrl* c_ColorFContourPointColor;
 		wxSpinCtrl* c_ColorFContourBorderWidth;
 		wxStaticText* m_staticText103;
 		wxColourPickerCtrl* c_ColorTContourBorderColor;
+		wxColourPickerCtrl* c_ColorTContourPointColor;
 		wxSpinCtrl* c_ColorTContourBorderWidth;
 		wxStaticText* m_staticText104;
 		wxColourPickerCtrl* c_ColorBContourBorderColor;
+		wxColourPickerCtrl* c_ColorBContourPointColor;
 		wxSpinCtrl* c_ColorBContourBorderWidth;
-		wxCheckBox* c_ColorContourCornerDraw;
-		wxColourPickerCtrl* c_ColorContourCornerColor;
-		wxSpinCtrl* c_ColorContourCornerWidth;
 		wxCheckBox* c_ColorContourPolygonFill;
 		wxColourPickerCtrl* c_ColorContourPolygonColor;
+		
 		
 		wxStaticText* m_staticText92;
 		wxColourPickerCtrl* c_ColorFeatureColor;
@@ -1034,7 +1043,7 @@ class PreferencesDialog_ : public wxDialog
 		
 	
 	public:
-		PreferencesDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 363,353 ), long style = wxDEFAULT_DIALOG_STYLE );
+		PreferencesDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack Preferences"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 480,480 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~PreferencesDialog_();
 	
 };

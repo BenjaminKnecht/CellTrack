@@ -37,9 +37,9 @@ public:
 
 	void ProcessImage( ImagePlus *img, int pos, int zPos );
 	static void ProcessStatic
-( int i, ImagePlus *img, ImagePlus *oimg, IplImage* &gray, IplImage* &ogray, CvPoint* &ps, CvPoint* &ops,
- float alpha, float beta, float gamma,
- float oalpha, float obeta, float ogamma, float oteta, float ozeta, float oomega,
- CvSize winsize, int scheme, CvTermCriteria criteria,
- bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool blur, bool oEarc_ready = false);
+    ( int i, ImagePlus *img, ImagePlus *oimg, IplImage* &gray, IplImage* &ogray, CvPoint* &ps, CvPoint* &ops,
+     float alpha, float beta, float gamma,
+     float oalpha, float obeta, float ogamma, float oteta, float ozeta, float oomega,
+     CvSize winsize, int scheme, CvTermCriteria criteria,
+     bool useAvailable, int &iterations, bool oready, bool freetemps, float* &oEarc, bool blur, bool oEarc_ready = false);
 };

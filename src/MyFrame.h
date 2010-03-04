@@ -115,9 +115,14 @@ public:
 	void OnCorrectContours( wxCommandEvent& event );
 
 	// Boundary View Menu
-	void OnFluorescenceBorder( wxCommandEvent& event );
-	void OnTopBoundary( wxCommandEvent& event );
-	void OnBottomBoundary( wxCommandEvent& event );
+	void OnBorder( wxCommandEvent& event );
+	void OnPoints( wxCommandEvent& event );
+	void OnOtherBorder( wxCommandEvent& event );
+	void OnOtherPoints( wxCommandEvent& event );
+	void OnTopBorder( wxCommandEvent& event );
+	void OnTopPoints( wxCommandEvent& event );
+	void OnBottomBorder( wxCommandEvent& event );
+	void OnBottomPoints( wxCommandEvent& event );
 
 	//Analysis menu
 	bool SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells);

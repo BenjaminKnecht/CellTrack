@@ -23,19 +23,24 @@ void NormalizeContoursPlugin::DoPreview()
 	cm->Redraw(false);
 }
 #include <vector>
-void NormalizeContoursPlugin::ProcessImage( ImagePlus *img ){
+void NormalizeContoursPlugin::ProcessImage( ImagePlus *img )
+{
 	ProcessStatic(img, sidebar->isMinLength->GetValue() ? sidebar->minLength->GetValue() : 0, sidebar->isMaxLength->GetValue() ? sidebar->maxLength->GetValue() : 0);
 }
-void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int maxLength ){
+
+void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int maxLength )
+{
 	CvSeq *seq;
 	//split long edges
-	if (maxLength){
+	if (maxLength)
+	{
 		for(int c=0; c<(int)img->contourArray.size(); c++){
 			seq = img->contourArray[c];
 			int n=seq->total;
 			wxPoint *ps = ContourToPointArray(seq);
 			std::vector<wxPoint> ps_;
-			for (int i=0; i<n; i++){
+			for (int i=0; i<n; i++)
+			{
 				int j = (i==n-1 ? 0 : i+1);
 				int dx = ps[j].x-ps[i].x;
 				int dy = ps[j].y-ps[i].y;
@@ -44,7 +49,8 @@ void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int 
 				if (dist <= maxLength)
 					continue;
 				float d=(dist - maxLength*(int)(dist/maxLength))/2;
-				while (d < dist){
+				while (d < dist)
+				{
 					int x = ps[i].x + (int) (d * dx / dist);
 					int y = ps[i].y + (int) (d * dy / dist);
 					if (x!=ps_.back().x || y!=ps_.back().y)
@@ -57,14 +63,17 @@ void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int 
 		}
 	}
 	//remove vertices that are too close
-	if (minLength){
-		for(int c=0; c<(int)img->contourArray.size(); c++){
+	if (minLength)
+	{
+		for(int c=0; c<(int)img->contourArray.size(); c++)
+		{
 			seq = img->contourArray[c];
 			int n=seq->total;
 			wxPoint *ps = ContourToPointArray(seq);
 			std::vector<wxPoint> ps_;
 			ps_.push_back(ps[0]);
-			for (int i=1; i<n; i++){
+			for (int i=1; i<n; i++)
+			{
 				int j = i-1;
 				int dx = ps[j].x-ps_.back().x;
 				int dy = ps[j].y-ps_.back().y;

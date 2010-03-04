@@ -45,9 +45,14 @@ public:
 
 	MyCapture_Confocal* m_capture;
 
-    bool drawFluorescence;
+    bool drawBorder;
+    bool drawPoints;
+    bool drawOtherBorder;
+    bool drawOtherPoints;
 	bool drawTopBorder;
+	bool drawTopPoints;
 	bool drawBottomBorder;
+	bool drawBottomPoints;
 
 public:
 	CvSeq *contours;

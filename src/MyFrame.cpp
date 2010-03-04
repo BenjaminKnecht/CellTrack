@@ -436,6 +436,12 @@ void MyFrame::OnFirst( wxCommandEvent& event )
 void MyFrame::OnFluorescence( wxCommandEvent &event )
 {
     cm->ShowFluorescence(!(cm->viewFluorescence));
+    /*if(hotplug)
+    {
+        if(hotplug->OnFluorescence())
+        {
+        }
+    }*/
     OnNavigate();
 }
 
@@ -759,33 +765,69 @@ void MyFrame::OnImportContours(wxCommandEvent& e )
 #include <wx/aboutdlg.h>
 void MyFrame::OnAbout(wxCommandEvent &e){
 	wxAboutDialogInfo i;
-	i.SetName(_T("CellTrack"));
-	i.SetVersion(_T("1.1"));
-	i.SetDescription(_T("An Open-Source Software for Cell Tracking and Motility Analysis"));
-	i.SetCopyright(_T("(C) 2008 Ahmet Sacan <sacan@cse.ohio-state.edu>"));
+	i.SetName(_T("Confocal CellTrack"));
+	i.SetVersion(_T("0.5-1.1"));
+	i.SetDescription(_T("An Open-Source Software for Cell Tracking and Motility Analysis on Confocal Data"));
+	i.SetCopyright(_T("(C) 2008 Ahmet Sacan <sacan@cse.ohio-state.edu>, extended by Benjamin Knecht <bknecht@ethz.ch>"));
 	i.SetWebSite(_T("http://db.cse.ohio-state.edu/CellTrack"));
 	wxAboutBox(i);
 }
 void MyFrame::OnHelp(wxCommandEvent &e){
 	wxLaunchDefaultBrowser(_T("http://db.cse.ohio-state.edu/CellTrack"));
 }
-void MyFrame::OnFluorescenceBorder( wxCommandEvent& event )
+
+void MyFrame::OnBorder( wxCommandEvent& event )
 {
-    cm->drawFluorescence = menu_contour_views->FindItemByPosition(0)->IsChecked();
+    cm->drawBorder = menu_contour_views->FindItemByPosition(0)->IsChecked();
     canvas->ResetCanvas();
 	canvas->RefreshContours();
 }
 
-void MyFrame::OnTopBoundary( wxCommandEvent& event )
+void MyFrame::OnPoints( wxCommandEvent& event )
 {
-    cm->drawTopBorder = menu_contour_views->FindItemByPosition(1)->IsChecked();
+    cm->drawPoints = menu_contour_views->FindItemByPosition(1)->IsChecked();
     canvas->ResetCanvas();
 	canvas->RefreshContours();
 }
 
-void MyFrame::OnBottomBoundary( wxCommandEvent& event )
+void MyFrame::OnOtherBorder( wxCommandEvent& event )
 {
-    cm->drawBottomBorder = menu_contour_views->FindItemByPosition(2)->IsChecked();
+    cm->drawOtherBorder = menu_contour_views->FindItemByPosition(3)->IsChecked();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
+}
+
+void MyFrame::OnOtherPoints( wxCommandEvent& event )
+{
+    cm->drawOtherPoints = menu_contour_views->FindItemByPosition(4)->IsChecked();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
+}
+
+void MyFrame::OnTopBorder( wxCommandEvent& event )
+{
+    cm->drawTopBorder = menu_contour_views->FindItemByPosition(6)->IsChecked();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
+}
+
+void MyFrame::OnTopPoints( wxCommandEvent& event )
+{
+    cm->drawTopPoints = menu_contour_views->FindItemByPosition(7)->IsChecked();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
+}
+
+void MyFrame::OnBottomBorder( wxCommandEvent& event )
+{
+    cm->drawBottomBorder = menu_contour_views->FindItemByPosition(9)->IsChecked();
+    canvas->ResetCanvas();
+	canvas->RefreshContours();
+}
+
+void MyFrame::OnBottomPoints( wxCommandEvent& event )
+{
+    cm->drawBottomPoints = menu_contour_views->FindItemByPosition(10)->IsChecked();
     canvas->ResetCanvas();
 	canvas->RefreshContours();
 }

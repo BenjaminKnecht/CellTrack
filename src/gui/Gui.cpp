@@ -156,17 +156,45 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_menubar1->Append( menu_contours, _("Detection") );
 	
 	menu_contour_views = new wxMenu();
-	wxMenuItem* m_fluorescenceBoundary;
-	m_fluorescenceBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Fluorescence Boundaries") ) , wxEmptyString, wxITEM_CHECK );
-	menu_contour_views->Append( m_fluorescenceBoundary );
+	wxMenuItem* m_currentBoundary;
+	m_currentBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show this layer's boundaries") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_currentBoundary );
+	m_currentBoundary->Check( true );
+	
+	wxMenuItem* m_currentBoundaryPoints;
+	m_currentBoundaryPoints = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show this layer's boundary points") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_currentBoundaryPoints );
+	m_currentBoundaryPoints->Check( true );
+	
+	menu_contour_views->AppendSeparator();
+	
+	wxMenuItem* m_otherBoundary;
+	m_otherBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show other layer's boundaries") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_otherBoundary );
+	
+	wxMenuItem* m_otherBoundaryPoints;
+	m_otherBoundaryPoints = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show other layer's boundary points") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_otherBoundaryPoints );
+	
+	menu_contour_views->AppendSeparator();
 	
 	wxMenuItem* m_topBoundary;
-	m_topBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Top Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	m_topBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show top boundaries") ) , wxEmptyString, wxITEM_CHECK );
 	menu_contour_views->Append( m_topBoundary );
 	
+	wxMenuItem* m_topBoundaryPoints;
+	m_topBoundaryPoints = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show top boundary points") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_topBoundaryPoints );
+	
+	menu_contour_views->AppendSeparator();
+	
 	wxMenuItem* m_bottomBoundary;
-	m_bottomBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show Bottom Boundary") ) , wxEmptyString, wxITEM_CHECK );
+	m_bottomBoundary = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show bottom boundaries") ) , wxEmptyString, wxITEM_CHECK );
 	menu_contour_views->Append( m_bottomBoundary );
+	
+	wxMenuItem* m_bottomBoundaryPoints;
+	m_bottomBoundaryPoints = new wxMenuItem( menu_contour_views, wxID_ANY, wxString( _("Show bottom boundary points") ) , wxEmptyString, wxITEM_CHECK );
+	menu_contour_views->Append( m_bottomBoundaryPoints );
 	
 	m_menubar1->Append( menu_contour_views, _("Boundary View") );
 	
@@ -452,9 +480,14 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem52->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportContours ) );
 	this->Connect( m_menuItem14->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Connect( m_menuItem10->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
-	this->Connect( m_fluorescenceBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
-	this->Connect( m_topBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBoundary ) );
-	this->Connect( m_bottomBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBoundary ) );
+	this->Connect( m_currentBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBorder ) );
+	this->Connect( m_currentBoundaryPoints->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPoints ) );
+	this->Connect( m_otherBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOtherBorder ) );
+	this->Connect( m_otherBoundaryPoints->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOtherPoints ) );
+	this->Connect( m_topBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBorder ) );
+	this->Connect( m_topBoundaryPoints->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopPoints ) );
+	this->Connect( m_bottomBoundary->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBorder ) );
+	this->Connect( m_bottomBoundaryPoints->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomPoints ) );
 	this->Connect( m_menuItem38->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnMatchTemplate ) );
 	this->Connect( m_menuItem39->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCamShift ) );
 	this->Connect( m_menuItem382->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnLKContours ) );
@@ -536,9 +569,14 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportContours ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFindFeatures ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnSubtractBackground ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnFluorescenceBorder ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBoundary ) );
-	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBoundary ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBorder ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPoints ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOtherBorder ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnOtherPoints ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopBorder ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnTopPoints ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomBorder ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnBottomPoints ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnMatchTemplate ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnCamShift ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnLKContours ) );
@@ -3429,7 +3467,7 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	sbSizer51 = new wxStaticBoxSizer( new wxStaticBox( m_panel6, wxID_ANY, _("Boundaries") ), wxVERTICAL );
 	
 	wxFlexGridSizer* fgSizer4;
-	fgSizer4 = new wxFlexGridSizer( 2, 3, 0, 0 );
+	fgSizer4 = new wxFlexGridSizer( 2, 4, 0, 0 );
 	fgSizer4->SetFlexibleDirection( wxBOTH );
 	fgSizer4->SetNonFlexibleGrowMode( wxFLEX_GROWMODE_SPECIFIED );
 	
@@ -3440,22 +3478,28 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	m_staticText111->Wrap( -1 );
 	fgSizer4->Add( m_staticText111, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
+	m_staticText109 = new wxStaticText( m_panel6, wxID_ANY, _("Corner point color"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText109->Wrap( -1 );
+	fgSizer4->Add( m_staticText109, 0, wxALL, 5 );
+	
 	m_staticText112 = new wxStaticText( m_panel6, wxID_ANY, _("Width"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText112->Wrap( -1 );
 	fgSizer4->Add( m_staticText112, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 5 );
 	
-	c_ColorContourBorderDraw = new wxCheckBox( m_panel6, wxID_ANY, _("Draw borders"), wxDefaultPosition, wxDefaultSize, 0 );
-	c_ColorContourBorderDraw->SetValue(true);
-	
-	fgSizer4->Add( c_ColorContourBorderDraw, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
+	m_staticText106 = new wxStaticText( m_panel6, wxID_ANY, _("DIC borders"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText106->Wrap( -1 );
+	fgSizer4->Add( m_staticText106, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	c_ColorContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 0, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
 	fgSizer4->Add( c_ColorContourBorderColor, 0, wxALL, 5 );
 	
+	c_ColorContourPointColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 0, 128, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
+	fgSizer4->Add( c_ColorContourPointColor, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
 	c_ColorContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 10, 3 );
 	fgSizer4->Add( c_ColorContourBorderWidth, 0, wxALL, 5 );
 	
-	m_staticText22 = new wxStaticText( m_panel6, wxID_ANY, _("    Selected borders"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText22 = new wxStaticText( m_panel6, wxID_ANY, _("Selected borders"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText22->Wrap( -1 );
 	fgSizer4->Add( m_staticText22, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
@@ -3465,47 +3509,47 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	
 	fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 	
-	c_ColorFContourBorderDraw = new wxCheckBox( m_panel6, wxID_ANY, _("Draw Fluorescence Borders"), wxDefaultPosition, wxDefaultSize, 0 );
-	c_ColorFContourBorderDraw->SetValue(true);
 	
-	fgSizer4->Add( c_ColorFContourBorderDraw, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
+	
+	m_staticText107 = new wxStaticText( m_panel6, wxID_ANY, _("Fluorescence borders"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText107->Wrap( -1 );
+	fgSizer4->Add( m_staticText107, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	c_ColorFContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 0, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer4->Add( c_ColorFContourBorderColor, 0, wxALL, 5 );
 	
-	c_ColorFContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	c_ColorFContourPointColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 128, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
+	fgSizer4->Add( c_ColorFContourPointColor, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	c_ColorFContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 10, 3 );
 	fgSizer4->Add( c_ColorFContourBorderWidth, 0, wxALL, 5 );
 	
-	m_staticText103 = new wxStaticText( m_panel6, wxID_ANY, _("    Top Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText103 = new wxStaticText( m_panel6, wxID_ANY, _("Top Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText103->Wrap( -1 );
 	fgSizer4->Add( m_staticText103, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	c_ColorTContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 0, 139, 23 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer4->Add( c_ColorTContourBorderColor, 0, wxALL, 5 );
 	
-	c_ColorTContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	c_ColorTContourPointColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 128, 255, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
+	fgSizer4->Add( c_ColorTContourPointColor, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	c_ColorTContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 10, 3 );
 	fgSizer4->Add( c_ColorTContourBorderWidth, 0, wxALL, 5 );
 	
-	m_staticText104 = new wxStaticText( m_panel6, wxID_ANY, _("    Bottom Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText104 = new wxStaticText( m_panel6, wxID_ANY, _("Bottom Slide Border"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText104->Wrap( -1 );
 	fgSizer4->Add( m_staticText104, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
-	c_ColorBContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 36, 198, 0 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
+	c_ColorBContourBorderColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 0, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE );
 	fgSizer4->Add( c_ColorBContourBorderColor, 0, wxALL, 5 );
 	
-	c_ColorBContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, wxSP_ARROW_KEYS, 0, 10, 3 );
+	c_ColorBContourPointColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 128, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
+	fgSizer4->Add( c_ColorBContourPointColor, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	
+	c_ColorBContourBorderWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 10, 3 );
 	fgSizer4->Add( c_ColorBContourBorderWidth, 0, wxALL, 5 );
-	
-	c_ColorContourCornerDraw = new wxCheckBox( m_panel6, wxID_ANY, _("Show corner points"), wxDefaultPosition, wxDefaultSize, 0 );
-	c_ColorContourCornerDraw->SetValue(true);
-	
-	fgSizer4->Add( c_ColorContourCornerDraw, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
-	
-	c_ColorContourCornerColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 0, 128, 255 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
-	fgSizer4->Add( c_ColorContourCornerColor, 0, wxALL, 5 );
-	
-	c_ColorContourCornerWidth = new wxSpinCtrl( m_panel6, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 0, 10, 3 );
-	fgSizer4->Add( c_ColorContourCornerWidth, 0, wxALL, 5 );
 	
 	c_ColorContourPolygonFill = new wxCheckBox( m_panel6, wxID_ANY, _("Fill inside cells"), wxDefaultPosition, wxDefaultSize, 0 );
 	
@@ -3513,6 +3557,9 @@ PreferencesDialog_::PreferencesDialog_( wxWindow* parent, wxWindowID id, const w
 	
 	c_ColorContourPolygonColor = new wxColourPickerCtrl( m_panel6, wxID_ANY, wxColour( 255, 255, 128 ), wxDefaultPosition, wxDefaultSize, wxCLRP_DEFAULT_STYLE|wxCLRP_SHOW_LABEL );
 	fgSizer4->Add( c_ColorContourPolygonColor, 0, wxALL, 5 );
+	
+	
+	fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
 	
 	
 	fgSizer4->Add( 0, 0, 1, wxEXPAND, 5 );
