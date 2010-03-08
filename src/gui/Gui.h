@@ -74,6 +74,7 @@ class MyFrame_ : public wxFrame
 		wxMenu* menu_analyze;
 		wxMenu* m_menu4;
 		wxMenu* m_menu5;
+		wxMenu* m_menu6;
 		wxMenu* m_menu41;
 		wxMenu* m_menu2;
 		wxMenu* m_menu1;
@@ -147,6 +148,9 @@ class MyFrame_ : public wxFrame
 		virtual void OnPlotArea( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPlotAreaDiff( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportAreaData( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnPlotVolume( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnPlotVolumeDiff( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnExportVolumeData( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPlotDeformation( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportDeformationData( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewTrackImage( wxCommandEvent& event ){ event.Skip(); }
@@ -1078,6 +1082,8 @@ class ConfocalDialog_ : public wxDialog
 	
 	protected:
 		wxStaticText* m_staticText102;
+		wxStaticText* m_staticText109;
+		wxStaticText* m_staticText110;
 		wxStaticText* m_staticText106;
 		wxStdDialogButtonSizer* m_sdbSizer2;
 		wxButton* m_sdbSizer2OK;
@@ -1086,8 +1092,10 @@ class ConfocalDialog_ : public wxDialog
 	public:
 		wxStaticText* m_staticText101;
 		wxSpinCtrl* m_zslides;
+		wxTextCtrl* m_deltaZ;
+		wxTextCtrl* m_calibration;
 		wxCheckBox* m_fluorescence;
-		ConfocalDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load confocal images"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 250,200 ), long style = wxDEFAULT_DIALOG_STYLE );
+		ConfocalDialog_( wxWindow* parent, wxWindowID id = wxID_ANY, const wxString& title = _("CellTrack::Load confocal images"), const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxSize( 300,280 ), long style = wxDEFAULT_DIALOG_STYLE );
 		~ConfocalDialog_();
 	
 };

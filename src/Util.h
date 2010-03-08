@@ -18,7 +18,6 @@
 bool Config_ReadBool( const wxConfigBase *config, const wxString &key, bool defaultValue );
 
 #include <wx/wx.h>
-long wxString2long( const wxString &s );
 
 #include <cxcore.h>
 #define cvImageSize(x)	cvSize(x->width, x->height)
@@ -44,6 +43,7 @@ int GetContourCount(CvSeq *seq);
 		listbox->Select(index);
 
 long wxStringToLong(const wxString &s);
+double wxStringToDouble(const wxString &s);
 
 #define WXFORMAT	wxString::Format
 

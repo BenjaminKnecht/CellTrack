@@ -1,15 +1,10 @@
 #include "Util.h"
 #include "string.h"
 
-bool Config_ReadBool( const wxConfigBase *config, const wxString &key, bool defaultValue ) {
+bool Config_ReadBool( const wxConfigBase *config, const wxString &key, bool defaultValue )
+{
 	config->Read(key, &defaultValue);
 	return defaultValue;
-}
-long wxString2long( const wxString &s )
-{
-	long l;
-	s.ToLong(&l);
-	return l;
 }
 
 bool cvSizeEquals( const CvSize& p, const CvSize& q )
@@ -64,6 +59,14 @@ long wxStringToLong( const wxString& s )
 	s.ToLong(&val);
 	return val;
 }
+
+double wxStringToDouble( const wxString& s )
+{
+	double val;
+	s.ToDouble(&val);
+	return val;
+}
+
 wxRealPoint GetImageScaling(int width, int height, int towidth, int toheight){
 	wxRealPoint scale;
 	wxSize newsize(0,0);

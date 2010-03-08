@@ -28,6 +28,8 @@ void CaptureManager::Reset(){
 	fps = 0;
 	pos = 0;
 	zPos = 0;
+	deltaZ = 0.0;
+	calibration = 0.0;
 	loadedImgs = 0;
 	size = cvSize(0, 0);
 	img.ReleaseAll();
@@ -67,9 +69,11 @@ bool CaptureManager::OpenMovie( const wxArrayString& files )
 	return OpenMovie_initialize(capture);
 }
 
-bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence)
+bool CaptureManager::OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence, double delta, double calib)
 {
     Reset();
+    deltaZ = delta;
+    calibration = calib;
     m_capture = new MyCapture_Confocal(files, zSlides, fluorescence);
     return OpenConfocal_initialize();
 }
@@ -559,6 +563,48 @@ std::vector<float> CaptureManager::GetAreaDiff(int c, float &avgDiff)
 	return diff;
 }
 
+std::vector<float> CaptureManager::GetVolumes(int c, float &avgVolume)
+{
+	std::vector<float> v(frameCount, 0.0);
+	int goodSteps = 0;
+	float totalVolume = 0.0;
+    for (int i=0; i<frameCount; i++)
+    {
+        float frameVolume = 0.0;
+        for (int j=0; j<slideCount-1; j++)
+        {
+            if (Access(i,j, false, true)->contourArray.size() > c && Access(i,j+1, false, true)->contourArray.size() > c)
+            {
+                float area1 = calibration*calibration*fabs(cvContourArea(Access(i,j, false, true)->contourArray[c]));
+                float area2 = calibration*calibration*fabs(cvContourArea(Access(i,j+1, false, true)->contourArray[c]));
+                frameVolume += deltaZ*(area1 + area2)/2.0f;
+            }
+        }
+        goodSteps++;
+        totalVolume += (v[i] = frameVolume);
+	}
+	avgVolume = (goodSteps ? totalVolume/goodSteps : 0);
+	return v;
+}
+
+std::vector<float> CaptureManager::GetVolumeDiff(int c, float &avgDiff)
+{
+	std::vector<float> v = GetVolumes(c, avgDiff);
+	std::vector<float> diff(frameCount-1, 0.0);
+	double totalDiff = 0;
+	int goodSteps = 0;
+	for (int i=0; i<frameCount-1; i++)
+	{
+		if (Access(i,0, false, true)->contourArray.size() > c)
+		{
+			goodSteps++;
+			totalDiff += (diff[i] = v[i+1]-v[i]);
+		}
+	}
+	avgDiff = (goodSteps ? totalDiff/goodSteps : 0);
+	return diff;
+}
+
 #include "FindContoursPlugin.h"
 std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef)
 {
@@ -941,6 +987,36 @@ bool CaptureManager::SaveAreaData(const char* file)
 		}
 	}
 	fclose(fp);
+	return true;
+}
+
+bool CaptureManager::SaveVolumeData(const char* file)
+{
+	std::ofstream outfile;
+	outfile.open(file, std::ofstream::out);
+	if (!outfile)
+	{
+		wxLogError(_T("Unable to open file %s"), file);
+		return false;
+	}
+
+	int numContours = Access(0,0,false)->contourArray.size();
+	outfile << "#width: " << size.width << ", height: " << size.height << ", frameCount: " << frameCount << ", fps: " << fps << std::endl;
+	outfile << "#cellCount: " << numContours << std::endl;
+	for (int c=0; c<numContours; c++)
+	{
+		CvSeq *oseq = Access(0,0,false)->contourArray[c];
+		int np = oseq->total;
+		float avgVolume;
+		std::vector<float> volumes = GetVolumes(c, avgVolume);
+
+		outfile << "#Cell: " << c+1 << ", pointCount: " << np << ", avgVolume: " << avgVolume << std::endl;
+		for (int i=0; i<volumes.size(); i++)
+		{
+			outfile << volumes[i] << std::endl;;
+		}
+	}
+	outfile.close();
 	return true;
 }
 

@@ -248,6 +248,21 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	
 	menu_analyze->Append( -1, _("Cell Area"), m_menu5 );
 	
+	m_menu6 = new wxMenu();
+	wxMenuItem* m_menuItem59;
+	m_menuItem59 = new wxMenuItem( m_menu6, wxID_ANY, wxString( _("Plot volume") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu6->Append( m_menuItem59 );
+	
+	wxMenuItem* m_menuItem60;
+	m_menuItem60 = new wxMenuItem( m_menu6, wxID_ANY, wxString( _("Plot change in volume") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu6->Append( m_menuItem60 );
+	
+	wxMenuItem* m_menuItem61;
+	m_menuItem61 = new wxMenuItem( m_menu6, wxID_ANY, wxString( _("Export volume data") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu6->Append( m_menuItem61 );
+	
+	menu_analyze->Append( -1, _("Cell Volume"), m_menu6 );
+	
 	m_menu41 = new wxMenu();
 	wxMenuItem* m_menuItem3831;
 	m_menuItem3831 = new wxMenuItem( m_menu41, wxID_ANY, wxString( _("Plot deformation") ) , wxEmptyString, wxITEM_NORMAL );
@@ -498,6 +513,9 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem391->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotArea ) );
 	this->Connect( m_menuItem58->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotAreaDiff ) );
 	this->Connect( m_menuItem57->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportAreaData ) );
+	this->Connect( m_menuItem59->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotVolume ) );
+	this->Connect( m_menuItem60->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotVolumeDiff ) );
+	this->Connect( m_menuItem61->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportVolumeData ) );
 	this->Connect( m_menuItem3831->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotDeformation ) );
 	this->Connect( m_menuItem561->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportDeformationData ) );
 	this->Connect( m_menuItem41->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrackImage ) );
@@ -587,6 +605,9 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotArea ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotAreaDiff ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportAreaData ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotVolume ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotVolumeDiff ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportVolumeData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnPlotDeformation ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportDeformationData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrackImage ) );
@@ -3674,19 +3695,33 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	
 	m_staticText102 = new wxStaticText( this, wxID_ANY, _("Number of Z slides:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText102->Wrap( -1 );
-	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer40->Add( m_staticText102, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_zslides = new wxSpinCtrl( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 100, 30 );
-	fgSizer40->Add( m_zslides, 0, wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
+	fgSizer40->Add( m_zslides, 0, wxALL, 5 );
+	
+	m_staticText109 = new wxStaticText( this, wxID_ANY, _("Distance between slides (μm)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText109->Wrap( -1 );
+	fgSizer40->Add( m_staticText109, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_deltaZ = new wxTextCtrl( this, wxID_ANY, _("0.25"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
+	fgSizer40->Add( m_deltaZ, 0, wxALL, 5 );
+	
+	m_staticText110 = new wxStaticText( this, wxID_ANY, _("Calibration (μm/px)"), wxDefaultPosition, wxDefaultSize, 0 );
+	m_staticText110->Wrap( -1 );
+	fgSizer40->Add( m_staticText110, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	
+	m_calibration = new wxTextCtrl( this, wxID_ANY, _("0.213"), wxDefaultPosition, wxSize( 50,-1 ), 0 );
+	fgSizer40->Add( m_calibration, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_staticText106 = new wxStaticText( this, wxID_ANY, _("Fluorescence image:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText106->Wrap( -1 );
-	fgSizer40->Add( m_staticText106, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer40->Add( m_staticText106, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	m_fluorescence = new wxCheckBox( this, wxID_ANY, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0 );
 	m_fluorescence->SetValue(true);
 	
-	fgSizer40->Add( m_fluorescence, 0, wxALIGN_CENTER_HORIZONTAL|wxALIGN_CENTER_VERTICAL|wxALL, 5 );
+	fgSizer40->Add( m_fluorescence, 0, wxALIGN_CENTER_VERTICAL|wxALL, 5 );
 	
 	bSizer60->Add( fgSizer40, 0, wxEXPAND, 5 );
 	

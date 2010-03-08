@@ -49,6 +49,7 @@ public:
 	bool ShowsCanvas2(){ return showsCanvas2; }
 	virtual int GetScope() { return -1; } //-1:None, 0:current-frame, 1:all-frames, 2:t-direction, 3:z-direction
 	virtual int GetScope2() { return -1; } //-1:None, 0:normal-frame, 1:fluorescence-frames, 2:both
+	virtual void OnFluorescence() {}
 	virtual void DoPreview(){}
 	virtual void OnEndPreview(); //called when the preview option is switched from on to off.
 	virtual void OnMouse( wxMouseEvent& event ){}

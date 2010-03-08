@@ -18,6 +18,7 @@ public:
 	ImproveContoursPlugin( wxWindow* parent_, MyFrame *win_ );
 	~ImproveContoursPlugin() { if(gray) cvReleaseImage( &gray ); }
 	static string GetStaticName() { return "ImproveContours"; }
+	virtual void OnFluorescence();
 	virtual int GetScope();
 	virtual int GetScope2();
 	virtual bool IsPreviewOn();

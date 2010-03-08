@@ -53,6 +53,8 @@ private:
 	wxTimer *timer;
 	bool loaded;
 	int m_zslides;
+	double m_deltaZ;
+	double m_calibration;
 	bool loadFluorescence;
 
 	wxString getCWD();
@@ -129,6 +131,8 @@ public:
 	void OnPlotSpeed( wxCommandEvent& event );
 	void OnPlotArea( wxCommandEvent& event );
 	void OnPlotAreaDiff( wxCommandEvent& event );
+	void OnPlotVolume( wxCommandEvent& event );
+	void OnPlotVolumeDiff( wxCommandEvent& event );
 	void OnPlotDeformation( wxCommandEvent& event );
 	void OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &));
 	void OnViewTrackImage(wxCommandEvent &e);
@@ -141,6 +145,7 @@ public:
 	void OnExportTrajectoryData(wxCommandEvent &e);
 	void OnExportSpeedData(wxCommandEvent &e);
 	void OnExportAreaData(wxCommandEvent &e);
+	void OnExportVolumeData(wxCommandEvent &e);
 	void OnExportDeformationData(wxCommandEvent &e);
 
 	void OnImportTrackData(wxCommandEvent &e);

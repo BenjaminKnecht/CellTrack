@@ -31,6 +31,8 @@ public:
 	int offset;
 	int pos;
 	int zPos;
+	double deltaZ;
+	double calibration;
 	bool hasFluorescence;
 	bool viewFluorescence;
 	MyCanvas *canvas;
@@ -67,7 +69,7 @@ public:
 	MyCanvas* GetCanvas();
 	bool OpenMovie(const char* avi);
 	bool OpenMovie(const wxArrayString &files);
-	bool OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence);
+	bool OpenConfocal(const wxArrayString &files, int zSlides, bool fluorescence, double delta, double calib);
 	bool SaveMovie(const char* avi);
 	int GetFrameCount();
 	CvSize GetSize();
@@ -100,6 +102,7 @@ public:
 	bool SaveTrajectoryData(const char* file);
 	bool SaveSpeedData(const char* file);
 	bool SaveAreaData(const char* file);
+	bool SaveVolumeData(const char* file);
 	bool SaveDeformationData(const char* file);
 	bool ImportTrackData(const char* file);
 	bool ImportContours(const char* file);
@@ -110,6 +113,8 @@ public:
 	std::vector<float> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object
 	std::vector<float> GetAreas(int c, float &avgArea); //get areas of cth object
 	std::vector<float> GetAreaDiff(int c, float &avgDiff);
+	std::vector<float> GetVolumes(int c, float &avgVolume); //get volumes of cth object
+	std::vector<float> GetVolumeDiff(int c, float &avgDiff);
 	std::vector<float> GetDeformation(int c, float &avgDef);
 
 	void Resize(int width, int height, int method);

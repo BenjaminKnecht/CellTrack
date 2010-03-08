@@ -93,6 +93,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	getCWD();
 	imgDir = config->Read(_T("LastFilepath"),cwd);
 	m_zslides = config->Read(_T("SliceNumber"), 33);
+    config->Read(_T("SliceDistance"), &m_deltaZ, 0.25);
+	config->Read(_T("Calibration"), &m_calibration, 0.213);
 	loadFluorescence = Config_ReadBool(config,_T("LoadFluorescence"), true);
 }
 
@@ -197,11 +199,15 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
         if (!files.GetCount())
             return;
         ConfocalDialog_ w(this);
-        w.m_fluorescence->SetValue(loadFluorescence);
         w.m_zslides->SetValue(m_zslides);
+        w.m_deltaZ->SetValue(wxString::Format(_T("%f"), m_deltaZ));
+        w.m_calibration->SetValue(wxString::Format(_T("%f"), m_calibration));
+        w.m_fluorescence->SetValue(loadFluorescence);
         if(w.ShowModal() == wxID_OK)
         {
             m_zslides = w.m_zslides->GetValue();
+            m_deltaZ = wxStringToDouble(w.m_deltaZ->GetValue());
+            m_calibration = wxStringToDouble(w.m_calibration->GetValue());
             loadFluorescence = w.m_fluorescence->GetValue();
         }
         else
@@ -209,27 +215,34 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
         while (files.GetCount()%((loadFluorescence?2:1)*m_zslides) != 0)
         {
             ConfocalDialog_ v(this);
-            v.m_zslides->SetValue(m_zslides);
             v.m_fluorescence->SetValue(loadFluorescence);
-            if(w.ShowModal() == wxID_OK)
+            v.m_deltaZ->SetValue(wxString::Format(_T("%f"), m_deltaZ));
+            v.m_calibration->SetValue(wxString::Format(_T("%f"), m_calibration));
+            v.m_zslides->SetValue(m_zslides);
+
+            if(v.ShowModal() == wxID_OK)
             {
-                m_zslides = w.m_zslides->GetValue();
-                loadFluorescence = w.m_fluorescence->GetValue();
+                m_zslides = v.m_zslides->GetValue();
+                m_deltaZ = wxStringToDouble(v.m_deltaZ->GetValue());
+                m_calibration = wxStringToDouble(v.m_calibration->GetValue());
+                loadFluorescence = v.m_fluorescence->GetValue();
             }
             else
                 return;
         }
         config->Write(_T("SliceNumber"), m_zslides);
+        config->Write(_T("SliceDistance"), m_deltaZ);
+        config->Write(_T("Calibration"), m_calibration);
         config->Write(_T("LoadFluorescence"), loadFluorescence);
         wxBeginBusyCursor();
-            if(cm->OpenConfocal(files, m_zslides, loadFluorescence))
-            {
-                m_slider2->Show();
-                Layout();
-                if (loadFluorescence)
-                    m_fluorescence->Enable();
-                OnNewMovieOpened();
-            }
+        if(cm->OpenConfocal(files, m_zslides, loadFluorescence, m_deltaZ, m_calibration))
+        {
+            m_slider2->Show();
+            Layout();
+            if (loadFluorescence)
+                m_fluorescence->Enable();
+            OnNewMovieOpened();
+        }
         wxEndBusyCursor();
     }
 }
@@ -436,12 +449,8 @@ void MyFrame::OnFirst( wxCommandEvent& event )
 void MyFrame::OnFluorescence( wxCommandEvent &event )
 {
     cm->ShowFluorescence(!(cm->viewFluorescence));
-    /*if(hotplug)
-    {
-        if(hotplug->OnFluorescence())
-        {
-        }
-    }*/
+    if(hotplug)
+        hotplug->OnFluorescence();
     OnNavigate();
 }
 
@@ -584,9 +593,11 @@ void MyFrame::ShowCanvas2(bool show){
 	}
 }
 //---------------------- Analysis ------------------------------
-bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells){
+bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mpWindow* &p, int &numCells)
+{
 	numCells=cm->Access(0,0,false,true)->contourArray.size();
-	if (!numCells){
+	if (!numCells)
+	{
 		wxLogError(_T("No cells in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
@@ -616,11 +627,13 @@ void MyFrame::OnPlotSpeed( wxCommandEvent& e )
 	pd->ShowModal();
 	delete pd;
 }
+
 void MyFrame::OnPlotArea( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
 	if(!SetupCellPlot(_T("Cell Area"), _T("area (pixel^2)"), pd, p, numCells)) return;
-	for (int i=0; i<numCells; i++){
+	for (int i=0; i<numCells; i++)
+	{
 		float avgArea;
 		std::vector<float> areas = cm->GetAreas(i, avgArea);
 		wxString name = wxString::Format(_T("Cell-%d (avgArea=%.1f)"), i+1, avgArea);
@@ -633,6 +646,7 @@ void MyFrame::OnPlotArea( wxCommandEvent& e )
 	pd->ShowModal();
 	delete pd;
 }
+
 void MyFrame::OnPlotAreaDiff( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
@@ -650,6 +664,45 @@ void MyFrame::OnPlotAreaDiff( wxCommandEvent& e )
 	pd->ShowModal();
 	delete pd;
 }
+
+void MyFrame::OnPlotVolume( wxCommandEvent& e )
+{
+	PlotDialog *pd; mpWindow *p; int numCells;
+	if(!SetupCellPlot(_T("Cell Volume"), _T("volume (μm^3)"), pd, p, numCells)) return;
+	for (int i=0; i<numCells; i++)
+	{
+		float avgVolume;
+		std::vector<float> volumes = cm->GetVolumes(i, avgVolume);
+		wxString name = wxString::Format(_T("Cell-%d (avgVolume=%.1f)"), i+1, avgVolume);
+		mpFXVector *v = new mpFXVector(name);
+		v->SetData( volumes );
+		v->SetContinuity(true);
+		p->AddLayer(   v   );
+	}
+	p->Fit();
+	pd->ShowModal();
+	delete pd;
+}
+
+void MyFrame::OnPlotVolumeDiff( wxCommandEvent& e )
+{
+	PlotDialog *pd; mpWindow *p; int numCells;
+	if(!SetupCellPlot(_T("Change in Cell Volume"), _T("d-volume (μm^3/frame)"), pd, p, numCells)) return;
+	for (int i=0; i<numCells; i++)
+	{
+		float avgVolume;
+		std::vector<float> volumes = cm->GetVolumeDiff(i, avgVolume);
+		wxString name = wxString::Format(_T("Cell-%d (avgChange=%.1f)"), i+1, avgVolume);
+		mpFXVector *v = new mpFXVector(name);
+		v->SetData( volumes );
+		v->SetContinuity(true);
+		p->AddLayer(   v   );
+	}
+	p->Fit();
+	pd->ShowModal();
+	delete pd;
+}
+
 void MyFrame::OnPlotDeformation( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
@@ -714,6 +767,7 @@ void MyFrame::OnExportData(wxString title, bool (CaptureManager::*func)(const ch
 		wxEndBusyCursor();
 	}
 }
+
 void MyFrame::OnExportTrajectoryData(wxCommandEvent& e ) {
 	OnExportData(_T("Save Trajectory data as..."), &CaptureManager::SaveTrajectoryData);
 }
@@ -723,9 +777,17 @@ void MyFrame::OnExportTrackData(wxCommandEvent& e ){
 void MyFrame::OnExportSpeedData(wxCommandEvent& e ){
 	OnExportData(_T("Save Cell Speed data as..."), &CaptureManager::SaveSpeedData);
 }
-void MyFrame::OnExportAreaData(wxCommandEvent& e ){
+
+void MyFrame::OnExportAreaData(wxCommandEvent& e )
+{
 	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveAreaData);
 }
+
+void MyFrame::OnExportVolumeData(wxCommandEvent& e )
+{
+	OnExportData(_T("Save Cell Volume data as..."), &CaptureManager::SaveVolumeData);
+}
+
 void MyFrame::OnExportDeformationData(wxCommandEvent& e ){
 	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveDeformationData);
 }

@@ -263,5 +263,5 @@ long Preferences::GetSavingCodec()
 CvSize Preferences::GetSavingSize()
 {
 	InitializeOnDemand();
-	return cvSize(wxString2long(SavingSizeWidth), wxString2long(SavingSizeHeight));
+	return cvSize(wxStringToLong(SavingSizeWidth), wxStringToLong(SavingSizeHeight));
 }

@@ -9,8 +9,20 @@ ImproveContoursPlugin::ImproveContoursPlugin( wxWindow* parent_, MyFrame *win_ )
 }
 
 int ImproveContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
-int ImproveContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
+int ImproveContoursPlugin::GetScope2() { return sidebar->scope2->GetSelection(); }
 bool ImproveContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
+
+void ImproveContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}
 
 void ImproveContoursPlugin::DoPreview()
 {
