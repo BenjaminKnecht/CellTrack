@@ -30,6 +30,7 @@ public:
 	virtual void ReleaseTemps();
 	virtual void OnOK();
 	void FetchParams();
+	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus *img, int pos, int zPos, bool fluorescence );
 	static void ProcessStatic

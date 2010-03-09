@@ -31,4 +31,5 @@ public:
 	virtual void OnReload();
 	virtual void OnOK();
 	virtual void OnCancel();
+	virtual void OnFluorescence() {}
 };

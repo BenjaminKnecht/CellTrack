@@ -66,6 +66,7 @@ public:
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
 	void FetchParams();
+	virtual void OnFluorescence();
 
 	void OnOK();
 	void ProcessImage( ImagePlus *img, int pos, int zPos );

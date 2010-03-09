@@ -98,7 +98,7 @@ void CamShiftPlugin::OnOK()
             {
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(i,cm->GetZPos(),false,false,true), cm->Access(useFirst ? 0 : i-1, cm->GetZPos()), hsizes, criteria,
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(),false,false,GetScope()), cm->Access(useFirst ? 0 : i-1, cm->GetZPos()), hsizes, criteria,
                                     planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                 }
                 cm->Release(i-1,cm->GetZPos(),false);
@@ -117,7 +117,7 @@ void CamShiftPlugin::OnOK()
             {
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(i,cm->GetZPos(),true,false,true), cm->Access(useFirst ? 0 : i-1, cm->GetZPos()), hsizes, criteria,
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(),true,false,GetScope()), cm->Access(useFirst ? 0 : i-1, cm->GetZPos()), hsizes, criteria,
                                     planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                 }
                 cm->Release(i-1,cm->GetZPos(),true);
@@ -144,7 +144,7 @@ void CamShiftPlugin::OnOK()
                 cm->Access(cm->GetPos(),i,false,true)->CloneContours(oimg);
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(cm->GetPos(),i,false,false,true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), hsizes, criteria,
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i,false,false,GetScope()), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), hsizes, criteria,
                                     planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                 }
                 cm->Release(cm->GetPos(),i,false);
@@ -159,7 +159,7 @@ void CamShiftPlugin::OnOK()
 
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(cm->GetPos(),i,true,false,true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), hsizes, criteria,
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i,true,false,GetScope()), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), hsizes, criteria,
                                     planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                 }
                 cm->Release(cm->GetPos(),i,true);
@@ -191,7 +191,7 @@ void CamShiftPlugin::OnOK()
                 {
                     for (int j=0; j<numContours; j++)
                     {
-                        ProcessStatic(j, cm->Access(i,slide,false,false,true), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
+                        ProcessStatic(j, cm->Access(i,slide,false,false,GetScope()), cm->Access(useFirst ? 0 : i-1, slide), hsizes, criteria,
                                     planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                     }
                     cm->Release(i-1,slide,false);
@@ -212,7 +212,7 @@ void CamShiftPlugin::OnOK()
                     {
                         if (GetScope2() != 0) // both and fluorescence
                         {
-                            ProcessStatic(j, cm->Access(i,slide,true,false,true), cm->Access(useFirst ? 0 : i-1, slide, true), hsizes, criteria,
+                            ProcessStatic(j, cm->Access(i,slide,true,false,GetScope()), cm->Access(useFirst ? 0 : i-1, slide, true), hsizes, criteria,
                                         planes, hist, backproject, orect, ocenter, searchwin, rotation, shift, i>1);
                         }
                     }
@@ -228,6 +228,19 @@ void CamShiftPlugin::OnOK()
 	cm->ReloadCurrentFrameContours(true, false);
 	wxEndBusyCursor();
 }
+
+void CamShiftPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}
+
 void CamShiftPlugin::ProcessStatic
 ( int i, ImagePlus *img, ImagePlus *oimg, int *hsizes, CvTermCriteria criteria,
 IplImage** &planes, CvHistogram* &hist, IplImage* &backproject, CvRect &orect, CvPoint &ocenter, CvRect &searchwin, CvMat* &rotation, CvMat* &shift, bool oready){

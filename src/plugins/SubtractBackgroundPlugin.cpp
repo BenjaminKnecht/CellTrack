@@ -91,13 +91,13 @@ void SubtractBackgroundPlugin::InitModels(bool reinit)
         {
             if (!avgImg[zPos])
             {
-                IplImage *temp32 = cvCreateImage( cvImageSize(cm->Access(0,zPos, false, false, true)->orig), IPL_DEPTH_32F, 3);
+                IplImage *temp32 = cvCreateImage( cvImageSize(cm->Access(0,zPos, false, false, GetScope())->orig), IPL_DEPTH_32F, 3);
                 avgImg[zPos] = cvCreateImage( cvImageSize(cm->Access(0,zPos)->orig), IPL_DEPTH_8U, 3 );
                 cvConvertScale(cm->Access(0,zPos)->orig, temp32);
                 cm->Release(0,zPos, false);
                 for (int i=1; i<cm->GetFrameCount(); i++)
                 {
-                    cvAcc(cm->Access(i,zPos, false, false, true)->orig, temp32);
+                    cvAcc(cm->Access(i,zPos, false, false, GetScope())->orig, temp32);
                     cm->Release(i, zPos, false);
                 }
                 cvConvertScale(temp32, temp32, 1.0/cm->GetFrameCount());

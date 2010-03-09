@@ -32,6 +32,7 @@ public:
 	virtual void ReleaseTemps();
 	virtual void ShowProcessInfo();
 	virtual void OnOK();
+	virtual void OnFluorescence();
 
 	void FetchParams();
 

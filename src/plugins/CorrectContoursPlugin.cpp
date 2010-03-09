@@ -325,3 +325,15 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     if (dirty)
         top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);
 }
+
+void CorrectContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}

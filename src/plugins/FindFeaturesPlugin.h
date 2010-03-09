@@ -28,6 +28,7 @@ public:
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
 	void FetchParams();
+	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus *img );
 };

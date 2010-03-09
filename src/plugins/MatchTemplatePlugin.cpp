@@ -32,6 +32,18 @@ void MatchTemplatePlugin::FetchParams()
 	useFirst = sidebar->useFirst->GetValue();
 }
 
+void MatchTemplatePlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}
+
 void MatchTemplatePlugin::OnOK()
 {
 	wxBeginBusyCursor();
@@ -68,7 +80,7 @@ void MatchTemplatePlugin::OnOK()
             {
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), false, false, true), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), false, false, GetScope()), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
                 }
                 cm->Release(i-1,cm->GetZPos(),false);
             }
@@ -86,7 +98,7 @@ void MatchTemplatePlugin::OnOK()
             {
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), false, false, true), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
+                    ProcessStatic(j, cm->Access(i,cm->GetZPos(), true, false, GetScope()), cm->Access(useFirst ? 0 : i-1,cm->GetZPos()), method, winsize, map);
                 }
                 cm->Release(i-1,cm->GetZPos(),true);
             }
@@ -112,7 +124,7 @@ void MatchTemplatePlugin::OnOK()
                 cm->Access(cm->GetPos(),i,false,true)->CloneContours(oimg);
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(cm->GetPos(),i, false, false, true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i, false, false, GetScope()), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
                 }
                 cm->Release(cm->GetPos(),i,false);
                 cm->Release(cm->GetPos()-1,i,false);
@@ -129,7 +141,7 @@ void MatchTemplatePlugin::OnOK()
 
                 for (int j=0; j<numContours; j++)
                 {
-                    ProcessStatic(j, cm->Access(cm->GetPos(),i, false, false, true), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
+                    ProcessStatic(j, cm->Access(cm->GetPos(),i, true, false, GetScope()), cm->Access(useFirst ? 0 : cm->GetPos()-1, i), method, winsize, map);
                 }
                 cm->Release(cm->GetPos(),i,true);
                 cm->Release(cm->GetPos()-1,i,true);
@@ -158,7 +170,7 @@ void MatchTemplatePlugin::OnOK()
                 {
                     for (int j=0; j<numContours; j++)
                     {
-                        ProcessStatic(j, cm->Access(i,slide, false, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                        ProcessStatic(j, cm->Access(i,slide, false, false, GetScope()), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
                     }
                     cm->Release(i-1,slide,false);
                 }
@@ -175,7 +187,7 @@ void MatchTemplatePlugin::OnOK()
                 {
                     for (int j=0; j<numContours && (cont=progressDlg->Update(slide*frameCount+i+(GetScope2()==2?frameCount*slideCount:0), wxString::Format(_T("Cell %d of %d, Frame %d of %d"), j+1,numContours, i+1, frameCount))); j++)
                     {
-                        ProcessStatic(j, cm->Access(i,slide, true, false, true), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
+                        ProcessStatic(j, cm->Access(i,slide, true, false, GetScope()), cm->Access(useFirst ? 0 : i-1,slide), method, winsize, map);
                     }
                     cm->Release(i-1,slide,true);
                 }

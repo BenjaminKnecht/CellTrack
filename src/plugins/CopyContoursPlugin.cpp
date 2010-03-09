@@ -137,3 +137,15 @@ void CopyContoursPlugin::ProcessImage_static( ImagePlus *source, ImagePlus* targ
 {
 	target->CloneContours(source);
 }
+
+void CopyContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}

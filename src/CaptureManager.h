@@ -21,6 +21,8 @@ private:
 	bool OpenConfocal_initialize();
     ImagePlus** book;
 
+    void Preload(int direct);
+
 public:
 	ImagePlus img;
 	int *frameMap;
@@ -61,7 +63,7 @@ public:
 
 	CaptureManager(void);
 	~CaptureManager(void);
-	ImagePlus* Access(int pos, int z=0, bool fluorescence=false, bool noImage=false, bool preload=false);
+	ImagePlus* Access(int pos, int z=0, bool fluorescence=false, bool noImage=false, int preload=0);
 	ImagePlus* DirectAccess(int x);
 	void Reset();
 	void Release(int pos, int z, bool fluorescence);

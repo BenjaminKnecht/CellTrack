@@ -150,7 +150,7 @@ void MyCanvas::DrawContours()
 	if (cm && (cm->drawOtherBorder || cm->drawOtherPoints))
     {
         wxMemoryDC dc(bmp);
-        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos(),(cm->viewFluorescence?false:true),true);
+        ImagePlus* img = cm->Access((cm->GetCanvas()==this?cm->GetPos():cm->GetPos()-1),cm->GetZPos(),(cm->viewFluorescence?false:true),true);
         if (img)
         {
             CvSeq *seq = img->contours;
@@ -167,7 +167,7 @@ void MyCanvas::DrawContours()
     if (cm && (cm->drawTopBorder || cm->drawTopPoints) && cm->zPos < cm->slideCount-1)
     {
         wxMemoryDC dc(bmp);
-        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()+1,(cm->viewFluorescence?true:false),true);
+        ImagePlus* img = cm->Access((cm->GetCanvas()==this?cm->GetPos():cm->GetPos()-1),cm->GetZPos()+1,(cm->viewFluorescence?true:false),true);
         if (img)
         {
             CvSeq *seq = img->contours;
@@ -184,7 +184,7 @@ void MyCanvas::DrawContours()
     if (cm && (cm->drawBottomBorder || cm->drawBottomPoints) && cm->zPos > 0)
     {
         wxMemoryDC dc(bmp);
-        ImagePlus* img = cm->Access(cm->GetPos(),cm->GetZPos()-1,(cm->viewFluorescence?true:false), true);
+        ImagePlus* img = cm->Access((cm->GetCanvas()==this?cm->GetPos():cm->GetPos()-1),cm->GetZPos()-1,(cm->viewFluorescence?true:false), true);
         if (img)
         {
             CvSeq *seq = img->contours;
@@ -233,7 +233,7 @@ void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoi
 	wxPoint *ps = ContourToPointArray(seq, shift, scale);
 	if (drawBorder)
 	{
-        dc->SetPen(wxPen(*borderColor, width));
+        dc->SetPen(wxPen((borderColor?*borderColor:wxColour(Preferences::GetColorContourBorderColor())), width));
         dc->SetBrush(*wxTRANSPARENT_BRUSH);
         dc->DrawPolygon(seq->total, ps);
 	}
@@ -247,10 +247,11 @@ void MyCanvas::DrawContour_static(wxDC *dc, CvSeq *seq, wxPoint shift, wxRealPoi
         for (int i=1; i<seq->total; i++)
             dc->DrawRectangle(ps[i]-MyPoint(width)/2, MyPoint(width).ToSize());
     }
-    dc->SetTextForeground(*borderColor);
+    dc->SetTextForeground(borderColor?*borderColor:wxColour(Preferences::GetColorContourBorderColor()));
     dc->DrawText(wxString::Format(_T("%d"), label), ps[0]);
     delete[] ps;
 }
+
 void MyCanvas::DrawRoi(bool lastPointOnly)
 {
 	if (!lastPointOnly)

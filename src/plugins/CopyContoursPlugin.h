@@ -22,6 +22,7 @@ public:
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void OnOK();
+	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus* img, int pos, int zPos, bool fluor );
 	static void ProcessImage_static( ImagePlus* source, ImagePlus* target );

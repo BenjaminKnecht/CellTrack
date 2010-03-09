@@ -9,6 +9,7 @@ PluginBase::PluginBase( string name_, wxWindow* parent_, MyFrame *win_, bool has
 	if (showsCanvas2)
 		OnNavigate();
 }
+
 PluginBase::~PluginBase(void)
 {
 	if (hasPreview)
@@ -21,12 +22,16 @@ PluginBase::~PluginBase(void)
 		progressDlg->Destroy();
 }
 
+void PluginBase::OnFluorescence() {}
+
 void PluginBase::OnNavigate()
 {
 	if (showsCanvas2)
 	{
 		if(cm->GetPos())
+		{
 			canvas2->SetImage(*(cm->Access(cm->GetPos()-1, cm->GetZPos(), cm->viewFluorescence)));
+		}
 		else
 			canvas2->SetImage(ImagePlus());
 	}
@@ -69,12 +74,12 @@ void PluginBase::OnOK()
                 {
                     if (GetScope2() != 1)
                     {
-                        ProcessImage(cm->Access(i,j,false, false, true), i, j, false);
+                        ProcessImage(cm->Access(i,j,false, false, GetScope()), i, j, false);
                         cm->Release(i,j,false);
                     }
                     if (GetScope2() != 0)
                     {
-                        ProcessImage(cm->Access(i,j,true, false, true), i, j, true);
+                        ProcessImage(cm->Access(i,j,true, false, GetScope()), i, j, true);
                         cm->Release(i,j,true);
                     }
                 }
@@ -88,12 +93,12 @@ void PluginBase::OnOK()
             {
                 if (GetScope2() != 1)
                 {
-                    ProcessImage(cm->Access(i,cm->GetZPos(),false, false, true), i, cm->GetZPos(), false);
+                    ProcessImage(cm->Access(i,cm->GetZPos(),false, false, GetScope()), i, cm->GetZPos(), false);
                     cm->Release(i,cm->GetZPos(),false);
                 }
                 if (GetScope2() != 0)
                 {
-                    ProcessImage(cm->Access(i,cm->GetZPos(),true, false, true), i, cm->GetZPos(), true);
+                    ProcessImage(cm->Access(i,cm->GetZPos(),true, false, GetScope()), i, cm->GetZPos(), true);
                     cm->Release(i,cm->GetZPos(),true);
                 }
 			}
@@ -106,12 +111,12 @@ void PluginBase::OnOK()
             {
                 if (GetScope2() != 1)
                 {
-                    ProcessImage(cm->Access(cm->GetPos(),i,false, false, true), cm->GetPos(), i, false);
+                    ProcessImage(cm->Access(cm->GetPos(),i,false, false, GetScope()), cm->GetPos(), i, false);
                     cm->Release(cm->GetPos(),i,false);
                 }
                 if (GetScope2() != 0)
                 {
-                    ProcessImage(cm->Access(cm->GetPos(),i,true, false, true), cm->GetPos(), i, true);
+                    ProcessImage(cm->Access(cm->GetPos(),i,true, false, GetScope()), cm->GetPos(), i, true);
                     cm->Release(cm->GetPos(),i,true);
                 }
 			}
@@ -127,7 +132,6 @@ void PluginBase::OnOK()
             if (GetScope2() != 0)
             {
                 ProcessImage( cm->Access(cm->GetPos(),cm->GetZPos(), true), cm->GetPos(), cm->GetZPos(), true);
-                std::cout << "About to release current image" << std::endl;
                 cm->Release(cm->GetPos(), cm->GetZPos(), true);
             }
 		}

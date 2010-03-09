@@ -502,3 +502,15 @@ int LKContoursPlugin::InterpolateTracking(CvPoint2D32f *opsf, CvPoint2D32f *psf,
 	}
 	return numLost;
 }
+
+void LKContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}

@@ -47,7 +47,6 @@ void CaptureManager::Reset(){
 void CaptureManager::SetCanvas(MyCanvas *canvas_)
 {
 	canvas = canvas_;
-	canvas->SetCM(this);
 }
 
 MyCanvas* CaptureManager::GetCanvas()
@@ -244,7 +243,16 @@ void CaptureManager::Release(int p, int z, bool fluorescence)
     }
 }
 
-ImagePlus* CaptureManager::Access(int p, int z, bool fluorescence, bool noImage, bool preload)
+void CaptureManager::Preload(int direct)
+{
+    if (!book[direct]->orig && !book[direct]->isLoading)
+    {
+        m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 1);
+        book[direct]->isLoading = true;
+    }
+}
+
+ImagePlus* CaptureManager::Access(int p, int z, bool fluorescence, bool noImage, int preload)
 {
     if (p < 0 || p >= frameCount || z < 0 || z >= slideCount)
         return NULL;
@@ -256,16 +264,25 @@ ImagePlus* CaptureManager::Access(int p, int z, bool fluorescence, bool noImage,
         {
             int newpos = i + p;
             int newZPos = z + newpos/frameCount;
-            if (newZPos <= slideCount)
+            if (preload == 1) // all
             {
-                if (newpos >= frameCount)
-                    newpos = newpos % frameCount;
-                int direct = CalculateDirect(newpos, newZPos, fluorescence);
-                if (!book[direct]->orig && !book[direct]->isLoading)
+                if (newZPos <= slideCount)
                 {
-                    m_queue->AddJob(Job(Job::thread_load, direct, m_capture->getFilename(direct)), 1);
-                    book[direct]->isLoading = true;
+                    if (newpos >= frameCount)
+                        newpos = newpos % frameCount;
+                    Preload(CalculateDirect(newpos, newZPos, fluorescence));
                 }
+            }
+            else if (preload == 2) // t-direction
+            {
+                if (newpos < frameCount)
+                    Preload(CalculateDirect(newpos, z, fluorescence));
+            }
+            else // z-direction
+            {
+                newZPos = z + i;
+                if (newZPos < slideCount)
+                    Preload(CalculateDirect(p, newZPos, fluorescence));
             }
         }
     }
@@ -621,12 +638,12 @@ std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef)
 	{
 		if (!(MyPoint(-1,-1)==traj[i] || MyPoint(-1,-1)==traj[i+1]))
 		{
-			wxPoint *ps = ContourToPointArray(book[i]->contourArray[c], MyPoint(traj[i+1])-MyPoint(traj[i]).ToWxPoint());
+			wxPoint *ps = ContourToPointArray(Access(i,0,false, true)->contourArray[c], MyPoint(traj[i+1])-MyPoint(traj[i]).ToWxPoint());
 			img_->RemoveAllContours();
-			img_->AddContour(ps,book[i*offset]->contourArray[c]->total);
+			img_->AddContour(ps,Access(i,0,false, true)->contourArray[c]->total);
 			delete[] ps;
 
-			CvSeq *seq = book[i+1]->contourArray[c];
+			CvSeq *seq = Access(i+1,0,false, true)->contourArray[c];
 			CvSeq *oseq = img_->contourArray[0];
 			//Draw both contours on the temporary image
 			cvZero(img_->orig);
@@ -658,13 +675,13 @@ std::vector<CvPoint> CaptureManager::GetTrajectory(int c)
 	std::vector<CvPoint> traj(frameCount);
 	for (int i=0; i<frameCount; i++)
 	{
-		if (book[i*offset]->contourArray.size() <= c)
+		if (Access(i,0,false, true)->contourArray.size() <= c)
 			traj[i]=cvPoint(-1,-1);
 		else
 		{
 			CvMoments m;
 			double m00,m10,m01;
-			cvMoments(book[i*offset]->contourArray[c], &m);
+			cvMoments(Access(i,0,false, true)->contourArray[c], &m);
 			m00 = cvGetSpatialMoment(&m,0,0);
 			m01 = cvGetSpatialMoment(&m,0,1);
 			m10 = cvGetSpatialMoment(&m,1,0);
@@ -1095,7 +1112,7 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
 
 bool CaptureManager::SaveTrajectoryImage(wxBitmap &bmp)
 {
-	if (!book[0]->contourArray.size())
+	if (!Access(0,0, false, true)->contourArray.size())
 	{
 		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
@@ -1106,11 +1123,11 @@ bool CaptureManager::SaveTrajectoryImage(wxBitmap &bmp)
 	wxMemoryDC dc(bmp);
 	dc.SetBackground(*wxWHITE_BRUSH);
 	dc.Clear();
-	for (int c=0; c<book[0]->contourArray.size(); c++)
+	for (int c=0; c<Access(0,0,false, true)->contourArray.size(); c++)
 	{
 		std::vector<CvPoint> traj = GetTrajectory(c);
 		lastLoc = traj[0];
-		MyCanvas::DrawContour_static(&dc, book[0]->contourArray[c],wxPoint(0,0),scale);
+		MyCanvas::DrawContour_static(&dc, Access(0,0, false, true)->contourArray[c],wxPoint(0,0),scale);
 		dc.SetBrush(*wxTRANSPARENT_BRUSH);
 		for (int i=1; i<traj.size(); i++)
 		{

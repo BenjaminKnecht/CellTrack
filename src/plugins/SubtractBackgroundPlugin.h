@@ -26,6 +26,7 @@ public:
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
+	virtual void OnFluorescence() {}
 
 	void ProcessImage( ImagePlus *img, int pos, int zPos );
 	void InitModels(bool reinit=false);

@@ -69,6 +69,8 @@ MyFrame::MyFrame(const wxString& title, const wxPoint& pos, const wxSize& size, 
 	queue = new ImageJobQueue(this);
 
 	cm->SetCanvas(canvas);
+    canvas->SetCM(cm);
+    canvas2->SetCM(cm);
 	//	  SetIcon(wxIcon(wxT("celltrack.xpm")));
 	SPLITTER_UNSPLIT_DESTROY( splitterSidebar, 1 )
 	SPLITTER_UNSPLIT_DESTROY( splitterBottombar, 2 )
@@ -491,7 +493,8 @@ void MyFrame::StartPlugin(Plugin *newplugin, wxWindow *parentwin)
 {
 	if (CheckPluginAlreadyHot(Plugin::GetStaticName()))
 		return;
-	if ( hotplug ) {
+	if ( hotplug )
+	{
 //		if (wxMessageBox(wxString("There is already an active plugin named \"")+hotplug->GetStaticName()+"\". Do you want to continue starting new plugin named \""+Plugin::GetStaticName()+"\"?", "Cancel active plugin?", wxOK|wxCANCEL, this) != wxOK)
 //			return;
 		hotplug->OnCancel();
@@ -500,17 +503,17 @@ void MyFrame::StartPlugin(Plugin *newplugin, wxWindow *parentwin)
 	}
 	hotplug = new Plugin(parentwin, this);
 	wxWindow *sidebar = hotplug->GetSidebar();
-	if ( sidebar ){
+	if ( sidebar )
 		splitterSidebar->SplitVertically(sidebar, splitterSidebar->GetWindow1(), sidebar->GetSize().GetWidth());
-	}
 	sidebar = hotplug->GetBottombar();
-	if ( sidebar ){
-		splitterBottombar->SplitHorizontally(splitterBottombar->GetWindow1(), sidebar,
-			splitterBottombar->GetSize().GetHeight() - sidebar->GetSize().GetHeight());
+	if ( sidebar )
+	{
+		splitterBottombar->SplitHorizontally(splitterBottombar->GetWindow1(), sidebar, splitterBottombar->GetSize().GetHeight() - sidebar->GetSize().GetHeight());
 	}
 	if (hotplug->ShowsCanvas2())
 		ShowCanvas2(true);
 }
+
 template <class Plugin>
 void MyFrame::MemTestPlugin(){
 	for (int i=0; i<100; i++){
@@ -578,15 +581,20 @@ void MyFrame::SetStatusText( const wxString& text, int i )
 	sbar->SetStatusText(text, i);
 }
 
-void MyFrame::ShowCanvas2(bool show){
-	if (show){
-		if (!splitterCanvas->IsSplit()){
+void MyFrame::ShowCanvas2(bool show)
+{
+	if (show)
+	{
+		if (!splitterCanvas->IsSplit())
+		{
 			canvas2->Show(true);
 			splitterCanvas->SplitVertically(canvas2,canvas);
 		}
 	}
-	else{
-		if (splitterCanvas->IsSplit()){
+	else
+	{
+		if (splitterCanvas->IsSplit())
+		{
 			splitterCanvas->Unsplit(canvas2);
 			canvas2->Show(false);
 		}
@@ -727,7 +735,7 @@ void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap 
 	wxBitmap bmp;
 	if((cm->*func)(bmp))
 	{
-		ShowImageDialog d(this,wxID_ANY,_T("Cell Tracking"));
+		ShowImageDialog d(this,wxID_ANY,title);
 		d.canvas->SetImage(bmp);
 		d.ShowModal();
 	}
@@ -745,12 +753,17 @@ void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitma
 		wxEndBusyCursor();
 	  }
 }
-void MyFrame::OnViewTrackImage( wxCommandEvent& e ) {
+
+void MyFrame::OnViewTrackImage( wxCommandEvent& e )
+{
 	OnViewImage(_T("Cell Tracking"), &CaptureManager::SaveTrackImage);
 }
-void MyFrame::OnViewTrajectoryImage( wxCommandEvent& e ) {
+
+void MyFrame::OnViewTrajectoryImage( wxCommandEvent& e )
+{
 	OnViewImage(_T("Cell Trajectory"), &CaptureManager::SaveTrajectoryImage);
 }
+
 void MyFrame::OnExportTrackImage( wxCommandEvent& e ) {
 	OnExportImage(_T("Save tracking image as..."), &CaptureManager::SaveTrackImage);
 }
@@ -828,7 +841,7 @@ void MyFrame::OnImportContours(wxCommandEvent& e )
 void MyFrame::OnAbout(wxCommandEvent &e){
 	wxAboutDialogInfo i;
 	i.SetName(_T("Confocal CellTrack"));
-	i.SetVersion(_T("0.5-1.1"));
+	i.SetVersion(_T("0.2-1.1"));
 	i.SetDescription(_T("An Open-Source Software for Cell Tracking and Motility Analysis on Confocal Data"));
 	i.SetCopyright(_T("(C) 2008 Ahmet Sacan <sacan@cse.ohio-state.edu>, extended by Benjamin Knecht <bknecht@ethz.ch>"));
 	i.SetWebSite(_T("http://db.cse.ohio-state.edu/CellTrack"));

@@ -86,3 +86,15 @@ void NormalizeContoursPlugin::ProcessStatic( ImagePlus *img, int minLength, int 
 		}
 	}
 }
+
+void NormalizeContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
+}

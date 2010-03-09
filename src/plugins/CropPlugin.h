@@ -21,4 +21,5 @@ public:
 	virtual void OnOK();
 	void OnMouse(wxMouseEvent &e);
 	void DoPreview();
+	virtual void OnFluorescence() {}
 };
