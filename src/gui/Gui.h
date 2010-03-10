@@ -155,6 +155,7 @@ class MyFrame_ : public wxFrame
 		virtual void OnExportDeformationData( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewTrackImage( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportTrackImage( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnExportSingleTrackImages( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportTrackData( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnViewTrajectoryImage( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnExportTrajectoryImage( wxCommandEvent& event ){ event.Skip(); }

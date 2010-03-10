@@ -135,11 +135,15 @@ public:
 	void OnPlotVolumeDiff( wxCommandEvent& event );
 	void OnPlotDeformation( wxCommandEvent& event );
 	void OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &));
+	void OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &, int, int));
 	void OnViewTrackImage(wxCommandEvent &e);
 	void OnViewTrajectoryImage(wxCommandEvent &e);
 	void OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &));
+	void OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &, int, int));
+	void OnExportImage(wxString filename, bool (CaptureManager::*func)(wxBitmap &, int, int), int start, int end);
 	void OnExportTrackImage(wxCommandEvent &e);
 	void OnExportTrajectoryImage(wxCommandEvent &e);
+	void OnExportSingleTrackImages(wxCommandEvent &e);
 	void OnExportData(wxString title, bool (CaptureManager::*func)(const char*));
 	void OnExportTrackData(wxCommandEvent &e);
 	void OnExportTrajectoryData(wxCommandEvent &e);

@@ -96,7 +96,7 @@ public:
 	void ReloadCurrentFrame(bool redraw=true, bool callPlugin=true);
 	void ReloadCurrentFrameContours(bool redraw=true, bool callPlugin=true);
 	void PushbackCurrentFrame();
-	bool SaveTrackImage(wxBitmap &bmp);
+	bool SaveTrackImage(wxBitmap &bmp, int start=0, int end=-1);
 	bool SaveTrajectoryImage(wxBitmap &bmp);
 	bool SaveData_setup(const char* file, FILE* &fp);
 	bool SaveTrackData(const char* file);

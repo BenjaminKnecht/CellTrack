@@ -283,6 +283,10 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	m_menuItem36 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Save as image") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem36 );
 	
+	wxMenuItem* m_menuItem62;
+	m_menuItem62 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Save individual tracking images") ) , wxEmptyString, wxITEM_NORMAL );
+	m_menu2->Append( m_menuItem62 );
+	
 	wxMenuItem* m_menuItem35;
 	m_menuItem35 = new wxMenuItem( m_menu2, wxID_ANY, wxString( _("Export tracking data") ) , wxEmptyString, wxITEM_NORMAL );
 	m_menu2->Append( m_menuItem35 );
@@ -520,6 +524,7 @@ MyFrame_::MyFrame_( wxWindow* parent, wxWindowID id, const wxString& title, cons
 	this->Connect( m_menuItem561->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportDeformationData ) );
 	this->Connect( m_menuItem41->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrackImage ) );
 	this->Connect( m_menuItem36->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrackImage ) );
+	this->Connect( m_menuItem62->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportSingleTrackImages ) );
 	this->Connect( m_menuItem35->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrackData ) );
 	this->Connect( m_menuItem421->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportTrackData ) );
 	this->Connect( m_menuItem40->GetId(), wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrajectoryImage ) );
@@ -612,6 +617,7 @@ MyFrame_::~MyFrame_()
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportDeformationData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrackImage ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrackImage ) );
+	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportSingleTrackImages ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnExportTrackData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnImportTrackData ) );
 	this->Disconnect( wxID_ANY, wxEVT_COMMAND_MENU_SELECTED, wxCommandEventHandler( MyFrame_::OnViewTrajectoryImage ) );

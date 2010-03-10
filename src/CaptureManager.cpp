@@ -655,7 +655,8 @@ std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef)
 			//detect contours on the drawn image:
 			FindContoursPlugin::ProcessImage_static(img_,gray,edge,150,50,3,1);
 			float unionArea = 0;
-			for (int j=0; j<img_->contourArray.size(); j++){
+			for (int j=0; j<img_->contourArray.size(); j++)
+			{
 				unionArea += fabs(cvContourArea(img_->contourArray[j]));
 			}
 
@@ -1064,30 +1065,31 @@ bool CaptureManager::SaveDeformationData(const char* file)
 
 #include <wx/bitmap.h>
 #include <wx/dc.h>
-bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
+bool CaptureManager::SaveTrackImage(wxBitmap &bmp, int start, int end)
 {
+    if (end == -1) end = frameCount;
 	if (!Access(0,0,false, true)->contourArray.size())
 	{
 		wxLogError(_T("No objects in the first frame. Detect/draw boundaries in the first frame and apply tracking first."));
 		return false;
 	}
-	wxRealPoint scale(6,6);
-	bmp.Create(scale.x*size.width,scale.y*size.height);
+	wxRealPoint scale(6, 6);
+	bmp.Create(scale.x*size.width, scale.y*size.height);
 	wxMemoryDC dc(bmp);
 	dc.SetBackground(*wxWHITE_BRUSH);
 	dc.Clear();
 
-	for (int c=0; c<Access(0,0,false, true)->contourArray.size(); c++)
+	for (int c=0; c<Access(0, 0, false, true)->contourArray.size(); c++)
 	{
         std::vector<CvPoint> traj = GetTrajectory(c);
-        std::vector<std::vector<double> > ratios;
-        CvPoint lastTraj = traj[0];
+        std::vector< std::vector<double> > ratios;
+        CvPoint lastTraj = traj[start];
         float maxRatio = 0;
         float minRatio = 0;
-		for (int i=1; i<frameCount && Access(i,0,false, true)->contourArray.size() > c; i++)
+		for (int i=start+1; i<end && Access(i, 0, false, true)->contourArray.size() > c; i++)
         {
-            CvSeq* oseq = Access(i-1,0,false, true)->contourArray[c];
-            CvSeq* seq = Access(i,0,false, true)->contourArray[c];
+            CvSeq* oseq = Access(i-1, 0, false, true)->contourArray[c];
+            CvSeq* seq = Access(i, 0, false, true)->contourArray[c];
             ratios.push_back(std::vector<double>());
             for (int j=0; j<oseq->total; j++)
             {
@@ -1099,7 +1101,7 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
                 float pty = p->y - lastLoc->y;
                 float trajx = traj[i].x - lastTraj.x;
                 float trajy = traj[i].y - lastTraj.y;
-                float ratio = (ptx*trajx+pty*trajy)/(trajx*trajx+trajy*trajy);
+                float ratio = (ptx*trajx + pty*trajy)/(trajx*trajx + trajy*trajy);
                 if (maxRatio < ratio)
                     maxRatio = ratio;
                 if (minRatio > ratio)
@@ -1109,35 +1111,41 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
             lastTraj = traj[i];
         }
 
-		CvSeq* oseq = Access(0,0,false, true)->contourArray[c];
-		MyCanvas::DrawContour_static(&dc, oseq,wxPoint(0,0),scale);
+		CvSeq* oseq = Access(0, 0, false, true)->contourArray[c];
+		MyCanvas::DrawContour_static(&dc, oseq, wxPoint(0,0), scale);
 		for (int i=0; i<oseq->total; i++)
 		{
 			CvPoint *lastLoc = (CvPoint*) cvGetSeqElem(oseq, i);
 			dc.SetPen(wxPen(wxColour(Preferences::GetColorContourPointColor())));
 			dc.SetBrush(*wxTRANSPARENT_BRUSH);
-			for (int j=1; j<frameCount; j++)
+			for (int j=start+1; j<end; j++)
 			{
 				if(Access(j,0,false, true)->contourArray.size() <= c || Access(j,0,false, true)->contourArray[c]->total <= i)
 					continue;
-				CvPoint *p = (CvPoint*) cvGetSeqElem(Access(j,0,false, true)->contourArray[c], i);
-				dc.DrawLine(scale.x*lastLoc->x,scale.y*lastLoc->y, scale.x*p->x,scale.y*p->y);
+				CvPoint *p = (CvPoint*) cvGetSeqElem(Access(j, 0, false, true)->contourArray[c], i);
+				dc.DrawLine(scale.x*lastLoc->x, scale.y*lastLoc->y, scale.x*p->x, scale.y*p->y);
 				lastLoc = p;
 			}
-			dc.DrawCircle(MyPoint((CvPoint*)cvGetSeqElem(Access(0,0,false, true)->contourArray[c],i))*scale, Preferences::GetColorContourBorderWidth());
-			dc.SetBrush(*wxRED_BRUSH);
-			dc.SetPen(wxPen(*wxRED /* this color to be changed */ ));
-			for (int j=1; j<frameCount; j++)
+			dc.DrawCircle(MyPoint((CvPoint*)cvGetSeqElem(Access(start, 0, false, true)->contourArray[c],i))*scale, Preferences::GetColorContourBorderWidth());
+			//dc.SetPen(wxPen(*wxRED /* this color to be changed */ ));
+			for (int j=start+1; j<end; j++)
 			{
-				if(Access(j,0,false, true)->contourArray.size() <= c || Access(j,0,false, true)->contourArray[c]->total <= i)
+			    wxColor pointColor(*wxLIGHT_GREY);
+                if (ratios[j-1][i] > 0)
+                    pointColor = wxColor(128 + 127*ratios[j-1][i]/maxRatio, 128 - 128*ratios[j-1][i]/maxRatio, 128 - 128*ratios[j-1][i]/maxRatio);
+                else
+                    pointColor = wxColor(128 - 128*ratios[j-1][i]/minRatio, 128 - 128*ratios[j-1][i]/minRatio, 128 + 127*ratios[j-1][i]/minRatio);
+                dc.SetPen(wxPen(pointColor));
+                dc.SetBrush(pointColor);
+				if(Access(j, 0, false, true)->contourArray.size() <= c || Access(j, 0, false, true)->contourArray[c]->total <= i)
 					continue;
-				CvPoint *p = (CvPoint*) cvGetSeqElem(Access(j,0,false, true)->contourArray[c], i);
+				CvPoint *p = (CvPoint*) cvGetSeqElem(Access(j, 0, false, true)->contourArray[c], i);
 				dc.DrawCircle(MyPoint(*p)*scale, Preferences::GetColorContourBorderWidth());
 			}
 		}
-		lastTraj = traj[0];
+		lastTraj = traj[start];
 		dc.SetBrush(*wxTRANSPARENT_BRUSH);
-		for (int i=1; i<traj.size(); i++)
+		for (int i=start+1; i<start/*traj.size()*/; i++)
 		{
 			if(traj[i].x<0)
 				continue;
@@ -1148,8 +1156,8 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp)
 			}
 			lastTraj = traj[i];
 		}
-		if(c < Access(frameCount-1,0,false, true)->contourArray.size())
-			MyCanvas::DrawContour_static(&dc, Access(frameCount-1,0,false, true)->contourArray[c],wxPoint(0,0),scale, true, wxRED);
+		if(c < Access(end-1,0,false, true)->contourArray.size())
+			MyCanvas::DrawContour_static(&dc, Access(end-1,0,false, true)->contourArray[c], wxPoint(0,0), scale, true, wxRED);
 	}
 	return true;
 }

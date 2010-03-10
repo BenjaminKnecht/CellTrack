@@ -175,16 +175,17 @@ void MyFrame::OnOpenImages( wxCommandEvent& event )
 {
 	wxFileDialog d(this, _T("Select image files to load"), cwd, _T(""), _T("Windows bitmaps (*.bmp, *.dib)|*.bmp;*.dib|JPEG files (*.jpeg,*.jpg,*.jpe)|*.jpeg;*.jpg;*.jpe|Portable Network Graphics (*.png)|*.png|Portable image format (*.pbm,*.pgm,*.ppm)|*.pbm;*.pgm;*.ppm|Sun rasters (*.sr,*.ras)|*.sr;*.ras|TIFF files (*.tiff,*.tif)|*.tiff;*.tif|OpenEXR HDR images (.exr)|*.exr|JPEG 2000 images (.jp2)|*.jp2|All files (*.*)|*.*"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST | wxFD_MULTIPLE);
 	d.SetFilterIndex(config->Read(_T("OpenImages/filterIndex"),1l));
-	if (d.ShowModal() == wxID_OK){
+	if (d.ShowModal() == wxID_OK)
+	{
 		config->Write(_T("OpenImages/filterIndex"),(long)d.GetFilterIndex());
 		wxArrayString files;
 		d.GetFilenames(files);
 		if (!files.GetCount())
 			return;
-	wxBeginBusyCursor();
+        wxBeginBusyCursor();
 		if(cm->OpenMovie(files))
 			OnNewMovieOpened();
-	wxEndBusyCursor();
+        wxEndBusyCursor();
 	}
 }
 
@@ -313,6 +314,7 @@ void MyFrame::OnNewMovieOpened()
 //	OnExportTrackData(dummy);
 	OnPlotDeformation(dummy);
 }
+
 void MyFrame::OnSaveMovieAs( wxCommandEvent &event )
 {
 	wxString filename = wxFileSelector(_T("Save movie file as..."), cwd, _T(""), _T(""), _T("Movie Files (*.avi)|*.avi"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
@@ -323,6 +325,7 @@ void MyFrame::OnSaveMovieAs( wxCommandEvent &event )
 	wxEndBusyCursor();
 	}
 }
+
 void MyFrame::OnSaveFrameAs( wxCommandEvent &event )
 {
 	wxString filename = wxFileSelector(_T("Save current frame as..."), cwd, _T(""), _T(""), _T("Image Files|*.png;*.bmp;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
@@ -333,6 +336,7 @@ void MyFrame::OnSaveFrameAs( wxCommandEvent &event )
 		wxEndBusyCursor();
 	}
 }
+
 void MyFrame::OnClose(wxCloseEvent &event)
 {
     queue->AddJob(Job(Job::thread_exit),0);
@@ -359,16 +363,19 @@ wxString MyFrame::getCWD()
 	config->Read(_T("CWD"), &cwd);
 	return cwd;
 }
+
 void MyFrame::setCWD(const wxString& path)
 {
 	cwd = path;
 	config->Write(_T("CWD"), cwd);
 }
+
 void MyFrame::OnDelete( wxCommandEvent& event )
 {
 	if(cm->OnDelete())
 		OnNavigate();
 }
+
 void MyFrame::OnDeleteBefore( wxCommandEvent& event )
 {
 	if(cm->OnDeleteBefore())
@@ -448,6 +455,7 @@ void MyFrame::OnFirst( wxCommandEvent& event )
 	if (cm->SetPos(0))
 		OnNavigate();
 }
+
 void MyFrame::OnFluorescence( wxCommandEvent &event )
 {
     cm->ShowFluorescence(!(cm->viewFluorescence));
@@ -461,7 +469,9 @@ void MyFrame::OnLast( wxCommandEvent& event )
 	if (cm->SetPos(cm->GetFrameCount()-1))
 		OnNavigate();
 }
-void MyFrame::UpdateControls(){
+
+void MyFrame::UpdateControls()
+{
 	WX_SET_ENABLED ( m_prev, cm->GetPos() > 0 );
 	WX_SET_ENABLED ( m_next, cm->GetPos() < cm->GetFrameCount() -1 );
 	m_slider->SetRange( 0, cm->GetFrameCount() - 1 );
@@ -473,15 +483,18 @@ void MyFrame::UpdateControls(){
 	WX_SET_ENABLED ( m_play, cm->GetFrameCount() > 1 );
 	sbar->SetStatusText(wxString::Format(_T("%d of %d | Slice %d of %d"), cm->pos+1, cm->GetFrameCount(), cm->zPos+1, cm->slideCount),SBAR_POS);
 }
+
 void MyFrame::OnNavigate()
 {
 	UpdateControls();
 	if ( hotplug )
 		hotplug->OnNavigate();
 }
+
 bool MyFrame::CheckPluginAlreadyHot(string pluginname)
 {
-	if ( pluginname != "" && hotplug && hotplug->GetName() == pluginname  ){
+	if ( pluginname != "" && hotplug && hotplug->GetName() == pluginname  )
+	{
 //		wxMessageBox(wxString("There is already an active ") + pluginname + " plugin.");
 		return true;
 	}
@@ -515,8 +528,10 @@ void MyFrame::StartPlugin(Plugin *newplugin, wxWindow *parentwin)
 }
 
 template <class Plugin>
-void MyFrame::MemTestPlugin(){
-	for (int i=0; i<100; i++){
+void MyFrame::MemTestPlugin()
+{
+	for (int i=0; i<100; i++)
+	{
 		Plugin *p=NULL;
 		StartPlugin(p, splitterSidebar);
 		hotplug->OnCancel();
@@ -544,7 +559,8 @@ DEFINE_ONPLUGIN( Crop )
 DEFINE_ONPLUGIN( CopyContours )
 DEFINE_ONPLUGIN( CorrectContours )
 
-void MyFrame::OnPluginEnd(wxEvent &event){
+void MyFrame::OnPluginEnd(wxEvent &event)
+{
 	wxWindow *sidebar=hotplug->GetSidebar(), *bottombar=hotplug->GetBottombar();
 	if ( sidebar )
 		splitterSidebar->Unsplit(sidebar);
@@ -554,6 +570,7 @@ void MyFrame::OnPluginEnd(wxEvent &event){
 	delete hotplug;
 	hotplug = NULL;
 }
+
 void MyFrame::OnKeyDown( wxKeyEvent& e )
 {
     wxCommandEvent dummy = wxCommandEvent();
@@ -562,6 +579,7 @@ void MyFrame::OnKeyDown( wxKeyEvent& e )
 	else if (e.GetKeyCode() == WXK_RIGHT)
 		OnNext(dummy);
 }
+
 void MyFrame::OnMouse( wxMouseEvent& event )
 {
 		event.Skip();
@@ -573,8 +591,6 @@ void MyFrame::OnMouse( wxMouseEvent& event )
 		if (event.GetEventObject() == canvas && event.m_leftDown)
 			sbar->SetStatusText(wxString::Format(_T("x=%d, y=%d"), event.GetX(), event.GetY()));
 }
-
-
 
 void MyFrame::SetStatusText( const wxString& text, int i )
 {
@@ -741,17 +757,43 @@ void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap 
 	}
 }
 
+void MyFrame::OnViewImage(wxString title, bool (CaptureManager::*func)(wxBitmap &, int, int))
+{
+	wxBitmap bmp;
+	if((cm->*func)(bmp, 0, cm->frameCount))
+	{
+		ShowImageDialog d(this,wxID_ANY,title);
+		d.canvas->SetImage(bmp);
+		d.ShowModal();
+	}
+}
+
 void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &))
 {
 	wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
-	  if (!filename.empty()){
-		setCWD(wxPathOnly(filename));
+    if (!filename.empty())
+	{
+        setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
 		wxBitmap bmp;
 		if((cm->*func)(bmp))
 			bmp.ConvertToImage().SaveFile(filename);
 		wxEndBusyCursor();
-	  }
+	}
+}
+
+void MyFrame::OnExportImage(wxString title, bool (CaptureManager::*func)(wxBitmap &, int, int))
+{
+    wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+    if (!filename.empty())
+	{
+        setCWD(wxPathOnly(filename));
+		wxBeginBusyCursor();
+		wxBitmap bmp;
+		if((cm->*func)(bmp, 0, cm->frameCount))
+			bmp.ConvertToImage().SaveFile(filename);
+		wxEndBusyCursor();
+	}
 }
 
 void MyFrame::OnViewTrackImage( wxCommandEvent& e )
@@ -764,16 +806,40 @@ void MyFrame::OnViewTrajectoryImage( wxCommandEvent& e )
 	OnViewImage(_T("Cell Trajectory"), &CaptureManager::SaveTrajectoryImage);
 }
 
-void MyFrame::OnExportTrackImage( wxCommandEvent& e ) {
+void MyFrame::OnExportTrackImage( wxCommandEvent& e )
+{
 	OnExportImage(_T("Save tracking image as..."), &CaptureManager::SaveTrackImage);
 }
-void MyFrame::OnExportTrajectoryImage( wxCommandEvent& e ) {
+
+void MyFrame::OnExportSingleTrackImages( wxCommandEvent& e )
+{
+    wxString filename = wxFileSelector(_T("Save tracking images as..."), cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
+    setCWD(wxPathOnly(filename));
+    wxString name = filename.BeforeLast('.');
+    wxString extension = filename.AfterLast('.');
+    for (int i = 1; i < cm->frameCount; i++)
+    {
+        if (!filename.empty())
+        {
+            wxBeginBusyCursor();
+            wxBitmap bmp;
+            if(cm->CaptureManager::SaveTrackImage(bmp, i-1, i))
+                bmp.ConvertToImage().SaveFile(name + wxString::Format(_T("%d_%d."), i-1, i) + extension);
+            wxEndBusyCursor();
+        }
+    }
+}
+
+void MyFrame::OnExportTrajectoryImage( wxCommandEvent& e )
+{
 	OnExportImage(_T("Save trajectory image as..."), &CaptureManager::SaveTrajectoryImage);
 }
 
-void MyFrame::OnExportData(wxString title, bool (CaptureManager::*func)(const char*)){
+void MyFrame::OnExportData(wxString title, bool (CaptureManager::*func)(const char*))
+{
 	wxString filename = wxFileSelector(title, cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
-	  if (!filename.empty()){
+	if (!filename.empty())
+	{
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
 		(cm->*func)(filename.mb_str());
@@ -781,13 +847,18 @@ void MyFrame::OnExportData(wxString title, bool (CaptureManager::*func)(const ch
 	}
 }
 
-void MyFrame::OnExportTrajectoryData(wxCommandEvent& e ) {
+void MyFrame::OnExportTrajectoryData(wxCommandEvent& e )
+{
 	OnExportData(_T("Save Trajectory data as..."), &CaptureManager::SaveTrajectoryData);
 }
-void MyFrame::OnExportTrackData(wxCommandEvent& e ){
+
+void MyFrame::OnExportTrackData(wxCommandEvent& e )
+{
 	OnExportData(_T("Save Tracking data as..."), &CaptureManager::SaveTrackData);
 }
-void MyFrame::OnExportSpeedData(wxCommandEvent& e ){
+
+void MyFrame::OnExportSpeedData(wxCommandEvent& e )
+{
 	OnExportData(_T("Save Cell Speed data as..."), &CaptureManager::SaveSpeedData);
 }
 
@@ -801,9 +872,11 @@ void MyFrame::OnExportVolumeData(wxCommandEvent& e )
 	OnExportData(_T("Save Cell Volume data as..."), &CaptureManager::SaveVolumeData);
 }
 
-void MyFrame::OnExportDeformationData(wxCommandEvent& e ){
+void MyFrame::OnExportDeformationData(wxCommandEvent& e )
+{
 	OnExportData(_T("Save Cell Area data as..."), &CaptureManager::SaveDeformationData);
 }
+
 void MyFrame::OnExportContours(wxCommandEvent& e )
 {
 	OnExportData(_T("Save Contours as..."), &CaptureManager::SaveContours);
@@ -812,7 +885,8 @@ void MyFrame::OnExportContours(wxCommandEvent& e )
 void MyFrame::OnImportTrackData(wxCommandEvent& e )
 {
 	wxString filename = wxFileSelector(_T("Import tracking data..."), cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
-	  if (!filename.empty()){
+	if (!filename.empty())
+	{
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
 		cm->ImportTrackData(filename.mb_str());
@@ -826,7 +900,8 @@ void MyFrame::OnImportTrackData(wxCommandEvent& e )
 void MyFrame::OnImportContours(wxCommandEvent& e )
 {
 	wxString filename = wxFileSelector(_T("Import contours..."), cwd, _T(""), _T(""), _T("Text Files|*.txt"), wxOPEN | wxCHANGE_DIR | wxFILE_MUST_EXIST, this);
-	  if (!filename.empty()){
+	if (!filename.empty())
+	{
 		setCWD(wxPathOnly(filename));
 		wxBeginBusyCursor();
 		cm->ImportContours(filename.mb_str());
@@ -838,7 +913,8 @@ void MyFrame::OnImportContours(wxCommandEvent& e )
 }
 
 #include <wx/aboutdlg.h>
-void MyFrame::OnAbout(wxCommandEvent &e){
+void MyFrame::OnAbout(wxCommandEvent &e)
+{
 	wxAboutDialogInfo i;
 	i.SetName(_T("Confocal CellTrack"));
 	i.SetVersion(_T("0.2-1.1"));
@@ -847,7 +923,9 @@ void MyFrame::OnAbout(wxCommandEvent &e){
 	i.SetWebSite(_T("http://db.cse.ohio-state.edu/CellTrack"));
 	wxAboutBox(i);
 }
-void MyFrame::OnHelp(wxCommandEvent &e){
+
+void MyFrame::OnHelp(wxCommandEvent &e)
+{
 	wxLaunchDefaultBrowser(_T("http://db.cse.ohio-state.edu/CellTrack"));
 }
 
