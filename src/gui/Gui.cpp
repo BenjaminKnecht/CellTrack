@@ -3691,7 +3691,7 @@ ConfocalDialog_::ConfocalDialog_( wxWindow* parent, wxWindowID id, const wxStrin
 	bSizer60 = new wxBoxSizer( wxVERTICAL );
 	
 	m_staticText101 = new wxStaticText( this, wxID_ANY, _("number of slides must be proper divisor of number of images"), wxDefaultPosition, wxDefaultSize, 0 );
-	m_staticText101->Wrap( 200 );
+	m_staticText101->Wrap( 300 );
 	bSizer60->Add( m_staticText101, 0, wxALIGN_CENTER|wxALL, 5 );
 	
 	wxFlexGridSizer* fgSizer40;

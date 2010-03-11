@@ -1106,12 +1106,12 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp, int start, int end)
                     maxRatio = ratio;
                 if (minRatio > ratio)
                     minRatio = ratio;
-                ratios[i-1].push_back(ratio);
+                ratios[i-1-start].push_back(ratio);
             }
             lastTraj = traj[i];
         }
 
-		CvSeq* oseq = Access(0, 0, false, true)->contourArray[c];
+		CvSeq* oseq = Access(start, 0, false, true)->contourArray[c];
 		MyCanvas::DrawContour_static(&dc, oseq, wxPoint(0,0), scale);
 		for (int i=0; i<oseq->total; i++)
 		{
@@ -1126,26 +1126,25 @@ bool CaptureManager::SaveTrackImage(wxBitmap &bmp, int start, int end)
 				dc.DrawLine(scale.x*lastLoc->x, scale.y*lastLoc->y, scale.x*p->x, scale.y*p->y);
 				lastLoc = p;
 			}
-			dc.DrawCircle(MyPoint((CvPoint*)cvGetSeqElem(Access(start, 0, false, true)->contourArray[c],i))*scale, Preferences::GetColorContourBorderWidth());
-			//dc.SetPen(wxPen(*wxRED /* this color to be changed */ ));
+			//dc.DrawCircle(MyPoint((CvPoint*)cvGetSeqElem(Access(start, 0, false, true)->contourArray[c],i))*scale, Preferences::GetColorContourBorderWidth());
 			for (int j=start+1; j<end; j++)
 			{
 			    wxColor pointColor(*wxLIGHT_GREY);
-                if (ratios[j-1][i] > 0)
-                    pointColor = wxColor(128 + 127*ratios[j-1][i]/maxRatio, 128 - 128*ratios[j-1][i]/maxRatio, 128 - 128*ratios[j-1][i]/maxRatio);
+                if (ratios[j-1-start][i] > 0)
+                    pointColor = wxColor(128 + 127*ratios[j-1-start][i]/maxRatio, 128 - 128*ratios[j-1-start][i]/maxRatio, 128 - 128*ratios[j-1-start][i]/maxRatio);
                 else
-                    pointColor = wxColor(128 - 128*ratios[j-1][i]/minRatio, 128 - 128*ratios[j-1][i]/minRatio, 128 + 127*ratios[j-1][i]/minRatio);
+                    pointColor = wxColor(128 - 128*ratios[j-1-start][i]/minRatio, 128 - 128*ratios[j-1-start][i]/minRatio, 128 + 127*ratios[j-1-start][i]/minRatio);
                 dc.SetPen(wxPen(pointColor));
                 dc.SetBrush(pointColor);
 				if(Access(j, 0, false, true)->contourArray.size() <= c || Access(j, 0, false, true)->contourArray[c]->total <= i)
 					continue;
 				CvPoint *p = (CvPoint*) cvGetSeqElem(Access(j, 0, false, true)->contourArray[c], i);
-				dc.DrawCircle(MyPoint(*p)*scale, Preferences::GetColorContourBorderWidth());
+				dc.DrawCircle(MyPoint(*p)*scale, Preferences::GetColorContourBorderWidth()*2);
 			}
 		}
 		lastTraj = traj[start];
 		dc.SetBrush(*wxTRANSPARENT_BRUSH);
-		for (int i=start+1; i<start/*traj.size()*/; i++)
+		for (int i=start+1; i<end/*traj.size()*/; i++)
 		{
 			if(traj[i].x<0)
 				continue;

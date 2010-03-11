@@ -146,13 +146,18 @@ void PluginBase::CreateProgressDlg(int maxFrames)
 	DestroyProgressDlg();
 	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount, win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 }
-bool PluginBase::UpdateProgressDlg(int frame){
+
+bool PluginBase::UpdateProgressDlg(int frame)
+{
 	if (!progressDlg)
 		CreateProgressDlg();
 	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, cm->GetFrameCount()*cm->slideCount));
 }
-void PluginBase::DestroyProgressDlg(){
-	if (progressDlg){
+
+void PluginBase::DestroyProgressDlg()
+{
+	if (progressDlg)
+	{
 		if (!progressDlg->Update(0))
 			cm->ReloadCurrentFrame();
 		progressDlg->Destroy();

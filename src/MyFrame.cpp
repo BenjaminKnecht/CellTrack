@@ -203,8 +203,8 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
             return;
         ConfocalDialog_ w(this);
         w.m_zslides->SetValue(m_zslides);
-        w.m_deltaZ->SetValue(wxString::Format(_T("%f"), m_deltaZ));
-        w.m_calibration->SetValue(wxString::Format(_T("%f"), m_calibration));
+        w.m_deltaZ->SetValue(wxString::Format(_T("%.3f"), m_deltaZ));
+        w.m_calibration->SetValue(wxString::Format(_T("%.3f"), m_calibration));
         w.m_fluorescence->SetValue(loadFluorescence);
         if(w.ShowModal() == wxID_OK)
         {
@@ -219,8 +219,8 @@ void MyFrame::OnOpenConfocal( wxCommandEvent& event )
         {
             ConfocalDialog_ v(this);
             v.m_fluorescence->SetValue(loadFluorescence);
-            v.m_deltaZ->SetValue(wxString::Format(_T("%f"), m_deltaZ));
-            v.m_calibration->SetValue(wxString::Format(_T("%f"), m_calibration));
+            v.m_deltaZ->SetValue(wxString::Format(_T("%.3f"), m_deltaZ));
+            v.m_calibration->SetValue(wxString::Format(_T("%.3f"), m_calibration));
             v.m_zslides->SetValue(m_zslides);
 
             if(v.ShowModal() == wxID_OK)
@@ -814,19 +814,23 @@ void MyFrame::OnExportTrackImage( wxCommandEvent& e )
 void MyFrame::OnExportSingleTrackImages( wxCommandEvent& e )
 {
     wxString filename = wxFileSelector(_T("Save tracking images as..."), cwd, _T(""), _T(""), _T("Image Files|*.png;*.jpg;*.gif"), wxSAVE | wxCHANGE_DIR | wxFD_OVERWRITE_PROMPT, this);
-    setCWD(wxPathOnly(filename));
-    wxString name = filename.BeforeLast('.');
-    wxString extension = filename.AfterLast('.');
-    for (int i = 1; i < cm->frameCount; i++)
+    if (!filename.empty())
     {
-        if (!filename.empty())
+        setCWD(wxPathOnly(filename));
+        wxString name = filename.BeforeLast('.');
+        wxString extension = filename.AfterLast('.');
+        wxBeginBusyCursor();
+        wxProgressDialog* progressDlg = new wxProgressDialog(_T("Saving individual images..."), wxString::Format(_T("Processing image of frame 0 and 1 of %d..."), cm->GetFrameCount()), cm->GetFrameCount()-1, this, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+        for (int i = 1; i < cm->frameCount; i++)
         {
-            wxBeginBusyCursor();
+            progressDlg->Update(i-1, wxString::Format(_T("Processing image of frame %d and %d of %d..."), i, i+1, cm->GetFrameCount()));
             wxBitmap bmp;
-            if(cm->CaptureManager::SaveTrackImage(bmp, i-1, i))
-                bmp.ConvertToImage().SaveFile(name + wxString::Format(_T("%d_%d."), i-1, i) + extension);
-            wxEndBusyCursor();
+            if(cm->SaveTrackImage(bmp, i-1, i+1))
+                bmp.ConvertToImage().SaveFile(name + wxString::Format(_T("%d_%d."), i, i+1) + extension);
         }
+        progressDlg->Destroy();
+		progressDlg = NULL;
+        wxEndBusyCursor();
     }
 }
 
