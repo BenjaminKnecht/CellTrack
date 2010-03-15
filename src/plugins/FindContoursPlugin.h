@@ -23,6 +23,7 @@ public:
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void ReleaseTemps();
+	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus *img );
 	static void ProcessImage_static( ImagePlus *img, IplImage* &gray, IplImage* &edge,

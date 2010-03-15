@@ -5,6 +5,8 @@ ImproveContoursPlugin::ImproveContoursPlugin( wxWindow* parent_, MyFrame *win_ )
 {
 	sidebar =  new ImproveContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 

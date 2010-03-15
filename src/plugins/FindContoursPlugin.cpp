@@ -7,6 +7,8 @@ gray(NULL), edge(NULL)
 {
 	sidebar =  new FindContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 
@@ -46,7 +48,7 @@ void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, I
 	{
         thresh2 = cvThreshold(gray, edge, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
         thresh1 = (255+thresh2)/2;
-        std::cout << thresh1 << " " << thresh2 << std::endl;
+        //std::cout << thresh1 << " " << thresh2 << std::endl;
 	}
 	cvCanny( gray, edge, thresh1, thresh2, aperture );
 	cvDilate( edge, edge, NULL, dilate );
@@ -55,4 +57,16 @@ void FindContoursPlugin::ProcessImage_static( ImagePlus *img, IplImage* &gray, I
 	cvFindContours( edge, img->CreateContoursStorageOnDemand(clean), &seq, sizeof(CvContour),
 		all ? CV_RETR_LIST : CV_RETR_EXTERNAL,  approx ? CV_CHAIN_APPROX_SIMPLE : CV_CHAIN_APPROX_NONE , cvPoint(0,0) );
 	img->AddContours(seq);
+}
+
+void FindContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
 }

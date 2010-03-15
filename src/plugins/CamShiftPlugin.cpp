@@ -7,6 +7,8 @@ backproject(NULL), hist(NULL), rotation(NULL), shift(NULL), planes(NULL)
 {
 	sidebar =  new CamShiftSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 void CamShiftPlugin::ReleaseTemps()

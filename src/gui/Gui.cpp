@@ -2051,6 +2051,7 @@ ImproveContoursSidebar_::ImproveContoursSidebar_( wxWindow* parent, wxWindowID i
 	bSizer9->Add( sbSizer162, 0, wxEXPAND, 5 );
 	
 	use_blur = new wxCheckBox( m_scrolledWindow3, wxID_ANY, _("Use blurred image"), wxDefaultPosition, wxDefaultSize, 0 );
+	use_blur->SetValue(true);
 	
 	bSizer9->Add( use_blur, 0, wxALL, 5 );
 	

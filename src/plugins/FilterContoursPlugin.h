@@ -22,6 +22,7 @@ public:
     virtual int GetScope2();
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
+	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus *img );
 };

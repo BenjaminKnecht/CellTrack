@@ -5,6 +5,8 @@ CopyContoursPlugin::CopyContoursPlugin( wxWindow* parent_, MyFrame *win_ ): Plug
 {
 	sidebar =  new CopyContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 
@@ -31,7 +33,7 @@ void CopyContoursPlugin::OnOK()
 			CreateProgressDlg();
 			for (int j = 0; j<cm->slideCount; j++)
             {
-                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount()); i++)
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount(), cm->GetFrameCount()*cm->slideCount); i++)
                 {
                     if (GetScope2() != 1)
                     {
@@ -48,7 +50,7 @@ void CopyContoursPlugin::OnOK()
 		else if (GetScope() == 2)
 		{
 		    CreateProgressDlg(cm->GetFrameCount());
-            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()); i++)
             {
                 if (GetScope2() != 1)
                 {
@@ -64,7 +66,7 @@ void CopyContoursPlugin::OnOK()
 		else if (GetScope() == 3)
 		{
 		    CreateProgressDlg(cm->slideCount);
-            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i, cm->slideCount); i++)
             {
                 if (GetScope2() != 1)
                 {

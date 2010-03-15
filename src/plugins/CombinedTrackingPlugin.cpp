@@ -10,6 +10,8 @@ as_gray(NULL), as_ogray(NULL), as_avgiterations(0), Earc(NULL), Earc_ready(false
 {
 	sidebar =  new CombinedTrackingSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 void CombinedTrackingPlugin::ReleaseTemps()

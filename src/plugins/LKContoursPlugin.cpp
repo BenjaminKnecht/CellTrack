@@ -7,6 +7,8 @@ gray(NULL), ogray(NULL), pyr(NULL), opyr(NULL), avgLost(0)
 {
 	sidebar =  new LKContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 void LKContoursPlugin::ReleaseTemps()
@@ -58,7 +60,7 @@ void LKContoursPlugin::OnOK()
 		if (GetScope2() != 1) // both and normal
         {
             ImagePlus *oimg=cm->Access(0,cm->GetZPos(),false);
-            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()); i++)
             {
                 ImagePlus* img = cm->Access(i,cm->GetZPos(),false);
                 LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
@@ -73,7 +75,7 @@ void LKContoursPlugin::OnOK()
         if (GetScope2() != 0) // both and fluorescence
         {
             ImagePlus *oimg=cm->Access(0,cm->GetZPos(),true);
-            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i+(GetScope2()==2?cm->GetFrameCount():0)); i++)
+            for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i+(GetScope2()==2?cm->GetFrameCount():0), cm->GetFrameCount()*(GetScope2()==2?2:1)); i++)
             {
                 ImagePlus* img = cm->Access(i,cm->GetZPos(),true);
                 LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
@@ -97,7 +99,7 @@ void LKContoursPlugin::OnOK()
 		IplImage *swap;
 		int flags=0;
 		CreateProgressDlg(cm->slideCount*(GetScope2()==2?2:1));
-        for (int i=0; i<cm->slideCount && UpdateProgressDlg(i); i++)
+        for (int i=0; i<cm->slideCount && UpdateProgressDlg(i, cm->slideCount*(GetScope2()==2?2:1)); i++)
         {
             if (GetScope2() != 1) // both and normal
             {
@@ -141,7 +143,7 @@ void LKContoursPlugin::OnOK()
 		    if (GetScope2() != 1) // both and normal
             {
                 ImagePlus *oimg=cm->Access(0,j, false);
-                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j); i++)
+                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j, cm->slideCount*cm->GetFrameCount()*(GetScope2()==2?2:1)); i++)
                 {
                     ImagePlus* img = cm->Access(i,j,false);
                     LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);
@@ -156,7 +158,7 @@ void LKContoursPlugin::OnOK()
             if (GetScope2() != 0) // both and fluorescence
             {
                 ImagePlus *oimg=cm->Access(0,j, true);
-                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j+(GetScope2()==2?cm->slideCount*cm->GetFrameCount():0)); i++)
+                for (int i=1; i<cm->GetFrameCount() && UpdateProgressDlg(i*j+(GetScope2()==2?cm->slideCount*cm->GetFrameCount():0), cm->slideCount*cm->GetFrameCount()*(GetScope2()==2?2:1)); i++)
                 {
                     ImagePlus* img = cm->Access(i,j,true);
                     LKContoursPlugin::ProcessStatic(img, oimg, level, winsize, criteria, flags, fixOutliers, intwin, avgLost, gray,ogray,pyr,opyr,ops,psf,opsf,status,useAvailable,np_total,false,i==cm->GetFrameCount()-1);

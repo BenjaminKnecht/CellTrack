@@ -10,6 +10,8 @@ FilterContoursPlugin::FilterContoursPlugin( wxWindow* parent_, MyFrame *win_ ): 
 	sidebar->maxArea->SetRange(0, maxArea);
 	sidebar->minArea->SetValue(pow(10, ceil(log10(maxArea/100.0))));
 	sidebar->maxArea->SetValue(pow(10, ceil(log10(maxArea/10.0))));
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 int FilterContoursPlugin::GetScope() {	return sidebar->scope->GetSelection(); }
@@ -47,4 +49,16 @@ void FilterContoursPlugin::ProcessImage( ImagePlus *img ){
 				continue;
 		}
 	}
+}
+
+void FilterContoursPlugin::OnFluorescence()
+{
+    if (cm->viewFluorescence && GetScope2() == 0)
+    {
+        sidebar->scope2->SetSelection(1);
+    }
+    else if (!cm->viewFluorescence && GetScope2() == 1)
+    {
+        sidebar->scope2->SetSelection(0);
+    }
 }

@@ -6,13 +6,15 @@ NormalizeContoursPlugin::NormalizeContoursPlugin( wxWindow* parent_, MyFrame *wi
 {
 	sidebar =  new NormalizeContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 void NormalizeContoursPlugin::ReleaseTemps()
 {
 }
-int NormalizeContoursPlugin::GetScope() {	return sidebar->scope->GetSelection() ? 1 : 0; }
-int NormalizeContoursPlugin::GetScope2() {	return sidebar->scope2->GetSelection(); }
+int NormalizeContoursPlugin::GetScope() { return sidebar->scope->GetSelection(); }
+int NormalizeContoursPlugin::GetScope2() { return sidebar->scope2->GetSelection(); }
 bool NormalizeContoursPlugin::IsPreviewOn(){ return sidebar->preview->GetValue(); }
 void NormalizeContoursPlugin::DoPreview()
 {

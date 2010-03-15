@@ -65,12 +65,12 @@ void PluginBase::OnOK()
 	if (doProcessImageOnOK && GetScope()>=0 && GetScope2()>=0)
 	{
 		wxBeginBusyCursor();
-		if (GetScope() == 1)
+		if (GetScope() == 1) // all
 		{
 			CreateProgressDlg();
 			for (int j = 0; j<cm->slideCount; j++)
             {
-                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount()); i++)
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount(), cm->GetFrameCount()*cm->slideCount); i++)
                 {
                     if (GetScope2() != 1)
                     {
@@ -86,10 +86,10 @@ void PluginBase::OnOK()
 			}
 			DestroyProgressDlg();
 		}
-		else if (GetScope() == 2)
+		else if (GetScope() == 2) // t-direction
 		{
 		    CreateProgressDlg(cm->GetFrameCount());
-            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()); i++)
             {
                 if (GetScope2() != 1)
                 {
@@ -104,10 +104,10 @@ void PluginBase::OnOK()
 			}
 			DestroyProgressDlg();
 		}
-		else if (GetScope() == 3)
+		else if (GetScope() == 3) // z-direction
 		{
 		    CreateProgressDlg(cm->slideCount);
-            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i, cm->slideCount); i++)
             {
                 if (GetScope2() != 1)
                 {
@@ -122,7 +122,7 @@ void PluginBase::OnOK()
 			}
 			DestroyProgressDlg();
 		}
-		else
+		else // single
 		{
 		    if (GetScope2() != 1)
             {
@@ -147,11 +147,11 @@ void PluginBase::CreateProgressDlg(int maxFrames)
 	progressDlg = new wxProgressDialog(wxString::FromAscii((name+string(" processing...")).c_str()), wxString::Format(_T("Frame 0 of %d..."), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount), maxFrames>=0 ? maxFrames : cm->GetFrameCount()*cm->slideCount, win, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
 }
 
-bool PluginBase::UpdateProgressDlg(int frame)
+bool PluginBase::UpdateProgressDlg(int frame, int maximum)
 {
 	if (!progressDlg)
-		CreateProgressDlg();
-	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, cm->GetFrameCount()*cm->slideCount));
+		CreateProgressDlg(maximum);
+	return progressDlg->Update(frame+1, wxString::Format(_T("Frame %d of %d..."), frame+1, maximum));
 }
 
 void PluginBase::DestroyProgressDlg()

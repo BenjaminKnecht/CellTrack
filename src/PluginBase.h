@@ -33,7 +33,7 @@ protected:
 
 	void CreateProgressDlg(int maxFrames=-1);
 	void DestroyProgressDlg();
-	bool UpdateProgressDlg(int frame);
+	bool UpdateProgressDlg(int frame, int maximum);
 public:
 	virtual ~PluginBase(void); //calls PluginBase::ReleaseTemps. must be overridden if want to delete additional temps.
 	PluginBase( string name_, wxWindow* parent_, MyFrame *win_, bool hasPreview_=false, bool doProcessImageOnOK_=true, bool showsCanvas2_=false);

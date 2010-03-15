@@ -5,6 +5,8 @@ CorrectContoursPlugin::CorrectContoursPlugin( wxWindow* parent_, MyFrame *win_ )
 {
 	sidebar =  new CorrectContoursSidebar(parent_, this);
 	sidebarw = sidebar;
+	if (cm->viewFluorescence)
+        sidebar->scope2->SetSelection(1);
 	DoPreview();
 }
 
@@ -31,17 +33,13 @@ void CorrectContoursPlugin::OnOK()
 			CreateProgressDlg();
             for (int i=0; i<cm->GetFrameCount(); i++)
             {
-                for (int j=0; j<cm->slideCount-1 && UpdateProgressDlg(i*cm->slideCount+j); j++)
+                for (int j=0; j<cm->slideCount-1 && UpdateProgressDlg(i*cm->slideCount+j, cm->GetFrameCount()*cm->slideCount); j++)
                 {
                     std::cout << "correct image:" << i << ", " << j << std::endl;
                     if (GetScope2() != 1)
-                    {
                         ProcessImage_static(cm->Access(i,j,false, true), cm->Access(i,j+1,false, true));
-                    }
                     if (GetScope2() != 0)
-                    {
                         ProcessImage_static(cm->Access(i,j,true, true), cm->Access(i,j+1,true, true));
-                    }
                 }
 			}
 			DestroyProgressDlg();
@@ -49,29 +47,21 @@ void CorrectContoursPlugin::OnOK()
 		else if (GetScope() == 2)
 		{
 		    CreateProgressDlg(cm->GetFrameCount());
-            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()); i++)
             {
                 if (cm->GetZPos() == cm->slideCount-1)
                 {
                     if (GetScope2() != 1)
-                    {
                         ProcessImage_static(cm->Access(i,cm->GetZPos()-1,false, true), cm->Access(i,cm->GetZPos(),false, true));
-                    }
                     if (GetScope2() != 0)
-                    {
                         ProcessImage_static(cm->Access(i,cm->GetZPos()-1,true, true), cm->Access(i,cm->GetZPos(),true, true));
-                    }
                 }
                 else
                 {
                     if (GetScope2() != 1)
-                    {
                         ProcessImage_static(cm->Access(i,cm->GetZPos(),false, true), cm->Access(i,cm->GetZPos()+1,false, true));
-                    }
                     if (GetScope2() != 0)
-                    {
                         ProcessImage_static(cm->Access(i,cm->GetZPos(),true, true), cm->Access(i,cm->GetZPos()+1,true, true));
-                    }
                 }
 			}
 			DestroyProgressDlg();
@@ -79,16 +69,12 @@ void CorrectContoursPlugin::OnOK()
 		else if (GetScope() == 3)
 		{
 		    CreateProgressDlg(cm->slideCount);
-            for (int i=0; i<cm->slideCount-1 && UpdateProgressDlg(i); i++)
+            for (int i=0; i<cm->slideCount-1 && UpdateProgressDlg(i, cm->slideCount); i++)
             {
                 if (GetScope2() != 1)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),i,false, true), cm->Access(cm->GetPos(),i+1,false, true));
-                }
                 if (GetScope2() != 0)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),i,true, true), cm->Access(cm->GetPos(),i+1,true, true));
-                }
 			}
 			DestroyProgressDlg();
 		}
@@ -97,24 +83,16 @@ void CorrectContoursPlugin::OnOK()
 		    if (cm->GetZPos() == cm->slideCount-1)
             {
                 if (GetScope2() != 1)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),cm->GetZPos()-1,false, true), cm->Access(cm->GetPos(),cm->GetZPos(),false, true));
-                }
                 if (GetScope2() != 0)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),cm->GetZPos()-1,true, true), cm->Access(cm->GetPos(),cm->GetZPos(),true, true));
-                }
             }
             else
             {
                 if (GetScope2() != 1)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),cm->GetZPos(),false, true), cm->Access(cm->GetPos(),cm->GetZPos()+1,false, true));
-                }
                 if (GetScope2() != 0)
-                {
                     ProcessImage_static(cm->Access(cm->GetPos(),cm->GetZPos(),true, true), cm->Access(cm->GetPos(),cm->GetZPos()+1,true, true));
-                }
             }
 		}
 		//if (!IsPreviewOn())
