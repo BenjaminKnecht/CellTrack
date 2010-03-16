@@ -151,6 +151,7 @@ public:
 	void OnExportAreaData(wxCommandEvent &e);
 	void OnExportVolumeData(wxCommandEvent &e);
 	void OnExportDeformationData(wxCommandEvent &e);
+	void OnNewApproach(wxCommandEvent &e);
 
 	void OnImportTrackData(wxCommandEvent &e);
 

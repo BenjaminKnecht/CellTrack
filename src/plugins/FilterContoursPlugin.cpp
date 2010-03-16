@@ -23,23 +23,36 @@ void FilterContoursPlugin::DoPreview()
 	ProcessImage(&cm->img);
 	cm->Redraw(false);
 }
-void FilterContoursPlugin::ProcessImage( ImagePlus *img ){
+
+void FilterContoursPlugin::ProcessImage( ImagePlus *img )
+{
+    ProcessImage_static( img, sidebar->isMinArea->GetValue(), sidebar->isMaxArea->GetValue(), sidebar->minArea->GetValue(), sidebar->maxArea->GetValue(), sidebar->isMinDist->GetValue(), sidebar->minDist->GetValue(), cm->GetSize() );
+}
+
+void FilterContoursPlugin::ProcessImage_static( ImagePlus *img, int isMinArea, int isMaxArea, int minArea, int maxArea, int isMinDist, int minDist, CvSize size )
+{
 	CvSeq *seq;
-	for (int i=(int)img->contourArray.size()-1; i>=0; i--) {
+	for (int i=(int)img->contourArray.size()-1; i>=0; i--)
+	{
 		seq = img->contourArray[i];
-		if (sidebar->isMinArea->GetValue() || sidebar->isMaxArea->GetValue()){
+		if (isMinArea || isMaxArea)
+		{
 			double area = fabs(cvContourArea(seq));
-			if ( (sidebar->isMinArea->GetValue() && area < sidebar->minArea->GetValue())
-				||(sidebar->isMaxArea->GetValue() && area > sidebar->maxArea->GetValue()) ){
+			if ( (isMinArea && area < minArea)
+				||(isMaxArea && area > maxArea) )
+            {
 				img->RemoveContour(i);
 				continue;
 			}
 		}
-		if (sidebar->isMinDist->GetValue()){
+		if (isMinDist)
+		{
 			bool removed = false;
-			for (int j=0; j<seq->total; j++) {
+			for (int j=0; j<seq->total; j++)
+			{
 				MyPoint p( (CvPoint*) cvGetSeqElem(seq, j) );
-				if ( !(p >= sidebar->minDist->GetValue()) || !(MyPoint(MyPoint(cm->GetSize()) -p) >= sidebar->minDist->GetValue()) ){
+				if ( !(p >= minDist) || !(MyPoint(MyPoint(size) -p) >= minDist) )
+				{
 					img->RemoveContour(i);
 					removed = true;
 					break;

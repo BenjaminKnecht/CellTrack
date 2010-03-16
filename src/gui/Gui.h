@@ -130,6 +130,7 @@ class MyFrame_ : public wxFrame
 		virtual void OnImportContours( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnFindFeatures( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnSubtractBackground( wxCommandEvent& event ){ event.Skip(); }
+		virtual void OnNewApproach( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnBorder( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnPoints( wxCommandEvent& event ){ event.Skip(); }
 		virtual void OnOtherBorder( wxCommandEvent& event ){ event.Skip(); }

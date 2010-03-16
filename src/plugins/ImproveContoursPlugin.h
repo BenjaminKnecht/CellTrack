@@ -25,4 +25,5 @@ public:
 	virtual void DoPreview();
 
 	void ProcessImage( ImagePlus *img );
+	static void ProcessImage_static(ImagePlus* img, IplImage* &gray, float alpha, float beta, float gamma, CvSize win, int scheme, bool useBlur, int max_iter, float epsilon);
 };

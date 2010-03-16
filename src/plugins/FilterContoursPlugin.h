@@ -25,4 +25,5 @@ public:
 	virtual void OnFluorescence();
 
 	void ProcessImage( ImagePlus *img );
+	static void ProcessImage_static( ImagePlus *img, int isMinArea, int isMaxArea, int minArea, int maxArea, int isMinDist, int minDist, CvSize size );
 };

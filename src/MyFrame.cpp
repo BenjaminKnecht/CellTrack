@@ -989,3 +989,45 @@ void MyFrame::OnBottomPoints( wxCommandEvent& event )
 	canvas->RefreshContours();
 }
 
+void MyFrame::OnNewApproach(wxCommandEvent &e)
+{
+    wxProgressDialog* progressDlg = new wxProgressDialog(_T("New Approach :: Finding Contours"), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()), cm->GetFrameCount(), this, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+    for (int i = 0; i<cm->GetFrameCount() && progressDlg->Update(i, wxString::Format(_T("Frame %d of %d..."), i+1, cm->GetFrameCount())); i++)
+    {
+        IplImage* gray = NULL;
+        IplImage* edge = NULL;
+        FindContoursPlugin::ProcessImage_static(cm->Access(i,0,true,false,2), gray, edge, 0, 0, 3, 1, 0, true, false, true, true);
+        FilterContoursPlugin::ProcessImage_static(cm->Access(i,0,true,true), 1,0,3000,10000, 0, 3, cm->GetSize());
+        std::cout << cm->Access(i,0,true,true)->contourArray.size() << std::endl;
+        cm->Release(i,0,true);
+        cvReleaseImage(&gray);
+        cvReleaseImage(&edge);
+    }
+    progressDlg->Destroy();
+    progressDlg = NULL;
+
+    progressDlg = new wxProgressDialog(_T("New Approach :: Calculating Contours"), wxString::Format(_T("Frame 0 of %d..."), cm->GetFrameCount()*cm->slideCount), cm->GetFrameCount()*cm->slideCount, this, wxPD_CAN_ABORT|wxPD_APP_MODAL|wxPD_ELAPSED_TIME|wxPD_REMAINING_TIME|wxPD_AUTO_HIDE);
+    for (int j = 0; j<cm->slideCount; j++)
+    {
+        int winsize = 1.0f/8.0f*((float)j)+3.0f;
+        CvSize win = cvSize(2*winsize-1, 2*winsize-1);
+        int alpha = 1.0f/4.0f*((float)j)+1.0f;
+        int beta = 1.0f/2.0f*((float)j)+1.0f;
+        int gamma = 1.0f/8.0f*((float)j)+1.0f;
+        int max = 1.0f/4.0f*((float)j)+3.0f;;
+        IplImage* gray = NULL;
+
+        for (int i = 0; i<cm->GetFrameCount() && progressDlg->Update(j*cm->GetFrameCount()+i, wxString::Format(_T("Frame %d of %d..."), j*cm->GetFrameCount()+i+1, cm->GetFrameCount()*cm->slideCount)); i++)
+        {
+            ImproveContoursPlugin::ProcessImage_static(cm->Access(i,j,true,false,1), gray, alpha, beta, gamma, win, 1, true, 10, 0.1f);
+            cm->Release(i,j,true);
+            NormalizeContoursPlugin::ProcessStatic(cm->Access(i,j,true,true), 1, max);
+            if (j==cm->slideCount-1)
+                break;
+            CopyContoursPlugin::ProcessImage_static(cm->Access(i,j,true,true), cm->Access(i,j+1,true,true));
+        }
+        cvReleaseImage(&gray);
+    }
+    progressDlg->Destroy();
+    progressDlg = NULL;
+}
