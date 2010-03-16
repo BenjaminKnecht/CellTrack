@@ -2689,7 +2689,7 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	m_staticText71->Wrap( -1 );
 	fgSizer11->Add( m_staticText71, 0, wxALL|wxALIGN_CENTER_VERTICAL, 2 );
 	
-	width = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 10, 3 );
+	width = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 10, 4 );
 	fgSizer11->Add( width, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
 	
 	m_staticText62 = new wxStaticText( m_scrolledWindow3, wxID_ANY, _("height:"), wxDefaultPosition, wxDefaultSize, 0 );

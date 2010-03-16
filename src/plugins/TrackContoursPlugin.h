@@ -36,7 +36,7 @@ public:
 
 	void FetchParams();
 
-	void ProcessImage( ImagePlus *img, int pos, int zPos );
+	void ProcessImage( ImagePlus *img, int pos, int zPos, bool fluor );
 	static void ProcessStatic
     ( int i, ImagePlus *img, ImagePlus *oimg, IplImage* &gray, IplImage* &ogray, CvPoint* &ps, CvPoint* &ops,
      float alpha, float beta, float gamma,

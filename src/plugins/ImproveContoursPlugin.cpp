@@ -80,10 +80,7 @@ void ImproveContoursPlugin::ProcessImage_static(ImagePlus* img, IplImage* &gray,
         if( ps == NULL )
             std::cout << "Err4" << std::endl;
         if( np < 3 )
-        {
             std::cout << "Err5" << std::endl;
-            cm->SaveContours("debugContours.txt");
-        }
         if( &alpha == NULL )
             std::cout << "Err6" << std::endl;
         if( &beta == NULL )
