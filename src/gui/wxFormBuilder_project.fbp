@@ -18,7 +18,7 @@
         <property name="relative_path">1</property>
         <property name="use_enum">1</property>
         <property name="use_microsoft_bom">0</property>
-        <object class="Frame" expanded="1">
+        <object class="Frame" expanded="0">
             <property name="bg"></property>
             <property name="center"></property>
             <property name="context_help"></property>
@@ -18065,8 +18065,8 @@
                                                     <property name="font"></property>
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
-                                                    <property name="initial">4</property>
-                                                    <property name="max">10</property>
+                                                    <property name="initial">3</property>
+                                                    <property name="max">20</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="min">1</property>
                                                     <property name="minimum_size"></property>
@@ -18172,7 +18172,7 @@
                                                     <property name="hidden">0</property>
                                                     <property name="id">wxID_ANY</property>
                                                     <property name="initial">3</property>
-                                                    <property name="max">10</property>
+                                                    <property name="max">20</property>
                                                     <property name="maximum_size"></property>
                                                     <property name="min">1</property>
                                                     <property name="minimum_size"></property>

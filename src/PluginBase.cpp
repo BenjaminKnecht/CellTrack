@@ -50,16 +50,19 @@ void PluginBase::OnEndPreview()
 	}
 	*/
 }
+
 void PluginBase::OnCancel()
 {
 	if ( IsPreviewOn() )
 		OnEndPreview();
 }
-void PluginBase::OnRedraw(  )
+
+void PluginBase::OnRedraw()
 {
 	if ( IsPreviewOn() && cm && cm->GetFrameCount())
 		ProcessImage(&cm->img, cm->GetPos(), cm->GetZPos(), cm->viewFluorescence);
 }
+
 void PluginBase::OnOK()
 {
 	if (doProcessImageOnOK && GetScope()>=0 && GetScope2()>=0)
@@ -67,10 +70,10 @@ void PluginBase::OnOK()
 		wxBeginBusyCursor();
 		if (GetScope() == 1) // all
 		{
-			CreateProgressDlg();
+			CreateProgressDlg(cm->slideCount*cm->frameCount*(GetScope2()==2?2:1));
 			for (int j = 0; j<cm->slideCount; j++)
             {
-                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount(), cm->GetFrameCount()*cm->slideCount); i++)
+                for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i+j*cm->GetFrameCount(), cm->GetFrameCount()*cm->slideCount*(GetScope2()==2?2:1)); i++)
                 {
                     if (GetScope2() != 1)
                     {
@@ -88,8 +91,8 @@ void PluginBase::OnOK()
 		}
 		else if (GetScope() == 2) // t-direction
 		{
-		    CreateProgressDlg(cm->GetFrameCount());
-            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()); i++)
+		    CreateProgressDlg(cm->GetFrameCount()*(GetScope2()==2?2:1));
+            for (int i=0; i<cm->GetFrameCount() && UpdateProgressDlg(i, cm->GetFrameCount()*(GetScope2()==2?2:1)); i++)
             {
                 if (GetScope2() != 1)
                 {
@@ -106,8 +109,8 @@ void PluginBase::OnOK()
 		}
 		else if (GetScope() == 3) // z-direction
 		{
-		    CreateProgressDlg(cm->slideCount);
-            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i, cm->slideCount); i++)
+		    CreateProgressDlg(cm->slideCount*(GetScope2()==2?2:1));
+            for (int i=0; i<cm->slideCount && UpdateProgressDlg(i, cm->slideCount*(GetScope2()==2?2:1)); i++)
             {
                 if (GetScope2() != 1)
                 {

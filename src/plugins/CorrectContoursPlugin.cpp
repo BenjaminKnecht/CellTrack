@@ -35,7 +35,7 @@ void CorrectContoursPlugin::OnOK()
             {
                 for (int j=0; j<cm->slideCount-1 && UpdateProgressDlg(i*cm->slideCount+j, cm->GetFrameCount()*cm->slideCount); j++)
                 {
-                    std::cout << "correct image:" << i << ", " << j << std::endl;
+                    //std::cout << "correct image:" << i << ", " << j << std::endl;
                     if (GetScope2() != 1)
                         ProcessImage_static(cm->Access(i,j,false, true), cm->Access(i,j+1,false, true));
                     if (GetScope2() != 0)
@@ -108,9 +108,11 @@ void CorrectContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos, boo
 
 void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* top )
 {
+    CvSeq* seq1 = bottom->contourArray[0];
+    CvSeq* seq2 = top->contourArray[0];
     // finding the largest contours in the image
     // (in case the contours have not been cleaned up properly)
-    int numBottomCells = bottom->contourArray.size();
+    /*int numBottomCells = bottom->contourArray.size();
     int numTopCells = top->contourArray.size();
     if (numBottomCells == 0 || numTopCells == 0)
         return;
@@ -151,6 +153,7 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     cvCvtSeqToArray(bottomCell, bottomPointsInt);
     for (int i=0; i<topCell->total; i++)
     {
+        until here first part of original function */
         //double test = cvPointPolygonTest(bottomPoints, topPoints[i], 1);
 
         //std::cout << test << std::endl;
@@ -185,6 +188,9 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
             std::cout << "FF" << std::endl;
 */
         //CvSeqReader reader;
+
+        // From here part 2 of original function
+        /*
         int counter = 0;
         int total = bottomCell->total;
         //cvStartReadSeq( bottomCell, &reader, -1 );
@@ -301,7 +307,7 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     }
     //std::cout << "finished, replacing with correct boundary.." << std::endl;
     if (dirty)
-        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);
+        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);*/
 }
 
 void CorrectContoursPlugin::OnFluorescence()

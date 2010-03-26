@@ -312,11 +312,12 @@ void TrackContoursPlugin::ProcessStatic
     IplImage* otemp = cvCreateImage( cvSize(oimg->orig->width, oimg->orig->height), IPL_DEPTH_8U, 1 );
     if (blur)
     {
-        std::cout << "Using Blur" << std::endl;
-        cvSmooth(gray, temp, CV_MEDIAN, 3);
-        cvSmooth(ogray, otemp, CV_MEDIAN, 3);
+        //std::cout << "Using Blur" << std::endl;
+        //cvSmooth(gray, temp, CV_MEDIAN, 3);
+        //cvSmooth(ogray, otemp, CV_MEDIAN, 3);
 
-        //cvThreshold(gray, temp, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+        cvThreshold(gray, temp, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
+        cvThreshold(ogray, otemp, 0, 255, CV_THRESH_BINARY | CV_THRESH_OTSU);
     }
 	cvSnakeImageTrack( temp, ps, np,
 		&alpha, &beta, &gamma,

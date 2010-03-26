@@ -2689,14 +2689,14 @@ TrackContoursSidebar_::TrackContoursSidebar_( wxWindow* parent, wxWindowID id, c
 	m_staticText71->Wrap( -1 );
 	fgSizer11->Add( m_staticText71, 0, wxALL|wxALIGN_CENTER_VERTICAL, 2 );
 	
-	width = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 10, 4 );
+	width = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 20, 3 );
 	fgSizer11->Add( width, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
 	
 	m_staticText62 = new wxStaticText( m_scrolledWindow3, wxID_ANY, _("height:"), wxDefaultPosition, wxDefaultSize, 0 );
 	m_staticText62->Wrap( -1 );
 	fgSizer11->Add( m_staticText62, 0, wxALL|wxALIGN_CENTER_VERTICAL, 5 );
 	
-	height = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 10, 3 );
+	height = new wxSpinCtrl( m_scrolledWindow3, wxID_ANY, wxEmptyString, wxDefaultPosition, wxSize( 50,-1 ), wxSP_ARROW_KEYS, 1, 20, 3 );
 	fgSizer11->Add( height, 0, wxALL|wxALIGN_CENTER_VERTICAL, 0 );
 	
 	sbSizer161->Add( fgSizer11, 0, wxEXPAND, 5 );
