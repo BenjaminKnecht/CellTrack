@@ -174,3 +174,8 @@ void ShiftFeatPoints(const std::vector<CvPoint2D32f> &src, std::vector<CvPoint2D
 		dst[i].y = src[i].y + shift.y;
 	}
 }
+
+wxPoint CvPointTowxPoint(CvPoint& point)
+{
+    return wxPoint(point.x, point.y);
+}
