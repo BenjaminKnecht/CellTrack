@@ -156,7 +156,10 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     int startingPoint = -1;
     for (int i=0; i<topCell->total; i++)
     {
-        if (cvPointPolygonTest(bottomCell, cvPointTo32f(topPointsInt[i]), false) >= 0)
+        //std::cout << "testing point (" << topPointsInt[i].x << "," << topPointsInt[i].y << ")" << std::endl;
+        double result = cvPointPolygonTest(bottomCell, cvPointTo32f(topPointsInt[i]), true);
+        //std::cout << result << std::endl;
+        if (result > 0)
         {
             startingPoint = i;
             break;
@@ -165,33 +168,42 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     // check if top boundary is never inside lower boundary -> replace boundary (trivial solution)
     if (startingPoint == -1)
     {
+        std::cout << "Found no inner points, replacing whole contour" << std::endl;
         top->ReplaceContour(biggestCellIndex, bottomPointsInt, bottomCell->total);
+        return;
     }
-    std::vector<CvPoint> newBoundary;
-    for (int i=startingPoint+1; i==startingPoint; i++)
+    std::cout << "Found inner point at " << startingPoint << std::endl;
+    std::vector<wxPoint> newBoundary;
+    for (int i=startingPoint+1; i!=startingPoint; i++)
     {
         CvPoint2D32f min, min0;
         int index;
-        double distance = modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index);
+        double distance = modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index, bottomCell->total);
+        std::cout << "Distance for point " << i << " is " << distance << "(" << startingPoint << ")" << std::endl;
         if (distance < 0)
         {
+            std::cout << "Found outer point at " << i << std::endl;
             int startingIndex = index;
-            while (modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index) < 0)
+            std::cout << "Starting index at bottom = " << index << std::endl;
+            while (modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index, bottomCell->total) < 0)
             {
                 i++;
                 if (i>=topCell->total-1)
                     i = -1;
             }
+            std::cout << "Found new inner point at " << i << std::endl;
+            std::cout << "Replacing contour segment with bottom segment from " << startingIndex << " to " << index << std::endl;
             for (int j = startingIndex; j<index; j++)
             {
-                newBoundary.push_back(bottomPointsInt[j]);
+                newBoundary.push_back(CvPointTowxPoint(bottomPointsInt[j]));
             }
         }
         else
         {
-            newBoundary.push_back(topPointsInt[i]);
+            newBoundary.push_back(CvPointTowxPoint(topPointsInt[i]));
         }
-
+        if (i==startingPoint)
+            break;
         if (i>=topCell->total-1)
             i = -1;
     }
@@ -230,7 +242,7 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
             std::cout << "FF" << std::endl;
 */
 
-        if (distance < 0)
+        /*if (distance < 0)
         {
             std::cout << "calculating proper position for point " << pt.x << ", " << pt.y << std::endl;
             // check if distance is between two points or point and a line
@@ -282,10 +294,9 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
             std::cout << "new position for point " << i << ": (" << topPointsInt[i].x << ", " << topPointsInt[i].y << ")" << std::endl;
             dirty = true;
         }
-    }
+    }*/
     //std::cout << "finished, replacing with correct boundary.." << std::endl;
-    if (dirty)
-        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);
+    top->ReplaceContour(biggestCellIndex, newBoundary);
 }
 
 void CorrectContoursPlugin::OnFluorescence()
@@ -300,15 +311,14 @@ void CorrectContoursPlugin::OnFluorescence()
     }
 }
 
-double CorrectContoursPlugin::modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*& bottomPointsInt, CvPoint2D32f& min0, CvPoint2D32f& min, int& index)
+double CorrectContoursPlugin::modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*& bottomPointsInt, CvPoint2D32f& min0, CvPoint2D32f& min, int& index, int size)
 {
     int counter = 0;
-    int total = bottomCell->total;
-    CvPoint2D32f v0, v, pt = cvPointTo32f(pt);
+    CvPoint2D32f v0, v;
     v = cvPointTo32f(bottomPointsInt[0]);
     double distance = 0;
     double min_dist_num = FLT_MAX, min_dist_denom = 1;
-    for( int j = 1; j < total; j++ )
+    for( int j = 1; j < size; j++ )
     {
         double dx, dy, dx1, dy1, dx2, dy2, dist_num, dist_denom = 1;
 
@@ -336,7 +346,7 @@ double CorrectContoursPlugin::modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*
             min_dist_denom = dist_denom;
             min0 = v0;
             min = v;
-            index = i;
+            index = j;
             if( min_dist_num == 0 )
                 break;
         }

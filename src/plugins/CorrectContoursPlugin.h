@@ -23,7 +23,7 @@ public:
 	virtual bool IsPreviewOn();
 	virtual void DoPreview();
 	virtual void OnFluorescence();
-	double modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*& bottomPointsInt, CvPoint2D32f& min0, CvPoint2D32f& min, int& index);
+	static double modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*& bottomPointsInt, CvPoint2D32f& min0, CvPoint2D32f& min, int& index, int size);
 
 	void ProcessImage( ImagePlus *img, int pos, int zPos, bool fluorescence );
 	static void ProcessImage_static( ImagePlus *source, ImagePlus* target );

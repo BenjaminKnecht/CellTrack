@@ -75,6 +75,7 @@ void ShiftContour(CvSeq *seq, const CvPoint &shift);
 CvMat *FeatPointsToMat(const std::vector<CvPoint2D32f> &feats);
 void TransformFeatPoints(const std::vector<CvPoint2D32f> &src, std::vector<CvPoint2D32f> &dst, CvMat *rotation, CvMat *shift);
 void ShiftFeatPoints(const std::vector<CvPoint2D32f> &src, std::vector<CvPoint2D32f> &dst, const CvPoint2D32f &shift);
+wxPoint CvPointTowxPoint(CvPoint& point);
 
 template<class T> class CvImageWrapper
 {
