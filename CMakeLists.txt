@@ -7,8 +7,9 @@ PROJECT(CellTrack C CXX)
 # This sets where to look for CMake modules (e.g. "Find*.cmake" files)
 SET(CMAKE_MODULE_PATH ${CMAKE_SOURCE_DIR}/cmake)
 
-FIND_PACKAGE(WxWidgets REQUIRED)
-FIND_PACKAGE(OpenCV    REQUIRED)
+FIND_PACKAGE(WxMathplots	REQUIRED)
+FIND_PACKAGE(WxWidgets		REQUIRED)
+FIND_PACKAGE(OpenCV		REQUIRED)
 
 ADD_DEFINITIONS(-ggdb ${WXWINDOWS_DEFINITIONS})
 

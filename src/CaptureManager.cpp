@@ -527,10 +527,10 @@ void CaptureManager::SetBookChangeListener( PluginBase* BookChangeListener_ )
 }
 
 #include "MyPoint.h"
-std::vector<float> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avgSpeed)
+std::vector<double> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avgSpeed)
 {
 	std::vector<CvPoint> traj = GetTrajectory(c);
-	std::vector<float> s(frameCount-1, 0.0);
+	std::vector<double> s(frameCount-1, 0.0);
 	totalDisp = 0;
 	int goodSteps = 0;
 	for (int i=0; i<frameCount-1; i++)
@@ -545,9 +545,9 @@ std::vector<float> CaptureManager::GetSpeeds(int c, float &totalDisp, float &avg
 	return s;
 }
 
-std::vector<float> CaptureManager::GetAreas(int c, float &avgArea)
+std::vector<double> CaptureManager::GetAreas(int c, float &avgArea)
 {
-	std::vector<float> a(frameCount, 0.0);
+	std::vector<double> a(frameCount, 0.0);
 	int goodSteps = 0;
 	float totalArea = 0.0;
 	for (int i=0; i<frameCount; i++)
@@ -562,10 +562,10 @@ std::vector<float> CaptureManager::GetAreas(int c, float &avgArea)
 	return a;
 }
 
-std::vector<float> CaptureManager::GetAreaDiff(int c, float &avgDiff)
+std::vector<double> CaptureManager::GetAreaDiff(int c, float &avgDiff)
 {
-	std::vector<float> a = GetAreas(c,avgDiff);
-	std::vector<float> diff(frameCount-1, 0.0);
+	std::vector<double> a = GetAreas(c,avgDiff);
+	std::vector<double> diff(frameCount-1, 0.0);
 	float totalDiff = 0;
 	int goodSteps = 0;
 	for (int i=0; i<frameCount-1; i++)
@@ -580,9 +580,9 @@ std::vector<float> CaptureManager::GetAreaDiff(int c, float &avgDiff)
 	return diff;
 }
 
-std::vector<float> CaptureManager::GetVolumes(int c, float &avgVolume)
+std::vector<double> CaptureManager::GetVolumes(int c, float &avgVolume)
 {
-	std::vector<float> v(frameCount, 0.0);
+	std::vector<double> v(frameCount, 0.0);
 	int goodSteps = 0;
 	float totalVolume = 0.0;
     for (int i=0; i<frameCount; i++)
@@ -604,10 +604,10 @@ std::vector<float> CaptureManager::GetVolumes(int c, float &avgVolume)
 	return v;
 }
 
-std::vector<float> CaptureManager::GetVolumeDiff(int c, float &avgDiff)
+std::vector<double> CaptureManager::GetVolumeDiff(int c, float &avgDiff)
 {
-	std::vector<float> v = GetVolumes(c, avgDiff);
-	std::vector<float> diff(frameCount-1, 0.0);
+	std::vector<double> v = GetVolumes(c, avgDiff);
+	std::vector<double> diff(frameCount-1, 0.0);
 	double totalDiff = 0;
 	int goodSteps = 0;
 	for (int i=0; i<frameCount-1; i++)
@@ -623,11 +623,11 @@ std::vector<float> CaptureManager::GetVolumeDiff(int c, float &avgDiff)
 }
 
 #include "FindContoursPlugin.h"
-std::vector<float> CaptureManager::GetDeformation(int c, float &avgDef)
+std::vector<double> CaptureManager::GetDeformation(int c, float &avgDef)
 {
 	std::vector<CvPoint> traj = GetTrajectory(c);
-	std::vector<float> areas = GetAreas(c,avgDef);
-	std::vector<float> defs(frameCount-1, 0.0);
+	std::vector<double> areas = GetAreas(c,avgDef);
+	std::vector<double> defs(frameCount-1, 0.0);
 	float totalDef = 0;
 	int goodSteps = 0;
 	CvSeq *h_next;
@@ -971,7 +971,7 @@ bool CaptureManager::SaveSpeedData(const char* file)
 		CvSeq *oseq = book[0]->contourArray[c];
 		int np = oseq->total;
 		float totalDisp, avgSpeed;
-		std::vector<float> speeds = GetSpeeds(c, totalDisp, avgSpeed);
+		std::vector<double> speeds = GetSpeeds(c, totalDisp, avgSpeed);
 
 		fprintf(fp, "#Cell: %d, pointCount: %d, totalDistance: %f, avgSped: %f\n", c+1, np, totalDisp, avgSpeed);
 		for (int i=0; i<speeds.size(); i++)
@@ -996,7 +996,7 @@ bool CaptureManager::SaveAreaData(const char* file)
 		CvSeq *oseq = book[0]->contourArray[c];
 		int np = oseq->total;
 		float avgArea;
-		std::vector<float> areas = GetAreas(c, avgArea);
+		std::vector<double> areas = GetAreas(c, avgArea);
 
 		fprintf(fp, "#Cell: %d, pointCount: %d, avgArea: %f\n", c+1, np, avgArea);
 		for (int i=0; i<areas.size(); i++)
@@ -1026,7 +1026,7 @@ bool CaptureManager::SaveVolumeData(const char* file)
 		CvSeq *oseq = Access(0,0,false)->contourArray[c];
 		int np = oseq->total;
 		float avgVolume;
-		std::vector<float> volumes = GetVolumes(c, avgVolume);
+		std::vector<double> volumes = GetVolumes(c, avgVolume);
 
 		outfile << "#Cell: " << c+1 << ", pointCount: " << np << ", avgVolume: " << avgVolume << std::endl;
 		for (int i=0; i<volumes.size(); i++)
@@ -1051,7 +1051,7 @@ bool CaptureManager::SaveDeformationData(const char* file)
 		CvSeq *oseq = book[0]->contourArray[c];
 		int np = oseq->total;
 		float avgDef;
-		std::vector<float> defs = GetDeformation(c, avgDef);
+		std::vector<double> defs = GetDeformation(c, avgDef);
 
 		fprintf(fp, "#Cell: %d, pointCount: %d, avgDeformation: %f\n", c+1, np, avgDef);
 		for (int i=0; i<defs.size(); i++)

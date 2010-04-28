@@ -3,7 +3,8 @@ INCLUDE_DIRECTORIES(
   ${CMAKE_CURRENT_SOURCE_DIR}/gui
   ${CMAKE_CURRENT_SOURCE_DIR}/gui/images
   ${CMAKE_CURRENT_SOURCE_DIR}/plugins
-  ${CMAKE_CURRENT_SOURCE_DIR}/lib/wxmathplot-0.03
+  #${CMAKE_CURRENT_SOURCE_DIR}/lib/wxmathplot-0.03
+  ${CMAKE_CURRENT_SOURCE_DIR}/lib/wxMathPlot-0.1.2
   ${OpenCV_INCLUDE_DIRS}
   ${WXWINDOWS_INCLUDE_DIR}
 )
@@ -27,8 +28,9 @@ SET( CELLTRACK_SRC_FILES
   gui/wxTextCtrl_double.cpp
   gui/Gui.cpp
 
-  lib/wxmathplot-0.03/mathplot.cpp
-  lib/wxmathplot-0.03/mpFXVector.cpp
+  lib/wxMathPlot-0.1.2/mathplot.cpp
+#  lib/wxmathplot-0.03/mathplot.cpp
+#  lib/wxmathplot-0.03/mpFXVector.cpp
 
   plugins/CamShiftPlugin.cpp
   plugins/CopyContoursPlugin.cpp

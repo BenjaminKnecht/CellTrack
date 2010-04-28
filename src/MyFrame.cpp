@@ -632,17 +632,20 @@ bool MyFrame::SetupCellPlot(wxString title, wxString ytitle, PlotDialog* &pd, mp
 	return true;
 }
 
-#include "mpFXVector.h"
+//#include "mpFXVector.h"
 void MyFrame::OnPlotSpeed( wxCommandEvent& e )
 {
 	PlotDialog *pd; mpWindow *p; int numCells;
 	if(!SetupCellPlot(_T("Cell Speed"), _T("speed (pixel/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float totalDisp, avgSpeed;
-		std::vector<float> speeds = cm->GetSpeeds(i, totalDisp, avgSpeed);
+		std::vector<double> speeds = cm->GetSpeeds(i, totalDisp, avgSpeed);
 		wxString name = wxString::Format(_T("Cell-%d (distance=%.1f, speed=%.1f)"), i+1, totalDisp, avgSpeed);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( speeds );
+		std::vector<double> xs(speeds.size());
+        for (int i=0; i<speeds.size(); i++)
+            xs[i] = i/*+xstart*/;
+		mpFXYVector *v = new mpFXYVector(name);
+		v->SetData( xs, speeds );
 		v->SetContinuity(true);
 		//wxPen mypen(*wxRED, 5, wxSOLID); v->SetPen( mypen);
 		p->AddLayer(   v   );
@@ -659,10 +662,13 @@ void MyFrame::OnPlotArea( wxCommandEvent& e )
 	for (int i=0; i<numCells; i++)
 	{
 		float avgArea;
-		std::vector<float> areas = cm->GetAreas(i, avgArea);
+		std::vector<double> areas = cm->GetAreas(i, avgArea);
 		wxString name = wxString::Format(_T("Cell-%d (avgArea=%.1f)"), i+1, avgArea);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( areas );
+		mpFXYVector *v = new mpFXYVector(name);
+		std::vector<double> xs(areas.size());
+        for (int i=0; i<areas.size(); i++)
+            xs[i] = i/*+xstart*/;
+		v->SetData( xs, areas );
 		v->SetContinuity(true);
 		p->AddLayer(   v   );
 	}
@@ -677,10 +683,13 @@ void MyFrame::OnPlotAreaDiff( wxCommandEvent& e )
 	if(!SetupCellPlot(_T("Change in Cell Area"), _T("d-area (pixel^2/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float avgArea;
-		std::vector<float> areas = cm->GetAreaDiff(i, avgArea);
+		std::vector<double> areas = cm->GetAreaDiff(i, avgArea);
 		wxString name = wxString::Format(_T("Cell-%d (avgChange=%.1f)"), i+1, avgArea);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( areas );
+		mpFXYVector *v = new mpFXYVector(name);
+		std::vector<double> xs(areas.size());
+        for (int i=0; i<areas.size(); i++)
+            xs[i] = i/*+xstart*/;
+		v->SetData( xs, areas );
 		v->SetContinuity(true);
 		p->AddLayer(   v   );
 	}
@@ -696,10 +705,13 @@ void MyFrame::OnPlotVolume( wxCommandEvent& e )
 	for (int i=0; i<numCells; i++)
 	{
 		float avgVolume;
-		std::vector<float> volumes = cm->GetVolumes(i, avgVolume);
+		std::vector<double> volumes = cm->GetVolumes(i, avgVolume);
 		wxString name = wxString::Format(_T("Cell-%d (avgVolume=%.1f)"), i+1, avgVolume);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( volumes );
+		mpFXYVector *v = new mpFXYVector(name);
+		std::vector<double> xs(volumes.size());
+        for (int i=0; i<volumes.size(); i++)
+            xs[i] = i/*+xstart*/;
+		v->SetData( xs, volumes );
 		v->SetContinuity(true);
 		p->AddLayer(   v   );
 	}
@@ -715,10 +727,13 @@ void MyFrame::OnPlotVolumeDiff( wxCommandEvent& e )
 	for (int i=0; i<numCells; i++)
 	{
 		float avgVolume;
-		std::vector<float> volumes = cm->GetVolumeDiff(i, avgVolume);
+		std::vector<double> volumes = cm->GetVolumeDiff(i, avgVolume);
 		wxString name = wxString::Format(_T("Cell-%d (avgChange=%.1f)"), i+1, avgVolume);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( volumes );
+		mpFXYVector *v = new mpFXYVector(name);
+		std::vector<double> xs(volumes.size());
+        for (int i=0; i<volumes.size(); i++)
+            xs[i] = i/*+xstart*/;
+		v->SetData( xs, volumes );
 		v->SetContinuity(true);
 		p->AddLayer(   v   );
 	}
@@ -733,10 +748,13 @@ void MyFrame::OnPlotDeformation( wxCommandEvent& e )
 	if(!SetupCellPlot(_T("Cell Deformation"), _T("deformation (pixel^2/frame)"), pd, p, numCells)) return;
 	for (int i=0; i<numCells; i++){
 		float avgDef;
-		std::vector<float> defs = cm->GetDeformation(i, avgDef);
+		std::vector<double> defs = cm->GetDeformation(i, avgDef);
 		wxString name = wxString::Format(_T("Cell-%d (avgDeform=%.1f)"), i+1, avgDef);
-		mpFXVector *v = new mpFXVector(name);
-		v->SetData( defs );
+		mpFXYVector *v = new mpFXYVector(name);
+		std::vector<double> xs(defs.size());
+        for (int i=0; i<defs.size(); i++)
+            xs[i] = i/*+xstart*/;
+		v->SetData( xs, defs );
 		v->SetContinuity(true);
 		p->AddLayer(   v   );
 	}

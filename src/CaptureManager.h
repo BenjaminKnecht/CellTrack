@@ -112,12 +112,12 @@ public:
 	bool IsInNeighborhood(int testPos, int testZPos) const;
 
 	std::vector<CvPoint> GetTrajectory(int c); //get trajectory of cth object
-	std::vector<float> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object
-	std::vector<float> GetAreas(int c, float &avgArea); //get areas of cth object
-	std::vector<float> GetAreaDiff(int c, float &avgDiff);
-	std::vector<float> GetVolumes(int c, float &avgVolume); //get volumes of cth object
-	std::vector<float> GetVolumeDiff(int c, float &avgDiff);
-	std::vector<float> GetDeformation(int c, float &avgDef);
+	std::vector<double> GetSpeeds(int c, float &totalDisp, float &avgSpeed); //get speeds of cth object
+	std::vector<double> GetAreas(int c, float &avgArea); //get areas of cth object
+	std::vector<double> GetAreaDiff(int c, float &avgDiff);
+	std::vector<double> GetVolumes(int c, float &avgVolume); //get volumes of cth object
+	std::vector<double> GetVolumeDiff(int c, float &avgDiff);
+	std::vector<double> GetDeformation(int c, float &avgDef);
 
 	void Resize(int width, int height, int method);
 	void Crop(CvPoint topleft, CvSize size);

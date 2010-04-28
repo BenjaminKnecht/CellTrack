@@ -108,11 +108,11 @@ void CorrectContoursPlugin::ProcessImage( ImagePlus *img, int pos, int zPos, boo
 
 void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* top )
 {
-    CvSeq* seq1 = bottom->contourArray[0];
-    CvSeq* seq2 = top->contourArray[0];
+    //CvSeq* seq1 = bottom->contourArray[0];
+    //CvSeq* seq2 = top->contourArray[0];
     // finding the largest contours in the image
     // (in case the contours have not been cleaned up properly)
-    /*int numBottomCells = bottom->contourArray.size();
+    int numBottomCells = bottom->contourArray.size();
     int numTopCells = top->contourArray.size();
     if (numBottomCells == 0 || numTopCells == 0)
         return;
@@ -151,9 +151,51 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     //CvPoint2D32f* bottomPoints = (CvPoint2D32f*)malloc( bottomCell->total*sizeof(CvPoint2D32f) );
     cvCvtSeqToArray(topCell, topPointsInt);
     cvCvtSeqToArray(bottomCell, bottomPointsInt);
+
+    // find first point inside lower boundary
+    int startingPoint = -1;
     for (int i=0; i<topCell->total; i++)
     {
-        until here first part of original function */
+        if (cvPointPolygonTest(bottomCell, cvPointTo32f(topPointsInt[i]), false) >= 0)
+        {
+            startingPoint = i;
+            break;
+        }
+    }
+    // check if top boundary is never inside lower boundary -> replace boundary (trivial solution)
+    if (startingPoint == -1)
+    {
+        top->ReplaceContour(biggestCellIndex, bottomPointsInt, bottomCell->total);
+    }
+    std::vector<CvPoint> newBoundary;
+    for (int i=startingPoint+1; i==startingPoint; i++)
+    {
+        CvPoint2D32f min, min0;
+        int index;
+        double distance = modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index);
+        if (distance < 0)
+        {
+            int startingIndex = index;
+            while (modifiedPointPolygonTest(cvPointTo32f(topPointsInt[i]), bottomPointsInt, min0, min, index) < 0)
+            {
+                i++;
+                if (i>=topCell->total-1)
+                    i = -1;
+            }
+            for (int j = startingIndex; j<index; j++)
+            {
+                newBoundary.push_back(bottomPointsInt[j]);
+            }
+        }
+        else
+        {
+            newBoundary.push_back(topPointsInt[i]);
+        }
+
+        if (i>=topCell->total-1)
+            i = -1;
+    }
+
         //double test = cvPointPolygonTest(bottomPoints, topPoints[i], 1);
 
         //std::cout << test << std::endl;
@@ -187,71 +229,7 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
         else
             std::cout << "FF" << std::endl;
 */
-        //CvSeqReader reader;
 
-        // From here part 2 of original function
-        /*
-        int counter = 0;
-        int total = bottomCell->total;
-        //cvStartReadSeq( bottomCell, &reader, -1 );
-        CvPoint2D32f v0, v, min0, min, pt = cvPointTo32f(topPointsInt[i]);
-        //CvPoint iV;
-        //CV_READ_SEQ_ELEM( iV, reader );
-        //v = cvPointTo32f(iV);
-        v = cvPointTo32f(bottomPointsInt[0]);
-        double distance = 0;
-        double min_dist_num = FLT_MAX, min_dist_denom = 1;
-        //std::cout << "testing point (" << pt.x << ", " << pt.y << ") ";
-        for( int j = 1; j < total; j++ )
-        {
-            double dx, dy, dx1, dy1, dx2, dy2, dist_num, dist_denom = 1;
-
-            v0 = v;
-            v = cvPointTo32f(bottomPointsInt[j]);
-            //std::cout << "with point (" << v.x << ", " << v.y << ") " << std::endl;
-            //CV_READ_SEQ_ELEM( iV, reader );
-            //v = cvPointTo32f(iV);
-
-            dx = v.x - v0.x; dy = v.y - v0.y;
-            dx1 = pt.x - v0.x; dy1 = pt.y - v0.y;
-            dx2 = pt.x - v.x; dy2 = pt.y - v.y;
-
-            if( dx1*dx + dy1*dy <= 0 )
-                dist_num = dx1*dx1 + dy1*dy1;
-            else if( dx2*dx + dy2*dy >= 0 )
-                dist_num = dx2*dx2 + dy2*dy2;
-            else
-            {
-                dist_num = (dy1*dx - dx1*dy);
-                dist_num *= dist_num;
-                dist_denom = dx*dx + dy*dy;
-            }
-
-            if( dist_num*min_dist_denom < min_dist_num*dist_denom )
-            {
-                min_dist_num = dist_num;
-                min_dist_denom = dist_denom;
-                min0 = v0;
-                min = v;
-                if( min_dist_num == 0 )
-                    break;
-            }
-
-            if( (v0.y <= pt.y && v.y <= pt.y) ||
-                (v0.y > pt.y && v.y > pt.y) ||
-                (v0.x < pt.x && v.x < pt.x) )
-                continue;
-
-            dist_num = dy1*dx - dx1*dy;
-            if( dy < 0 )
-                dist_num = -dist_num;
-            counter += dist_num > 0;
-        }
-        distance = sqrt(min_dist_num/min_dist_denom);
-        if( counter % 2 == 0 )
-            distance = -distance;
-        //std::cout << "d: " << distance << std::endl;
-        // point outside of contour!
         if (distance < 0)
         {
             std::cout << "calculating proper position for point " << pt.x << ", " << pt.y << std::endl;
@@ -307,7 +285,7 @@ void CorrectContoursPlugin::ProcessImage_static( ImagePlus* bottom, ImagePlus* t
     }
     //std::cout << "finished, replacing with correct boundary.." << std::endl;
     if (dirty)
-        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);*/
+        top->ReplaceContour(biggestCellIndex, topPointsInt, topCell->total);
 }
 
 void CorrectContoursPlugin::OnFluorescence()
@@ -320,4 +298,61 @@ void CorrectContoursPlugin::OnFluorescence()
     {
         sidebar->scope2->SetSelection(0);
     }
+}
+
+double CorrectContoursPlugin::modifiedPointPolygonTest(CvPoint2D32f pt, CvPoint*& bottomPointsInt, CvPoint2D32f& min0, CvPoint2D32f& min, int& index)
+{
+    int counter = 0;
+    int total = bottomCell->total;
+    CvPoint2D32f v0, v, pt = cvPointTo32f(pt);
+    v = cvPointTo32f(bottomPointsInt[0]);
+    double distance = 0;
+    double min_dist_num = FLT_MAX, min_dist_denom = 1;
+    for( int j = 1; j < total; j++ )
+    {
+        double dx, dy, dx1, dy1, dx2, dy2, dist_num, dist_denom = 1;
+
+        v0 = v;
+        v = cvPointTo32f(bottomPointsInt[j]);
+
+        dx = v.x - v0.x; dy = v.y - v0.y;
+        dx1 = pt.x - v0.x; dy1 = pt.y - v0.y;
+        dx2 = pt.x - v.x; dy2 = pt.y - v.y;
+
+        if( dx1*dx + dy1*dy <= 0 )
+            dist_num = dx1*dx1 + dy1*dy1;
+        else if( dx2*dx + dy2*dy >= 0 )
+            dist_num = dx2*dx2 + dy2*dy2;
+        else
+        {
+            dist_num = (dy1*dx - dx1*dy);
+            dist_num *= dist_num;
+            dist_denom = dx*dx + dy*dy;
+        }
+
+        if( dist_num*min_dist_denom < min_dist_num*dist_denom )
+        {
+            min_dist_num = dist_num;
+            min_dist_denom = dist_denom;
+            min0 = v0;
+            min = v;
+            index = i;
+            if( min_dist_num == 0 )
+                break;
+        }
+
+        if( (v0.y <= pt.y && v.y <= pt.y) ||
+            (v0.y > pt.y && v.y > pt.y) ||
+            (v0.x < pt.x && v.x < pt.x) )
+            continue;
+
+        dist_num = dy1*dx - dx1*dy;
+        if( dy < 0 )
+            dist_num = -dist_num;
+        counter += dist_num > 0;
+    }
+    distance = sqrt(min_dist_num/min_dist_denom);
+    if( counter % 2 == 0 )
+        distance = -distance;
+    return distance;
 }
